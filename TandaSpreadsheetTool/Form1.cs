@@ -12,16 +12,21 @@ namespace TandaSpreadsheetTool
 {
     public partial class Form1 : Form
     {
-        
+        Networker networker;
 
         public Form1()
         {
             InitializeComponent();
+
+            networker = new Networker();
+           
         }
 
-        private void btnSubmit_Click(object sender, EventArgs e)
+        private void btnLogIn_Click(object sender, EventArgs e)
         {
-
+            lblLoad.Text = "Loading";
+            networker.Connect(txtBxUName.Text, txtBxPwd.Text);
+            txtBxPwd.Text = "";
         }
     }
 }
