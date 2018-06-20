@@ -37,7 +37,8 @@
             this.lblUName = new System.Windows.Forms.Label();
             this.lblToContinue = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
-            this.lblTest = new System.Windows.Forms.Label();
+            this.lblInDate = new System.Windows.Forms.Label();
+            this.txtBxDate = new System.Windows.Forms.TextBox();
             this.btnTest = new System.Windows.Forms.Button();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
@@ -52,7 +53,7 @@
             this.pnlLogIn.Controls.Add(this.lblPwd);
             this.pnlLogIn.Controls.Add(this.lblUName);
             this.pnlLogIn.Controls.Add(this.lblToContinue);
-            this.pnlLogIn.Location = new System.Drawing.Point(22, 9);
+            this.pnlLogIn.Location = new System.Drawing.Point(12, 12);
             this.pnlLogIn.Name = "pnlLogIn";
             this.pnlLogIn.Size = new System.Drawing.Size(538, 190);
             this.pnlLogIn.TabIndex = 0;
@@ -67,7 +68,7 @@
             // 
             // btnLogIn
             // 
-            this.btnLogIn.Location = new System.Drawing.Point(295, 147);
+            this.btnLogIn.Location = new System.Drawing.Point(213, 119);
             this.btnLogIn.Name = "btnLogIn";
             this.btnLogIn.Size = new System.Drawing.Size(75, 23);
             this.btnLogIn.TabIndex = 5;
@@ -77,7 +78,7 @@
             // 
             // txtBxPwd
             // 
-            this.txtBxPwd.Location = new System.Drawing.Point(192, 121);
+            this.txtBxPwd.Location = new System.Drawing.Point(110, 93);
             this.txtBxPwd.Name = "txtBxPwd";
             this.txtBxPwd.Size = new System.Drawing.Size(178, 20);
             this.txtBxPwd.TabIndex = 4;
@@ -85,7 +86,7 @@
             // 
             // txtBxUName
             // 
-            this.txtBxUName.Location = new System.Drawing.Point(192, 87);
+            this.txtBxUName.Location = new System.Drawing.Point(110, 59);
             this.txtBxUName.Name = "txtBxUName";
             this.txtBxUName.Size = new System.Drawing.Size(178, 20);
             this.txtBxUName.TabIndex = 3;
@@ -93,7 +94,7 @@
             // lblPwd
             // 
             this.lblPwd.AutoSize = true;
-            this.lblPwd.Location = new System.Drawing.Point(133, 124);
+            this.lblPwd.Location = new System.Drawing.Point(51, 96);
             this.lblPwd.Name = "lblPwd";
             this.lblPwd.Size = new System.Drawing.Size(53, 13);
             this.lblPwd.TabIndex = 2;
@@ -102,7 +103,7 @@
             // lblUName
             // 
             this.lblUName.AutoSize = true;
-            this.lblUName.Location = new System.Drawing.Point(151, 90);
+            this.lblUName.Location = new System.Drawing.Point(69, 62);
             this.lblUName.Name = "lblUName";
             this.lblUName.Size = new System.Drawing.Size(35, 13);
             this.lblUName.TabIndex = 1;
@@ -112,7 +113,7 @@
             // 
             this.lblToContinue.AutoSize = true;
             this.lblToContinue.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblToContinue.Location = new System.Drawing.Point(78, 34);
+            this.lblToContinue.Location = new System.Drawing.Point(65, 3);
             this.lblToContinue.Name = "lblToContinue";
             this.lblToContinue.Size = new System.Drawing.Size(441, 39);
             this.lblToContinue.TabIndex = 0;
@@ -120,7 +121,9 @@
             // 
             // pnlMain
             // 
-            this.pnlMain.Controls.Add(this.lblTest);
+            this.pnlMain.Controls.Add(this.lblInDate);
+            this.pnlMain.Controls.Add(this.txtBxDate);
+            this.pnlMain.Controls.Add(this.btnTest);
             this.pnlMain.Enabled = false;
             this.pnlMain.Location = new System.Drawing.Point(642, 12);
             this.pnlMain.Name = "pnlMain";
@@ -128,30 +131,37 @@
             this.pnlMain.TabIndex = 1;
             this.pnlMain.Visible = false;
             // 
-            // lblTest
+            // lblInDate
             // 
-            this.lblTest.AutoSize = true;
-            this.lblTest.Location = new System.Drawing.Point(175, 238);
-            this.lblTest.Name = "lblTest";
-            this.lblTest.Size = new System.Drawing.Size(54, 13);
-            this.lblTest.TabIndex = 0;
-            this.lblTest.Text = "It worked!";
+            this.lblInDate.AutoSize = true;
+            this.lblInDate.Location = new System.Drawing.Point(73, 305);
+            this.lblInDate.Name = "lblInDate";
+            this.lblInDate.Size = new System.Drawing.Size(137, 13);
+            this.lblInDate.TabIndex = 4;
+            this.lblInDate.Text = "Input Date (YYYY-MM-DD):";
+            // 
+            // txtBxDate
+            // 
+            this.txtBxDate.Location = new System.Drawing.Point(216, 302);
+            this.txtBxDate.Name = "txtBxDate";
+            this.txtBxDate.Size = new System.Drawing.Size(154, 20);
+            this.txtBxDate.TabIndex = 3;
             // 
             // btnTest
             // 
-            this.btnTest.Location = new System.Drawing.Point(255, 320);
+            this.btnTest.Location = new System.Drawing.Point(216, 328);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(75, 23);
             this.btnTest.TabIndex = 2;
             this.btnTest.Text = "Save JSON";
             this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1258, 596);
-            this.Controls.Add(this.btnTest);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlLogIn);
             this.Name = "Form1";
@@ -175,8 +185,9 @@
         private System.Windows.Forms.Button btnLogIn;
         private System.Windows.Forms.Label lblLoad;
         private System.Windows.Forms.Panel pnlMain;
-        private System.Windows.Forms.Label lblTest;
         private System.Windows.Forms.Button btnTest;
+        private System.Windows.Forms.Label lblInDate;
+        private System.Windows.Forms.TextBox txtBxDate;
     }
 }
 

@@ -37,7 +37,7 @@ namespace TandaSpreadsheetTool
 
             client = new HttpClient();
             client.Timeout = new TimeSpan(0, 0, 30);
-
+            client.BaseAddress = new Uri("https://my.tanda.co/api/");
         }
 
         public void Subscribe(INetworkListener listener)
@@ -63,7 +63,7 @@ namespace TandaSpreadsheetTool
             client.DefaultRequestHeaders.Clear();
 
 
-            client.BaseAddress = new Uri("https://my.tanda.co/api/");
+            
             client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
 
             var formContent = new FormUrlEncodedContent(new[] {
@@ -115,7 +115,11 @@ namespace TandaSpreadsheetTool
         {
             status = NetworkStatus.BUSY;
             client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Add("Authorization", "bearer" + token.GetValue("access_token"));
+           
+
+          
+
+            client.DefaultRequestHeaders.Add("Authorization", "bearer " + token.GetValue("access_token"));
            
 
             try
@@ -123,8 +127,8 @@ namespace TandaSpreadsheetTool
                 httpresponse = await client.GetAsync("v2/rosters/on/" + containingDate);
                 var payload = await httpresponse.Content.ReadAsStringAsync();
 
-                var roosters = JObject.Parse(payload);
-
+               var roosters = JObject.Parse(payload);
+               SaveJSON(roosters);
             }
             catch (Exception ex)
             {
@@ -135,7 +139,7 @@ namespace TandaSpreadsheetTool
             UpdateStatus = NetworkStatus.IDLE;
         }
 
-        void SaveJSON(JObject jObj
+        void SaveJSON(JObject jObj)
         {
             
            
@@ -152,9 +156,9 @@ namespace TandaSpreadsheetTool
             {
                 status = value;
                 
-                foreach (INetworkListener listener in listeners)
+                for (int i = 0; i<listeners.Count;i++)
                 {
-                    listener.NetStatusChanged(status);
+                    listeners[i].NetStatusChanged(status);
                 }
             }
         }       
@@ -166,6 +170,8 @@ namespace TandaSpreadsheetTool
                 return status;
             }
         }             
+
+       
 
         ~Networker()
         {
