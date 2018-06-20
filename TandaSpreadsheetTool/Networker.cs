@@ -9,11 +9,10 @@ namespace TandaSpreadsheetTool
     class Networker
     {
 
-        bool networkerBusy = false;        
+        NetworkStatus status;
+        bool connected;
 
-        bool connected = false;
-
-       
+        List<INetworkListener> listeners;
 
         HttpClient client;
 
@@ -21,19 +20,31 @@ namespace TandaSpreadsheetTool
         {
            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
+            listeners = new List<INetworkListener>();
+
             client = new HttpClient();
             client.Timeout = new TimeSpan(0, 0, 15);
+        }
+
+        public void Subscribe(INetworkListener listener)
+        {
+            listeners.Add(listener);
+        }
+
+        public void Unsubscribe (INetworkListener listener)
+        {
+            listeners.Remove(listener);
         }
 
         public async void Connect(string username, string password)
         {
             Console.WriteLine(connected );
-            if (connected | networkerBusy)
+            if (connected | status == NetworkStatus.BUSY)
             {
                 return;
             }
-            
-            networkerBusy = true;
+
+            status = NetworkStatus.BUSY;
 
             client.BaseAddress = new Uri("https://my.tanda.co/api/oauth/token/");
             client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
@@ -62,7 +73,7 @@ namespace TandaSpreadsheetTool
            
             connected = httpresponse.IsSuccessStatusCode;
 
-            networkerBusy = false;
+            
         }
 
         public void PostRequest()

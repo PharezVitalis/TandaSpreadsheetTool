@@ -28,7 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.components = new System.ComponentModel.Container();
+            this.pnlLogIn = new System.Windows.Forms.Panel();
             this.lblLoad = new System.Windows.Forms.Label();
             this.btnLogIn = new System.Windows.Forms.Button();
             this.txtBxPwd = new System.Windows.Forms.TextBox();
@@ -36,22 +37,26 @@
             this.lblPwd = new System.Windows.Forms.Label();
             this.lblUName = new System.Windows.Forms.Label();
             this.lblToContinue = new System.Windows.Forms.Label();
-            this.panel1.SuspendLayout();
+            this.tNetPoller = new System.Windows.Forms.Timer(this.components);
+            this.pnlMain = new System.Windows.Forms.Panel();
+            this.lblTest = new System.Windows.Forms.Label();
+            this.pnlLogIn.SuspendLayout();
+            this.pnlMain.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel1
+            // pnlLogIn
             // 
-            this.panel1.Controls.Add(this.lblLoad);
-            this.panel1.Controls.Add(this.btnLogIn);
-            this.panel1.Controls.Add(this.txtBxPwd);
-            this.panel1.Controls.Add(this.txtBxUName);
-            this.panel1.Controls.Add(this.lblPwd);
-            this.panel1.Controls.Add(this.lblUName);
-            this.panel1.Controls.Add(this.lblToContinue);
-            this.panel1.Location = new System.Drawing.Point(22, 9);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(674, 561);
-            this.panel1.TabIndex = 0;
+            this.pnlLogIn.Controls.Add(this.lblLoad);
+            this.pnlLogIn.Controls.Add(this.btnLogIn);
+            this.pnlLogIn.Controls.Add(this.txtBxPwd);
+            this.pnlLogIn.Controls.Add(this.txtBxUName);
+            this.pnlLogIn.Controls.Add(this.lblPwd);
+            this.pnlLogIn.Controls.Add(this.lblUName);
+            this.pnlLogIn.Controls.Add(this.lblToContinue);
+            this.pnlLogIn.Location = new System.Drawing.Point(22, 9);
+            this.pnlLogIn.Name = "pnlLogIn";
+            this.pnlLogIn.Size = new System.Drawing.Size(538, 190);
+            this.pnlLogIn.TabIndex = 0;
             // 
             // lblLoad
             // 
@@ -63,7 +68,7 @@
             // 
             // btnLogIn
             // 
-            this.btnLogIn.Location = new System.Drawing.Point(242, 256);
+            this.btnLogIn.Location = new System.Drawing.Point(295, 147);
             this.btnLogIn.Name = "btnLogIn";
             this.btnLogIn.Size = new System.Drawing.Size(75, 23);
             this.btnLogIn.TabIndex = 5;
@@ -73,7 +78,7 @@
             // 
             // txtBxPwd
             // 
-            this.txtBxPwd.Location = new System.Drawing.Point(192, 218);
+            this.txtBxPwd.Location = new System.Drawing.Point(192, 121);
             this.txtBxPwd.Name = "txtBxPwd";
             this.txtBxPwd.Size = new System.Drawing.Size(178, 20);
             this.txtBxPwd.TabIndex = 4;
@@ -81,7 +86,7 @@
             // 
             // txtBxUName
             // 
-            this.txtBxUName.Location = new System.Drawing.Point(192, 177);
+            this.txtBxUName.Location = new System.Drawing.Point(192, 87);
             this.txtBxUName.Name = "txtBxUName";
             this.txtBxUName.Size = new System.Drawing.Size(178, 20);
             this.txtBxUName.TabIndex = 3;
@@ -89,7 +94,7 @@
             // lblPwd
             // 
             this.lblPwd.AutoSize = true;
-            this.lblPwd.Location = new System.Drawing.Point(133, 218);
+            this.lblPwd.Location = new System.Drawing.Point(133, 124);
             this.lblPwd.Name = "lblPwd";
             this.lblPwd.Size = new System.Drawing.Size(53, 13);
             this.lblPwd.TabIndex = 2;
@@ -98,7 +103,7 @@
             // lblUName
             // 
             this.lblUName.AutoSize = true;
-            this.lblUName.Location = new System.Drawing.Point(151, 180);
+            this.lblUName.Location = new System.Drawing.Point(151, 90);
             this.lblUName.Name = "lblUName";
             this.lblUName.Size = new System.Drawing.Size(35, 13);
             this.lblUName.TabIndex = 1;
@@ -114,23 +119,49 @@
             this.lblToContinue.TabIndex = 0;
             this.lblToContinue.Text = "Log Into Tanda To Continue";
             // 
+            // tNetPoller
+            // 
+            this.tNetPoller.Interval = 300;
+            // 
+            // pnlMain
+            // 
+            this.pnlMain.Controls.Add(this.lblTest);
+            this.pnlMain.Enabled = false;
+            this.pnlMain.Location = new System.Drawing.Point(642, 12);
+            this.pnlMain.Name = "pnlMain";
+            this.pnlMain.Size = new System.Drawing.Size(592, 546);
+            this.pnlMain.TabIndex = 1;
+            this.pnlMain.Visible = false;
+            // 
+            // lblTest
+            // 
+            this.lblTest.AutoSize = true;
+            this.lblTest.Location = new System.Drawing.Point(175, 238);
+            this.lblTest.Name = "lblTest";
+            this.lblTest.Size = new System.Drawing.Size(54, 13);
+            this.lblTest.TabIndex = 0;
+            this.lblTest.Text = "It worked!";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(711, 596);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(1258, 596);
+            this.Controls.Add(this.pnlMain);
+            this.Controls.Add(this.pnlLogIn);
             this.Name = "Form1";
             this.Text = "Form1";
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.pnlLogIn.ResumeLayout(false);
+            this.pnlLogIn.PerformLayout();
+            this.pnlMain.ResumeLayout(false);
+            this.pnlMain.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlLogIn;
         private System.Windows.Forms.TextBox txtBxPwd;
         private System.Windows.Forms.TextBox txtBxUName;
         private System.Windows.Forms.Label lblPwd;
@@ -138,6 +169,9 @@
         private System.Windows.Forms.Label lblToContinue;
         private System.Windows.Forms.Button btnLogIn;
         private System.Windows.Forms.Label lblLoad;
+        private System.Windows.Forms.Timer tNetPoller;
+        private System.Windows.Forms.Panel pnlMain;
+        private System.Windows.Forms.Label lblTest;
     }
 }
 
