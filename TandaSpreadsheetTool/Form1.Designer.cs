@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.pnlLogIn = new System.Windows.Forms.Panel();
             this.lblLoad = new System.Windows.Forms.Label();
             this.btnLogIn = new System.Windows.Forms.Button();
@@ -37,7 +36,6 @@
             this.lblPwd = new System.Windows.Forms.Label();
             this.lblUName = new System.Windows.Forms.Label();
             this.lblToContinue = new System.Windows.Forms.Label();
-            this.tNetPoller = new System.Windows.Forms.Timer(this.components);
             this.pnlMain = new System.Windows.Forms.Panel();
             this.lblTest = new System.Windows.Forms.Label();
             this.pnlLogIn.SuspendLayout();
@@ -119,10 +117,6 @@
             this.lblToContinue.TabIndex = 0;
             this.lblToContinue.Text = "Log Into Tanda To Continue";
             // 
-            // tNetPoller
-            // 
-            this.tNetPoller.Interval = 300;
-            // 
             // pnlMain
             // 
             this.pnlMain.Controls.Add(this.lblTest);
@@ -169,7 +163,6 @@
         private System.Windows.Forms.Label lblToContinue;
         private System.Windows.Forms.Button btnLogIn;
         private System.Windows.Forms.Label lblLoad;
-        private System.Windows.Forms.Timer tNetPoller;
         private System.Windows.Forms.Panel pnlMain;
         private System.Windows.Forms.Label lblTest;
     }

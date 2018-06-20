@@ -1,27 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
 namespace TandaSpreadsheetTool
 {
     interface INetworkListener
     {
-     bool Connected
-        {
-            set;
-        }
         
-        NetworkStatus NetStatus
-        {
-            set;
-        }
 
+        void NetStatusChanged(NetworkStatus status);
     }
 
-    enum NetworkStatus
+    public enum NetworkStatus
     {
-        BUSY,IDLE,ERROR
+        BUSY,IDLE,ERROR,DISCONNECTED
     }
 }

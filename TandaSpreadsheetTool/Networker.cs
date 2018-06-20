@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security;
 using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
@@ -9,8 +10,11 @@ namespace TandaSpreadsheetTool
     class Networker
     {
 
-        NetworkStatus status;
-        bool connected;
+        NetworkStatus status = NetworkStatus.DISCONNECTED;
+
+        string mostRecentError = "";
+
+        SecureString token;
 
         List<INetworkListener> listeners;
 
@@ -20,10 +24,14 @@ namespace TandaSpreadsheetTool
         {
            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
+            token = new SecureString();
+            
+
             listeners = new List<INetworkListener>();
 
             client = new HttpClient();
-            client.Timeout = new TimeSpan(0, 0, 15);
+            client.Timeout = new TimeSpan(0, 0, 30);
+
         }
 
         public void Subscribe(INetworkListener listener)
@@ -36,15 +44,15 @@ namespace TandaSpreadsheetTool
             listeners.Remove(listener);
         }
 
-        public async void Connect(string username, string password)
+        public async void GetToken(string username, string password)
         {
-            Console.WriteLine(connected );
-            if (connected | status == NetworkStatus.BUSY)
+           
+            if (status !=NetworkStatus.DISCONNECTED)
             {
                 return;
             }
 
-            status = NetworkStatus.BUSY;
+            UpdateStatus = NetworkStatus.BUSY;
 
             client.BaseAddress = new Uri("https://my.tanda.co/api/oauth/token/");
             client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
@@ -56,24 +64,46 @@ namespace TandaSpreadsheetTool
                 new KeyValuePair<string,string>("grant_type","password")
             });
 
-            string responseString = "";
+            
             HttpResponseMessage httpresponse = new HttpResponseMessage();
+            
+
+            httpresponse.EnsureSuccessStatusCode();
 
             try
             {
                 httpresponse = await client.PostAsync("", formContent);
+             var tokenbytes = await httpresponse.Content.ReadAsByteArrayAsync();
 
-                responseString = await httpresponse.Content.ReadAsStringAsync();
+                Console.WriteLine(token);
+                UpdateStatus = NetworkStatus.IDLE;
+               
+
+                for (int i = 0; i < tokenbytes.Length; i++)
+                {
+                    token.AppendChar((char)tokenbytes[i]);
+                }
+               
+
             }
             catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+            {                
+                mostRecentError = ex.Message;
+                UpdateStatus = NetworkStatus.ERROR;
             }
-                
-           
-            connected = httpresponse.IsSuccessStatusCode;
+
+
+         
 
             
+        }
+
+        public string LastErrMsg
+        {
+            get
+            {
+                return mostRecentError;
+            }
         }
 
         public void PostRequest()
@@ -81,18 +111,32 @@ namespace TandaSpreadsheetTool
 
         }
 
-      
-        public bool Connected
+        private NetworkStatus UpdateStatus
+        {
+            set
+            {
+                status = value;
+                
+                foreach (INetworkListener listener in listeners)
+                {
+                    listener.NetStatusChanged(status);
+                }
+            }
+        }       
+
+        public NetworkStatus Status
         {
             get
             {
-                return connected;
+                return status;
             }
-        }
+        }             
 
         ~Networker()
         {
+            client.CancelPendingRequests();
             client.Dispose();
+
         }
 
         
