@@ -23,7 +23,22 @@ namespace TandaSpreadsheetTool
             
             
             networker = new Networker();
-           
+           if (networker.Authenticated)
+            {
+                ShowMainPanel();
+            }
+        }
+
+        void ShowMainPanel()
+        {
+            pnlLogIn.Visible = false;
+            pnlMain.Visible = true;
+        }
+
+        void ShowLogInPanel()
+        {
+            pnlMain.Visible = false;
+            pnlLogIn.Visible = true;
         }
 
         public void NetStatusChanged(NetworkStatus newStatus)
@@ -39,11 +54,7 @@ namespace TandaSpreadsheetTool
                     case NetworkStatus.IDLE:
                         MessageBox.Show("Connected successfully");
 
-                        pnlLogIn.Enabled = false;
-                        pnlLogIn.Visible = false;
-
-                        pnlMain.Visible = true;
-                        pnlMain.Enabled = true;
+                        ShowMainPanel();
 
                         txtBxUName.Enabled = true;
                         txtBxPwd.Enabled = true;

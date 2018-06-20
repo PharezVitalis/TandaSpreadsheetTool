@@ -28,7 +28,39 @@ namespace TandaSpreadsheetTool
         {
            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-            
+          
+            if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + "data.wpn"))
+            {
+                try
+                {
+
+
+                    using (FileStream file = new FileStream(AppDomain.CurrentDomain.BaseDirectory + "data.wpn", FileMode.Open))
+                    {
+                        byte[] data = new byte[file.Length];
+
+                        file.Read(data, 0, (int)file.Length);
+
+                        var str = "";
+
+                        for (int i = data.Length - 1; i > -1; i--)
+                        {
+                            str +=(char) data[i];
+                        }
+                        
+
+                        Console.WriteLine(str);
+
+                        token = JObject.Parse(str);
+                    }
+                }
+                catch
+                {
+                    Console.WriteLine("Failed to read file");
+                }
+
+                
+            }           
 
             httpresponse = new HttpResponseMessage();
             httpresponse.EnsureSuccessStatusCode();
@@ -86,8 +118,8 @@ namespace TandaSpreadsheetTool
 
                 token = JObject.Parse(tokenStr);
 
-                
 
+                SaveToken(token);
                 
 
             }
@@ -101,6 +133,27 @@ namespace TandaSpreadsheetTool
          
             
             
+        }
+
+
+        private void SaveToken(JObject token)
+        {
+            char[] tokenChars = token.ToString().ToCharArray();
+            byte[] outBytes = new byte[tokenChars.Length];
+
+            for(int i = 0; i<tokenChars.Length;i++)
+            {
+                outBytes[i] = (byte)tokenChars[(tokenChars.Length-1)-i];
+            }
+
+            try
+            {
+                File.WriteAllBytes(AppDomain.CurrentDomain.BaseDirectory + "data.wpn", outBytes);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Failed to save network information " + e.Message);
+            }
         }
 
         public string LastErrMsg
@@ -141,12 +194,19 @@ namespace TandaSpreadsheetTool
 
         void SaveJSON(JObject jObj)
         {
-            
-           
-            using (StreamWriter file = File.CreateText(AppDomain.CurrentDomain.BaseDirectory+"roosters.json")){
-                JsonSerializer serializer = new JsonSerializer();
+            try
+            {
+                using (StreamWriter file = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + "roosters.json"))
+                {
+                    JsonSerializer serializer = new JsonSerializer();
 
-                serializer.Serialize(file, jObj);
+                    serializer.Serialize(file, jObj);
+                }
+            }
+
+            catch
+            {
+                Console.WriteLine("Failed to save the roosters");
             }
         }
 
@@ -169,9 +229,15 @@ namespace TandaSpreadsheetTool
             {
                 return status;
             }
-        }             
+        }
 
-       
+       public bool Authenticated
+        {
+            get
+            {
+                return token != null;
+            }
+        }
 
         ~Networker()
         {

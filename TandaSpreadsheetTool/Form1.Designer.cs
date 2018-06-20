@@ -124,7 +124,6 @@
             this.pnlMain.Controls.Add(this.lblInDate);
             this.pnlMain.Controls.Add(this.txtBxDate);
             this.pnlMain.Controls.Add(this.btnTest);
-            this.pnlMain.Enabled = false;
             this.pnlMain.Location = new System.Drawing.Point(642, 12);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(592, 546);
