@@ -11,6 +11,6 @@ namespace TandaSpreadsheetTool
 
     public enum NetworkStatus
     {
-        BUSY,IDLE,ERROR,DISCONNECTED
+        BUSY,IDLE,ERROR
     }
 }

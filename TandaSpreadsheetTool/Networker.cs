@@ -4,17 +4,20 @@ using System.Security;
 using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace TandaSpreadsheetTool
 {
     class Networker
     {
 
-        NetworkStatus status = NetworkStatus.DISCONNECTED;
+        NetworkStatus status = NetworkStatus.IDLE;
 
         string mostRecentError = "";
 
-        SecureString token;
+        
+
+        JObject token;
 
         List<INetworkListener> listeners;
 
@@ -47,12 +50,15 @@ namespace TandaSpreadsheetTool
         public async void GetToken(string username, string password)
         {
            
-            if (status !=NetworkStatus.DISCONNECTED)
+            if (token != null | status != NetworkStatus.IDLE)
             {
                 return;
             }
 
             UpdateStatus = NetworkStatus.BUSY;
+
+           
+            
 
             client.BaseAddress = new Uri("https://my.tanda.co/api/oauth/token/");
             client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
@@ -73,17 +79,13 @@ namespace TandaSpreadsheetTool
             try
             {
                 httpresponse = await client.PostAsync("", formContent);
-             var tokenbytes = await httpresponse.Content.ReadAsByteArrayAsync();
+                var tokenStr = await httpresponse.Content.ReadAsStringAsync();
 
-                Console.WriteLine(token);
-                UpdateStatus = NetworkStatus.IDLE;
-               
+                token = JObject.Parse(tokenStr);
 
-                for (int i = 0; i < tokenbytes.Length; i++)
-                {
-                    token.AppendChar((char)tokenbytes[i]);
-                }
-               
+                
+
+
 
             }
             catch (Exception ex)
@@ -91,10 +93,10 @@ namespace TandaSpreadsheetTool
                 mostRecentError = ex.Message;
                 UpdateStatus = NetworkStatus.ERROR;
             }
-
-
+            UpdateStatus = NetworkStatus.IDLE;
+            
          
-
+            
             
         }
 
@@ -106,7 +108,7 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        public void PostRequest()
+        public void PostRequest(string dateFrom, string dateTo)
         {
 
         }
