@@ -38,6 +38,7 @@
             this.lblToContinue = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.lblTest = new System.Windows.Forms.Label();
+            this.btnTest = new System.Windows.Forms.Button();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -136,11 +137,21 @@
             this.lblTest.TabIndex = 0;
             this.lblTest.Text = "It worked!";
             // 
+            // btnTest
+            // 
+            this.btnTest.Location = new System.Drawing.Point(255, 320);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(75, 23);
+            this.btnTest.TabIndex = 2;
+            this.btnTest.Text = "Save JSON";
+            this.btnTest.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1258, 596);
+            this.Controls.Add(this.btnTest);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlLogIn);
             this.Name = "Form1";
@@ -165,6 +176,7 @@
         private System.Windows.Forms.Label lblLoad;
         private System.Windows.Forms.Panel pnlMain;
         private System.Windows.Forms.Label lblTest;
+        private System.Windows.Forms.Button btnTest;
     }
 }
 

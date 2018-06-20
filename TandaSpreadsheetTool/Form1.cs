@@ -14,7 +14,7 @@ namespace TandaSpreadsheetTool
     {
         Networker networker;
 
-       
+        bool gettingToken;
 
         public Form1()
         {
@@ -26,11 +26,42 @@ namespace TandaSpreadsheetTool
 
         public void NetStatusChanged(NetworkStatus newStatus)
         {
-            Console.WriteLine("Here is what is happening: " + newStatus.ToString());
-
-            if(newStatus == NetworkStatus.ERROR)
+            if (gettingToken)
             {
-                Console.Write(networker.LastErrMsg);
+                switch (newStatus)
+                {
+                    case NetworkStatus.BUSY:
+
+                        break;
+
+                    case NetworkStatus.IDLE:
+                        lblLoad.Text = "Connected Successfullly";
+
+                        pnlLogIn.Enabled = false;
+                        pnlLogIn.Visible = false;
+                        
+                        pnlMain.Visible = true;
+                        pnlMain.Enabled = true;
+
+                        break;
+
+                    case NetworkStatus.ERROR:
+
+                        MessageBox.Show("Failed to Get Authentication", "Failed to Connect", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        lblLoad.Text = "";
+                        gettingToken = false;
+
+                        btnLogIn.Enabled = true;
+
+                        networker.Unsubscribe(this);
+                        break;
+
+                    
+                }
+            }
+            else
+            {
+
             }
         }
 
@@ -38,13 +69,14 @@ namespace TandaSpreadsheetTool
         private void btnLogIn_Click(object sender, EventArgs e)
         {
             lblLoad.Text = "Loading";
+            gettingToken = true;
 
             networker.Subscribe(this);
             networker.GetToken(txtBxUName.Text, txtBxPwd.Text);
 
             txtBxPwd.Text = "";
             btnLogIn.Enabled = false;
-
+            
 
             
 

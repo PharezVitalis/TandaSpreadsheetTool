@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
@@ -22,13 +22,16 @@ namespace TandaSpreadsheetTool
         List<INetworkListener> listeners;
 
         HttpClient client;
+        HttpResponseMessage httpresponse;
 
         public Networker()
         {
            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-            token = new SecureString();
             
+
+            httpresponse = new HttpResponseMessage();
+            httpresponse.EnsureSuccessStatusCode();
 
             listeners = new List<INetworkListener>();
 
@@ -57,10 +60,10 @@ namespace TandaSpreadsheetTool
 
             UpdateStatus = NetworkStatus.BUSY;
 
-           
-            
+            client.DefaultRequestHeaders.Clear();
 
-            client.BaseAddress = new Uri("https://my.tanda.co/api/oauth/token/");
+
+            client.BaseAddress = new Uri("https://my.tanda.co/api/");
             client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
 
             var formContent = new FormUrlEncodedContent(new[] {
@@ -71,21 +74,21 @@ namespace TandaSpreadsheetTool
             });
 
             
-            HttpResponseMessage httpresponse = new HttpResponseMessage();
+             
             
 
-            httpresponse.EnsureSuccessStatusCode();
+            
 
             try
             {
-                httpresponse = await client.PostAsync("", formContent);
+                httpresponse = await client.PostAsync("oauth/token/", formContent);
                 var tokenStr = await httpresponse.Content.ReadAsStringAsync();
 
                 token = JObject.Parse(tokenStr);
 
                 
 
-
+                
 
             }
             catch (Exception ex)
@@ -108,9 +111,39 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        public void PostRequest(string dateFrom, string dateTo)
+        public async void GetRooster(string containingDate)
         {
+            status = NetworkStatus.BUSY;
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("Authorization", "bearer" + token.GetValue("access_token"));
+           
 
+            try
+            {
+                httpresponse = await client.GetAsync("v2/rosters/on/" + containingDate);
+                var payload = await httpresponse.Content.ReadAsStringAsync();
+
+                var roosters = JObject.Parse(payload);
+
+            }
+            catch (Exception ex)
+            {
+                mostRecentError = ex.Message;
+                UpdateStatus = NetworkStatus.ERROR;
+            }
+
+            UpdateStatus = NetworkStatus.IDLE;
+        }
+
+        void SaveJSON(JObject jObj
+        {
+            
+           
+            using (StreamWriter file = File.CreateText(AppDomain.CurrentDomain.BaseDirectory+"roosters.json")){
+                JsonSerializer serializer = new JsonSerializer();
+
+                serializer.Serialize(file, jObj);
+            }
         }
 
         private NetworkStatus UpdateStatus
@@ -138,6 +171,7 @@ namespace TandaSpreadsheetTool
         {
             client.CancelPendingRequests();
             client.Dispose();
+            httpresponse.Dispose();
 
         }
 
