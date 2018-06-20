@@ -13,7 +13,7 @@ namespace TandaSpreadsheetTool
 
         bool connected = false;
 
-        string status = "No connection attempt has been made";
+       
 
         HttpClient client;
 
@@ -22,10 +22,12 @@ namespace TandaSpreadsheetTool
            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
             client = new HttpClient();
+            client.Timeout = new TimeSpan(0, 0, 15);
         }
 
         public async void Connect(string username, string password)
         {
+            Console.WriteLine(connected );
             if (connected | networkerBusy)
             {
                 return;
@@ -43,23 +45,32 @@ namespace TandaSpreadsheetTool
                 new KeyValuePair<string,string>("grant_type","password")
             });
 
-            
-                var responsehttp = await client.PostAsync("", formContent);
+            string responseString = "";
+            HttpResponseMessage httpresponse = new HttpResponseMessage();
 
-            var responseString = await responsehttp.Content.ReadAsByteArrayAsync();
+            try
+            {
+                httpresponse = await client.PostAsync("", formContent);
+
+                responseString = await httpresponse.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+                
            
-            connected = responsehttp.IsSuccessStatusCode;
+            connected = httpresponse.IsSuccessStatusCode;
+
             networkerBusy = false;
         }
 
-       public string Response
+        public void PostRequest()
         {
-            get
-            {
-                return status;
-            }
+
         }
 
+      
         public bool Connected
         {
             get
@@ -67,6 +78,13 @@ namespace TandaSpreadsheetTool
                 return connected;
             }
         }
+
+        ~Networker()
+        {
+            client.Dispose();
+        }
+
+        
         
     }
 }

@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.lblToContinue = new System.Windows.Forms.Label();
-            this.lblUName = new System.Windows.Forms.Label();
-            this.lblPwd = new System.Windows.Forms.Label();
-            this.txtBxUName = new System.Windows.Forms.TextBox();
-            this.txtBxPwd = new System.Windows.Forms.TextBox();
-            this.btnLogIn = new System.Windows.Forms.Button();
             this.lblLoad = new System.Windows.Forms.Label();
+            this.btnLogIn = new System.Windows.Forms.Button();
+            this.txtBxPwd = new System.Windows.Forms.TextBox();
+            this.txtBxUName = new System.Windows.Forms.TextBox();
+            this.lblPwd = new System.Windows.Forms.Label();
+            this.lblUName = new System.Windows.Forms.Label();
+            this.lblToContinue = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,48 +53,13 @@
             this.panel1.Size = new System.Drawing.Size(674, 561);
             this.panel1.TabIndex = 0;
             // 
-            // lblToContinue
+            // lblLoad
             // 
-            this.lblToContinue.AutoSize = true;
-            this.lblToContinue.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblToContinue.Location = new System.Drawing.Point(78, 34);
-            this.lblToContinue.Name = "lblToContinue";
-            this.lblToContinue.Size = new System.Drawing.Size(441, 39);
-            this.lblToContinue.TabIndex = 0;
-            this.lblToContinue.Text = "Log Into Tanda To Continue";
-            // 
-            // lblUName
-            // 
-            this.lblUName.AutoSize = true;
-            this.lblUName.Location = new System.Drawing.Point(151, 180);
-            this.lblUName.Name = "lblUName";
-            this.lblUName.Size = new System.Drawing.Size(35, 13);
-            this.lblUName.TabIndex = 1;
-            this.lblUName.Text = "Email:";
-            // 
-            // lblPwd
-            // 
-            this.lblPwd.AutoSize = true;
-            this.lblPwd.Location = new System.Drawing.Point(133, 218);
-            this.lblPwd.Name = "lblPwd";
-            this.lblPwd.Size = new System.Drawing.Size(53, 13);
-            this.lblPwd.TabIndex = 2;
-            this.lblPwd.Text = "Password";
-            // 
-            // txtBxUName
-            // 
-            this.txtBxUName.Location = new System.Drawing.Point(192, 177);
-            this.txtBxUName.Name = "txtBxUName";
-            this.txtBxUName.Size = new System.Drawing.Size(178, 20);
-            this.txtBxUName.TabIndex = 3;
-            // 
-            // txtBxPwd
-            // 
-            this.txtBxPwd.Location = new System.Drawing.Point(192, 218);
-            this.txtBxPwd.Name = "txtBxPwd";
-            this.txtBxPwd.Size = new System.Drawing.Size(178, 20);
-            this.txtBxPwd.TabIndex = 4;
-            this.txtBxPwd.UseSystemPasswordChar = true;
+            this.lblLoad.AutoSize = true;
+            this.lblLoad.Location = new System.Drawing.Point(437, 196);
+            this.lblLoad.Name = "lblLoad";
+            this.lblLoad.Size = new System.Drawing.Size(0, 13);
+            this.lblLoad.TabIndex = 6;
             // 
             // btnLogIn
             // 
@@ -106,13 +71,48 @@
             this.btnLogIn.UseVisualStyleBackColor = true;
             this.btnLogIn.Click += new System.EventHandler(this.btnLogIn_Click);
             // 
-            // lblLoad
+            // txtBxPwd
             // 
-            this.lblLoad.AutoSize = true;
-            this.lblLoad.Location = new System.Drawing.Point(437, 196);
-            this.lblLoad.Name = "lblLoad";
-            this.lblLoad.Size = new System.Drawing.Size(0, 13);
-            this.lblLoad.TabIndex = 6;
+            this.txtBxPwd.Location = new System.Drawing.Point(192, 218);
+            this.txtBxPwd.Name = "txtBxPwd";
+            this.txtBxPwd.Size = new System.Drawing.Size(178, 20);
+            this.txtBxPwd.TabIndex = 4;
+            this.txtBxPwd.UseSystemPasswordChar = true;
+            // 
+            // txtBxUName
+            // 
+            this.txtBxUName.Location = new System.Drawing.Point(192, 177);
+            this.txtBxUName.Name = "txtBxUName";
+            this.txtBxUName.Size = new System.Drawing.Size(178, 20);
+            this.txtBxUName.TabIndex = 3;
+            // 
+            // lblPwd
+            // 
+            this.lblPwd.AutoSize = true;
+            this.lblPwd.Location = new System.Drawing.Point(133, 218);
+            this.lblPwd.Name = "lblPwd";
+            this.lblPwd.Size = new System.Drawing.Size(53, 13);
+            this.lblPwd.TabIndex = 2;
+            this.lblPwd.Text = "Password";
+            // 
+            // lblUName
+            // 
+            this.lblUName.AutoSize = true;
+            this.lblUName.Location = new System.Drawing.Point(151, 180);
+            this.lblUName.Name = "lblUName";
+            this.lblUName.Size = new System.Drawing.Size(35, 13);
+            this.lblUName.TabIndex = 1;
+            this.lblUName.Text = "Email:";
+            // 
+            // lblToContinue
+            // 
+            this.lblToContinue.AutoSize = true;
+            this.lblToContinue.Font = new System.Drawing.Font("Microsoft Sans Serif", 25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblToContinue.Location = new System.Drawing.Point(78, 34);
+            this.lblToContinue.Name = "lblToContinue";
+            this.lblToContinue.Size = new System.Drawing.Size(441, 39);
+            this.lblToContinue.TabIndex = 0;
+            this.lblToContinue.Text = "Log Into Tanda To Continue";
             // 
             // Form1
             // 

@@ -17,7 +17,7 @@ namespace TandaSpreadsheetTool
         public Form1()
         {
             InitializeComponent();
-
+            
             networker = new Networker();
            
         }
@@ -27,6 +27,7 @@ namespace TandaSpreadsheetTool
             lblLoad.Text = "Loading";
             networker.Connect(txtBxUName.Text, txtBxPwd.Text);
             txtBxPwd.Text = "";
+            btnLogIn.Enabled = false;
         }
     }
 }
