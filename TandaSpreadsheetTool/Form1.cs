@@ -7,7 +7,7 @@ namespace TandaSpreadsheetTool
     public partial class Form1 : Form, INetworkListener
     {
         Networker networker;
-        RoosterBuilder builder;
+        RosterBuilder builder;
 
         bool gettingToken;
         
@@ -90,7 +90,7 @@ namespace TandaSpreadsheetTool
                     case NetworkStatus.IDLE:
                         if (networker.Rooster != null)
                         {
-                            builder = new RoosterBuilder(networker.Rooster);
+                            builder = new RosterBuilder(networker.Rooster);
                         }
                         else
                         {

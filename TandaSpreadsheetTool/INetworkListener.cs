@@ -18,32 +18,52 @@ namespace TandaSpreadsheetTool
 
     public struct Roster
     {
-        int id;
-        IList<Day> schedules;
-        string start;
-        string finish;
-        int updated_at;
+        public int id;
+        public IList<Day> schedules;
+        public string start;
+        public string finish;
+        public int updated_at;
     }
 
     public struct Day
     {
-        string date;
-        IList<Schedule> schedules;
+        public string date;
+        public IList<Schedule> schedules;
     }
 
     public struct Schedule
     {
-        int id;
-        int roster_id;
-        int user_id;
-        int start;
-        int finish;
-        object[] breaks;
-        int automatic_break_length;
-        int department_id;
-        object shift_detail_id;
-        object last_published_at;
-        int updated_at;
+        public int id;
+        public int roster_id;
+        public int user_id;
+        public int start;
+        public int finish;
+        public object[] breaks;
+        public int automatic_break_length;
+        public int department_id;
+        public object shift_detail_id;
+        public object last_published_at;
+        public int updated_at;
         
     }
+
+    public struct FormattedRoster
+    {
+        IList<Schedule> schedules;
+        string start;
+        string finish;
+        
+            
+    }
+
+    public struct FormattedSchedule
+    {
+        public string staff;
+        string startTime;
+        string endTime;
+        string startDate;
+        string team;
+
+    }
+
 }
