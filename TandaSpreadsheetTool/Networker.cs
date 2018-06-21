@@ -140,8 +140,11 @@ namespace TandaSpreadsheetTool
 
             try
             {
+                Console.WriteLine(client.BaseAddress + "oauth/token/");
                 httpresponse = await client.PostAsync("oauth/token/", formContent);
                 var tokenStr = await httpresponse.Content.ReadAsStringAsync();
+
+                
 
                 token = JObject.Parse(tokenStr);
 
@@ -249,7 +252,7 @@ namespace TandaSpreadsheetTool
         {
             string cypher = Encrypt(token.ToString(), password);
 
-            byte[] outBytes = Encoding.UTF8.GetBytes(token.ToString());
+            byte[] outBytes = Encoding.UTF8.GetBytes(cypher);
 
           
 

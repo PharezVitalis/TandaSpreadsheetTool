@@ -127,7 +127,7 @@ namespace TandaSpreadsheetTool
             if (networker.LastUser != "")
             {
                 
-                if (networker.LastUser == txtBxPwd.Text)
+                if (object.Equals(txtBxUName,networker.LastUser))
                 {
                     networker.SignIn(txtBxPwd.Text);
                 }
