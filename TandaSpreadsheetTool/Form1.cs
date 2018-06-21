@@ -127,9 +127,19 @@ namespace TandaSpreadsheetTool
             if (networker.LastUser != "")
             {
                 
-                if (object.Equals(txtBxUName,networker.LastUser))
+               
+
+                if (object.Equals(txtBxUName.Text,networker.LastUser))
                 {
-                    networker.SignIn(txtBxPwd.Text);
+                  if (networker.SignIn(txtBxPwd.Text))
+                    {
+                        ShowMainPanel();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to Authenticate", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+
                 }
                 else
                 {
@@ -156,10 +166,8 @@ namespace TandaSpreadsheetTool
             else
             {
 
-                
-                btnLogIn.Enabled = false;
-                txtBxUName.Enabled = false;
-                txtBxPwd.Enabled = false;
+
+                ShowMainPanel();
                 networker.Subscribe(this);
                 gettingToken = true;
                 networker.GetToken(txtBxUName.Text, txtBxPwd.Text);
