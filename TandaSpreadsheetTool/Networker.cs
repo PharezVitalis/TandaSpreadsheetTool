@@ -23,6 +23,8 @@ namespace TandaSpreadsheetTool
 
         JObject token;
 
+        JObject rooster;
+
         List<INetworkListener> listeners;
 
         HttpClient client;
@@ -370,8 +372,8 @@ namespace TandaSpreadsheetTool
                 httpresponse = await client.GetAsync("v2/rosters/on/" + containingDate);
                 var payload = await httpresponse.Content.ReadAsStringAsync();
 
-               var roosters = JObject.Parse(payload);
-               SaveJSON(roosters);
+                rooster = JObject.Parse(payload);
+               
             }
             catch (Exception ex)
             {
@@ -382,23 +384,14 @@ namespace TandaSpreadsheetTool
             UpdateStatus = NetworkStatus.IDLE;
         }
 
-        void SaveJSON(JObject jObj)
+        public JObject Rooster
         {
-            try
+            get
             {
-                using (StreamWriter file = File.CreateText(AppDomain.CurrentDomain.BaseDirectory + "roosters.json"))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-
-                    serializer.Serialize(file, jObj);
-                }
-            }
-
-            catch
-            {
-                Console.WriteLine("Failed to save the roosters");
+                return rooster;
             }
         }
+      
 
         private NetworkStatus UpdateStatus
         {

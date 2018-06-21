@@ -7,6 +7,7 @@ namespace TandaSpreadsheetTool
     public partial class Form1 : Form, INetworkListener
     {
         Networker networker;
+        RoosterBuilder builder;
 
         bool gettingToken;
         
@@ -85,9 +86,16 @@ namespace TandaSpreadsheetTool
                     case NetworkStatus.BUSY:
 
                         break;
-
+                        
                     case NetworkStatus.IDLE:
-                        MessageBox.Show("Successfully saved a file to : "+ AppDomain.CurrentDomain.BaseDirectory);
+                        if (networker.Rooster != null)
+                        {
+                            builder = new RoosterBuilder(networker.Rooster);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to get File");
+                        }
 
                         btnSaveJSON.Enabled = true;
 

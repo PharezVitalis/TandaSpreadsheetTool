@@ -40,6 +40,7 @@
             this.lblInDate = new System.Windows.Forms.Label();
             this.txtBxDate = new System.Windows.Forms.TextBox();
             this.btnSaveJSON = new System.Windows.Forms.Button();
+            this.btnFormat = new System.Windows.Forms.Button();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -121,6 +122,7 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.btnFormat);
             this.pnlMain.Controls.Add(this.lblInDate);
             this.pnlMain.Controls.Add(this.txtBxDate);
             this.pnlMain.Controls.Add(this.btnSaveJSON);
@@ -133,28 +135,37 @@
             // lblInDate
             // 
             this.lblInDate.AutoSize = true;
-            this.lblInDate.Location = new System.Drawing.Point(145, 46);
+            this.lblInDate.Location = new System.Drawing.Point(239, 23);
             this.lblInDate.Name = "lblInDate";
-            this.lblInDate.Size = new System.Drawing.Size(137, 13);
+            this.lblInDate.Size = new System.Drawing.Size(123, 13);
             this.lblInDate.TabIndex = 4;
-            this.lblInDate.Text = "Input Date (YYYY-MM-DD):";
+            this.lblInDate.Text = "Input Date (DD-MM-YY):";
             // 
             // txtBxDate
             // 
-            this.txtBxDate.Location = new System.Drawing.Point(288, 43);
+            this.txtBxDate.Location = new System.Drawing.Point(368, 20);
             this.txtBxDate.Name = "txtBxDate";
             this.txtBxDate.Size = new System.Drawing.Size(154, 20);
             this.txtBxDate.TabIndex = 3;
             // 
             // btnSaveJSON
             // 
-            this.btnSaveJSON.Location = new System.Drawing.Point(288, 69);
+            this.btnSaveJSON.Location = new System.Drawing.Point(447, 46);
             this.btnSaveJSON.Name = "btnSaveJSON";
             this.btnSaveJSON.Size = new System.Drawing.Size(75, 23);
             this.btnSaveJSON.TabIndex = 2;
             this.btnSaveJSON.Text = "Save JSON";
             this.btnSaveJSON.UseVisualStyleBackColor = true;
             this.btnSaveJSON.Click += new System.EventHandler(this.btnTest_Click);
+            // 
+            // btnFormat
+            // 
+            this.btnFormat.Location = new System.Drawing.Point(54, 107);
+            this.btnFormat.Name = "btnFormat";
+            this.btnFormat.Size = new System.Drawing.Size(75, 23);
+            this.btnFormat.TabIndex = 5;
+            this.btnFormat.Text = "Format";
+            this.btnFormat.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -187,6 +198,7 @@
         private System.Windows.Forms.Button btnSaveJSON;
         private System.Windows.Forms.Label lblInDate;
         private System.Windows.Forms.TextBox txtBxDate;
+        private System.Windows.Forms.Button btnFormat;
     }
 }
 
