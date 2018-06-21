@@ -15,9 +15,11 @@ namespace TandaSpreadsheetTool
 
         NetworkStatus status = NetworkStatus.IDLE;
 
-        string mostRecentError = "";
+        string mostRecentNetError = "";
 
-        
+        protected string userNameKey = "iv7jlwbcx#hcq&*";
+
+        string username = "";
 
         JObject token;
 
@@ -31,38 +33,7 @@ namespace TandaSpreadsheetTool
            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
           
-            if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + "data.wpn"))
-            {
-                try
-                {
-
-
-                    using (FileStream file = new FileStream(AppDomain.CurrentDomain.BaseDirectory + "data.wpn", FileMode.Open))
-                    {
-                        byte[] data = new byte[file.Length];
-
-                        file.Read(data, 0, (int)file.Length);
-
-                        var str = "";
-
-                        for (int i = data.Length - 1; i > -1; i--)
-                        {
-                            str +=(char) data[i];
-                        }
-                        
-
-                       
-
-                        token = JObject.Parse(str);
-                    }
-                }
-                catch
-                {
-                    Console.WriteLine("Failed to read file");
-                }
-
-                
-            }           
+            
 
             httpresponse = new HttpResponseMessage();
             httpresponse.EnsureSuccessStatusCode();
@@ -72,6 +43,60 @@ namespace TandaSpreadsheetTool
             client = new HttpClient();
             client.Timeout = new TimeSpan(0, 0, 30);
             client.BaseAddress = new Uri("https://my.tanda.co/api/");
+        }
+
+        public bool SignIn(string password)
+        {
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "data.wpn") & password != "")
+            {
+                if (password != "")
+                {
+
+                    try
+                    {
+
+
+                        using (FileStream file = new FileStream(AppDomain.CurrentDomain.BaseDirectory + "data.wpn", FileMode.Open))
+                        {
+                            byte[] data = new byte[file.Length];
+
+                            file.Read(data, 0, (int)file.Length);
+
+                            var str = "";
+
+                            for (int i = 0; i < data.Length; i++)
+                            {
+                                str += (char)data[i];
+                            }
+
+                            str = Decrypt(str, password);
+
+                            if (str == "FAILED")
+                            {
+                                return false;
+                            }
+
+                            token = JObject.Parse(str);
+                        }
+
+                       
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Failed to read file");
+                        return false;
+                    }
+                }
+
+
+            }
+            else
+            {
+                return false;
+            }
+
+
+            return true;
         }
 
         public void Subscribe(INetworkListener listener)
@@ -120,14 +145,16 @@ namespace TandaSpreadsheetTool
 
                 token = JObject.Parse(tokenStr);
 
+                this.username = username;
 
+                SaveUserName(username);
                 SaveToken(token, password);
                 
 
             }
             catch (Exception ex)
             {                
-                mostRecentError = ex.Message;
+                mostRecentNetError = ex.Message;
                 UpdateStatus = NetworkStatus.ERROR;
             }
             UpdateStatus = NetworkStatus.IDLE;
@@ -137,8 +164,90 @@ namespace TandaSpreadsheetTool
             
         }
 
+        public void ClearFileData()
+        {
+            if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + "data.wpn"))
+            {
+                try
+                {
+                    File.Delete(AppDomain.CurrentDomain.BaseDirectory + "data.wpn");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "ud.wpn"))
+            {
+                try
+                {
+                    File.Delete(AppDomain.CurrentDomain.BaseDirectory + "ud.wpn");
+                }
+                catch
+                {
+
+                }
+                
+            }
+
+            token = null;
+            username = "";
+        }
+
+        public void SaveUserName(string username)
+        {            
+           byte[] storedBytes=Encoding.UTF8.GetBytes(Encrypt(username, userNameKey));
+
+            try
+            {
+                File.WriteAllBytes(AppDomain.CurrentDomain.BaseDirectory + "ud.wpn", storedBytes);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Failed to Save User Data");
+            }
+        }
+
+        public string LoadUsername()
+        {
+            if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "ud.wpn"))
+            {
+                return "";
+            }
+
+            byte[] fileData =  new byte[1];
+            string username ="";
+
+            try
+            {
+                fileData = File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + "ud.wpn");
+                username = Decrypt(Encoding.UTF8.GetString(fileData), userNameKey);
+                
+            }
+            
+            catch(Exception e)
+            {
+
+            }
+
+             
+
+            if (username == "FAILED" || username == "")
+            {
+                // add warning system here
+            }
+            else
+            {
+                this.username = username;
+            }
+
+            return username;
+        }
+
         private void SaveToken(JObject token, string password)
         {
+            string cypher = Encrypt(token.ToString(), password);
 
             byte[] outBytes = Encoding.UTF8.GetBytes(token.ToString());
 
@@ -168,7 +277,23 @@ namespace TandaSpreadsheetTool
 
             Console.WriteLine("Data input length: " + data.Length);
 
-            return Convert.ToBase64String(DESEncrypt.TransformFinalBlock(buffer, 0, buffer.Length));
+            try
+            {
+                string cypherText = Convert.ToBase64String(DESEncrypt.TransformFinalBlock(buffer, 0, buffer.Length));
+
+                DES.Clear();
+                DESEncrypt.Dispose();
+                Array.Clear(buffer,0,buffer.Length);
+
+                return cypherText;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+
+                return "FAILED";
+            }
+            
         }
 
         private static byte[] GetKey(string password)
@@ -192,23 +317,37 @@ namespace TandaSpreadsheetTool
             DES.Mode = CipherMode.ECB;
             DES.Key = GetKey(key);
 
-            Console.WriteLine("Data output length: " + data.Length);
+            
 
             DES.Padding = PaddingMode.PKCS7;
             var DESDecrypt = DES.CreateDecryptor();
 
             var buffer = Convert.FromBase64String(data.Replace(" ", "+"));
 
-            Console.WriteLine("Data output post replace length: " + data.Length);
+            
+            try
+            {
+                string message = Encoding.UTF8.GetString(DESDecrypt.TransformFinalBlock(buffer, 0, buffer.Length));
 
-            return Encoding.UTF8.GetString(DESDecrypt.TransformFinalBlock(buffer, 0, buffer.Length));
+                DES.Clear();
+                DESDecrypt.Dispose();
+                Array.Clear(buffer, 0, buffer.Length); 
+
+                return message;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return "FAILED";
+            }
+           
         }
 
-        public string LastErrMsg
+        public string LastNetErrMsg
         {
             get
             {
-                return mostRecentError;
+                return mostRecentNetError;
             }
         }
 
@@ -233,7 +372,7 @@ namespace TandaSpreadsheetTool
             }
             catch (Exception ex)
             {
-                mostRecentError = ex.Message;
+                mostRecentNetError = ex.Message;
                 UpdateStatus = NetworkStatus.ERROR;
             }
 
@@ -284,6 +423,22 @@ namespace TandaSpreadsheetTool
             get
             {
                 return token != null;
+            }
+        }
+
+        public string LastUser
+        {
+            get
+            {
+                return username;
+            }
+        }
+
+        bool IsFirstUse
+        {
+            get
+            {
+                return !File.Exists(AppDomain.CurrentDomain.BaseDirectory + "data.wpn");
             }
         }
 

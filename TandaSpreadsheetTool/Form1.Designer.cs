@@ -40,6 +40,7 @@
             this.lblInDate = new System.Windows.Forms.Label();
             this.txtBxDate = new System.Windows.Forms.TextBox();
             this.btnTest = new System.Windows.Forms.Button();
+            this.pnl = new System.Windows.Forms.Panel();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -156,11 +157,19 @@
             this.btnTest.UseVisualStyleBackColor = true;
             this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
+            // pnl
+            // 
+            this.pnl.Location = new System.Drawing.Point(16, 223);
+            this.pnl.Name = "pnl";
+            this.pnl.Size = new System.Drawing.Size(533, 190);
+            this.pnl.TabIndex = 2;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1258, 596);
+            this.Controls.Add(this.pnl);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlLogIn);
             this.Name = "Form1";
@@ -187,6 +196,7 @@
         private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.Label lblInDate;
         private System.Windows.Forms.TextBox txtBxDate;
+        private System.Windows.Forms.Panel pnl;
     }
 }
 

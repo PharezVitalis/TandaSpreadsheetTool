@@ -23,12 +23,14 @@ namespace TandaSpreadsheetTool
             
             
             networker = new Networker();
-           if (networker.Authenticated)
-            {
-                ShowMainPanel();
-            }
 
-          
+            networker.LoadUsername();
+
+            if(networker.LastUser != "")
+            {
+                txtBxUName.Text = networker.LastUser;
+            }
+           
         }
 
         void ShowMainPanel()
@@ -67,7 +69,7 @@ namespace TandaSpreadsheetTool
 
                     case NetworkStatus.ERROR:
 
-                        MessageBox.Show(networker.LastErrMsg, "Network Operation Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBox.Show(networker.LastNetErrMsg, "Network Operation Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         lblLoad.Text = "";
                         gettingToken = false;
 
@@ -102,7 +104,7 @@ namespace TandaSpreadsheetTool
 
                     case NetworkStatus.ERROR:
 
-                        MessageBox.Show(networker.LastErrMsg, "Network Operation Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        MessageBox.Show(networker.LastNetErrMsg, "Network Operation Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         lblLoad.Text = "";
                         gettingToken = false;
 
@@ -119,16 +121,53 @@ namespace TandaSpreadsheetTool
         private void btnLogIn_Click(object sender, EventArgs e)
         {
             lblLoad.Text = "Loading";
-            gettingToken = true;
+            
 
-            networker.Subscribe(this);
-            networker.GetToken(txtBxUName.Text, txtBxPwd.Text);
+            
+            if (networker.LastUser != "")
+            {
+                
+                if (networker.LastUser == txtBxPwd.Text)
+                {
+                    networker.SignIn(txtBxPwd.Text);
+                }
+                else
+                {
+                    var dResult = MessageBox.Show("The username is different from the stored username, only one user may be signed in. Sign previous user out?"
+                        , "Sign out Old User?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                    if (dResult == DialogResult.Yes)
+                    {
+
+                        txtBxPwd.Text = "";
+                        btnLogIn.Enabled = false;
+                        txtBxUName.Enabled = false;
+                        txtBxPwd.Enabled = false;
+                        networker.ClearFileData();
+                        networker.Subscribe(this);
+                        gettingToken = true;
+                        networker.GetToken(txtBxUName.Text, txtBxPwd.Text);
+                    }
+                    else 
+                    {
+                        txtBxUName.Text = networker.LastUser;
+                    }
+                }
+            }
+            else
+            {
+
+                
+                btnLogIn.Enabled = false;
+                txtBxUName.Enabled = false;
+                txtBxPwd.Enabled = false;
+                networker.Subscribe(this);
+                gettingToken = true;
+                networker.GetToken(txtBxUName.Text, txtBxPwd.Text);
+                
+            }
+
 
             txtBxPwd.Text = "";
-            btnLogIn.Enabled = false;
-            txtBxUName.Enabled = false;
-            txtBxPwd.Enabled = false;
-            
 
 
         }
