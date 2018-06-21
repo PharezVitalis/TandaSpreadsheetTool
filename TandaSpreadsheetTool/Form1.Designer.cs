@@ -39,8 +39,7 @@
             this.pnlMain = new System.Windows.Forms.Panel();
             this.lblInDate = new System.Windows.Forms.Label();
             this.txtBxDate = new System.Windows.Forms.TextBox();
-            this.btnTest = new System.Windows.Forms.Button();
-            this.pnl = new System.Windows.Forms.Panel();
+            this.btnSaveJSON = new System.Windows.Forms.Button();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -124,17 +123,17 @@
             // 
             this.pnlMain.Controls.Add(this.lblInDate);
             this.pnlMain.Controls.Add(this.txtBxDate);
-            this.pnlMain.Controls.Add(this.btnTest);
-            this.pnlMain.Location = new System.Drawing.Point(642, 12);
+            this.pnlMain.Controls.Add(this.btnSaveJSON);
+            this.pnlMain.Location = new System.Drawing.Point(12, 208);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(592, 546);
+            this.pnlMain.Size = new System.Drawing.Size(538, 198);
             this.pnlMain.TabIndex = 1;
             this.pnlMain.Visible = false;
             // 
             // lblInDate
             // 
             this.lblInDate.AutoSize = true;
-            this.lblInDate.Location = new System.Drawing.Point(73, 305);
+            this.lblInDate.Location = new System.Drawing.Point(145, 46);
             this.lblInDate.Name = "lblInDate";
             this.lblInDate.Size = new System.Drawing.Size(137, 13);
             this.lblInDate.TabIndex = 4;
@@ -142,34 +141,26 @@
             // 
             // txtBxDate
             // 
-            this.txtBxDate.Location = new System.Drawing.Point(216, 302);
+            this.txtBxDate.Location = new System.Drawing.Point(288, 43);
             this.txtBxDate.Name = "txtBxDate";
             this.txtBxDate.Size = new System.Drawing.Size(154, 20);
             this.txtBxDate.TabIndex = 3;
             // 
-            // btnTest
+            // btnSaveJSON
             // 
-            this.btnTest.Location = new System.Drawing.Point(216, 328);
-            this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(75, 23);
-            this.btnTest.TabIndex = 2;
-            this.btnTest.Text = "Save JSON";
-            this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
-            // 
-            // pnl
-            // 
-            this.pnl.Location = new System.Drawing.Point(16, 223);
-            this.pnl.Name = "pnl";
-            this.pnl.Size = new System.Drawing.Size(533, 190);
-            this.pnl.TabIndex = 2;
+            this.btnSaveJSON.Location = new System.Drawing.Point(288, 69);
+            this.btnSaveJSON.Name = "btnSaveJSON";
+            this.btnSaveJSON.Size = new System.Drawing.Size(75, 23);
+            this.btnSaveJSON.TabIndex = 2;
+            this.btnSaveJSON.Text = "Save JSON";
+            this.btnSaveJSON.UseVisualStyleBackColor = true;
+            this.btnSaveJSON.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1258, 596);
-            this.Controls.Add(this.pnl);
+            this.ClientSize = new System.Drawing.Size(558, 417);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlLogIn);
             this.Name = "Form1";
@@ -193,10 +184,9 @@
         private System.Windows.Forms.Button btnLogIn;
         private System.Windows.Forms.Label lblLoad;
         private System.Windows.Forms.Panel pnlMain;
-        private System.Windows.Forms.Button btnTest;
+        private System.Windows.Forms.Button btnSaveJSON;
         private System.Windows.Forms.Label lblInDate;
         private System.Windows.Forms.TextBox txtBxDate;
-        private System.Windows.Forms.Panel pnl;
     }
 }
 

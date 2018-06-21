@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 using System.Windows.Forms;
 
 namespace TandaSpreadsheetTool
@@ -95,7 +89,7 @@ namespace TandaSpreadsheetTool
                     case NetworkStatus.IDLE:
                         MessageBox.Show("Successfully saved a file to : "+ AppDomain.CurrentDomain.BaseDirectory);
 
-                        btnTest.Enabled = true;
+                        btnSaveJSON.Enabled = true;
 
 
 
@@ -108,7 +102,7 @@ namespace TandaSpreadsheetTool
                         lblLoad.Text = "";
                         gettingToken = false;
 
-                        btnTest.Enabled = true;
+                        btnSaveJSON.Enabled = true;
                         btnLogIn.Enabled = true;
 
                         networker.Unsubscribe(this);
@@ -182,9 +176,65 @@ namespace TandaSpreadsheetTool
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            networker.Subscribe(this);
-            networker.GetRooster(txtBxDate.Text);
-            btnTest.Enabled = false;
+           
+
+            if(txtBxDate.Text.Length!=8 & txtBxDate.Text.Length != 10)
+            {
+                MessageBox.Show("Invalid date use DD-MM-YY format","Invalid Date",MessageBoxButtons.OK,MessageBoxIcon.Warning);               
+            }
+            else
+            {
+                var formattedDate = "";
+
+                if (txtBxDate.Text.Length == 10)
+                {
+                     formattedDate = txtBxDate.Text.Substring(6, 4);
+                    formattedDate += "-";
+                    formattedDate += txtBxDate.Text.Substring(3, 2);
+                    formattedDate += "-";
+                    formattedDate += txtBxDate.Text.Substring(0, 2);
+                    Console.WriteLine(formattedDate);
+                }
+                else
+                {
+                    try
+                    {
+                        var testInt = Convert.ToInt32(txtBxDate.Text.Substring(6, 1));
+                         formattedDate = "";
+                        if(testInt == 9)
+                        {
+                            formattedDate = "19";
+                            
+                        }
+                        else
+                        {
+                            formattedDate = "20";
+                        }
+                        formattedDate += txtBxDate.Text.Substring(6, 2);
+                        formattedDate += "-";
+                        formattedDate += txtBxDate.Text.Substring(3, 2);
+                        formattedDate += "-";
+                        formattedDate += txtBxDate.Text.Substring(0, 2);
+                        Console.WriteLine(formattedDate);
+                    }
+                    catch 
+                    {
+                        MessageBox.Show("Invalid date use DD-MM-YY format", "Invalid Date", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+
+                 networker.Subscribe(this);
+                networker.GetRooster(formattedDate);
+                btnSaveJSON.Enabled = false;
+            }
+
+            
+
+
+             
         }
+
+        
     }
 }
