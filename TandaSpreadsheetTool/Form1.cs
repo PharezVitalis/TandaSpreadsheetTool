@@ -27,6 +27,8 @@ namespace TandaSpreadsheetTool
             {
                 ShowMainPanel();
             }
+
+          
         }
 
         void ShowMainPanel()

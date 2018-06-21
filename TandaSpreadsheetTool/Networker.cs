@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace TandaSpreadsheetTool
 {
@@ -49,7 +51,7 @@ namespace TandaSpreadsheetTool
                         }
                         
 
-                        Console.WriteLine(str);
+                       
 
                         token = JObject.Parse(str);
                     }
@@ -101,7 +103,7 @@ namespace TandaSpreadsheetTool
             var formContent = new FormUrlEncodedContent(new[] {
                 new KeyValuePair<string, string>("username",username),
                 new KeyValuePair<string, string>("password",password),
-                new KeyValuePair<string, string>("scope","leave unavailability roster"),
+                new KeyValuePair<string, string>("scope","roster"),
                 new KeyValuePair<string,string>("grant_type","password")
             });
 
@@ -119,7 +121,7 @@ namespace TandaSpreadsheetTool
                 token = JObject.Parse(tokenStr);
 
 
-                SaveToken(token);
+                SaveToken(token, password);
                 
 
             }
@@ -135,16 +137,12 @@ namespace TandaSpreadsheetTool
             
         }
 
-
-        private void SaveToken(JObject token)
+        private void SaveToken(JObject token, string password)
         {
-            char[] tokenChars = token.ToString().ToCharArray();
-            byte[] outBytes = new byte[tokenChars.Length];
 
-            for(int i = 0; i<tokenChars.Length;i++)
-            {
-                outBytes[i] = (byte)tokenChars[(tokenChars.Length-1)-i];
-            }
+            byte[] outBytes = Encoding.UTF8.GetBytes(token.ToString());
+
+          
 
             try
             {
@@ -154,6 +152,56 @@ namespace TandaSpreadsheetTool
             {
                 Console.WriteLine("Failed to save network information " + e.Message);
             }
+        }
+
+        public static string Encrypt(string data, string key)
+        {
+            var DES = new TripleDESCryptoServiceProvider();
+
+            DES.Mode = CipherMode.ECB;
+            
+            DES.Key = GetKey(key);
+
+            DES.Padding = PaddingMode.PKCS7;
+            var DESEncrypt = DES.CreateEncryptor();
+            var buffer = Encoding.UTF8.GetBytes(data);
+
+            Console.WriteLine("Data input length: " + data.Length);
+
+            return Convert.ToBase64String(DESEncrypt.TransformFinalBlock(buffer, 0, buffer.Length));
+        }
+
+        private static byte[] GetKey(string password)
+        {
+            string key = null;
+            if (Encoding.UTF8.GetByteCount(password) < 24)
+            {
+                key = password.PadRight(24, ' ');
+            }
+            else
+            {
+                key = password.Substring(0, 24);
+            }
+
+            return Encoding.UTF8.GetBytes(key);
+        }
+
+        public static string Decrypt(string data, string key)
+        {
+            var DES = new TripleDESCryptoServiceProvider();
+            DES.Mode = CipherMode.ECB;
+            DES.Key = GetKey(key);
+
+            Console.WriteLine("Data output length: " + data.Length);
+
+            DES.Padding = PaddingMode.PKCS7;
+            var DESDecrypt = DES.CreateDecryptor();
+
+            var buffer = Convert.FromBase64String(data.Replace(" ", "+"));
+
+            Console.WriteLine("Data output post replace length: " + data.Length);
+
+            return Encoding.UTF8.GetString(DESDecrypt.TransformFinalBlock(buffer, 0, buffer.Length));
         }
 
         public string LastErrMsg
