@@ -90,7 +90,8 @@ namespace TandaSpreadsheetTool
                     case NetworkStatus.IDLE:
                         if (networker.Roster != null)
                         {
-                            builder = new RosterBuilder(networker);
+                            builder = new RosterBuilder(networker, this);
+                            builder.CreateFormattedRoster();
                         }
                         else
                         {
@@ -119,6 +120,12 @@ namespace TandaSpreadsheetTool
             }
         }
 
+        public void FormattingComplete()
+        {
+            MessageBox.Show("Saved File, Check MyDocuments/Tanda");
+        }
+
+        
 
         private void btnLogIn_Click(object sender, EventArgs e)
         {

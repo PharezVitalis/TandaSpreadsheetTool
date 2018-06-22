@@ -18,7 +18,7 @@ namespace TandaSpreadsheetTool
 
     public enum CurrentGet
     {
-        NONE,STAFF,TEAMS,ROSTER,TOKEN
+        NONE,STAFF,TEAMS,
     }
 
     
@@ -40,13 +40,18 @@ namespace TandaSpreadsheetTool
         public IList<Schedule> schedules;
     }
 
+    public struct StaffHolder
+    {
+        public IList<User> staff;
+    }
+
     public struct Schedule
     {
         public int id;
         public int roster_id;
         public int user_id;
         public int start;
-        public int finish;
+        public object finish;
         public object[] breaks;
         public int automatic_break_length;
         public int department_id;
@@ -72,10 +77,7 @@ namespace TandaSpreadsheetTool
         
     }
 
-    struct Departments
-    {
-        public IList<Team> teams;
-    }
+    
 
     public struct Team
     {

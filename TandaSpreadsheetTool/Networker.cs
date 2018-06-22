@@ -24,12 +24,12 @@ namespace TandaSpreadsheetTool
         JObject token;
 
         JObject rooster;
-        JObject teams;
-       List<JObject> staff;
+        JArray teams;
+        JArray staff;
 
         List<INetworkListener> listeners;
 
-        Queue<CurrentGet> requestQueue;
+       
 
         HttpClient client;
         HttpResponseMessage httpresponse;
@@ -38,9 +38,9 @@ namespace TandaSpreadsheetTool
         {
            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-            requestQueue = new Queue<CurrentGet>();
+          
 
-            staff = new List<JObject>();
+           
 
             httpresponse = new HttpResponseMessage();
             httpresponse.EnsureSuccessStatusCode();
@@ -114,65 +114,7 @@ namespace TandaSpreadsheetTool
         public void Unsubscribe (INetworkListener listener)
         {
             listeners.Remove(listener);
-        }
-
-        public async void GetToken(string username, string password)
-        {
-           
-            if (token != null | status != NetworkStatus.IDLE)
-            {
-                return;
-            }
-
-            UpdateStatus = NetworkStatus.BUSY;
-
-            client.DefaultRequestHeaders.Clear();
-
-
-            
-            client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
-
-            var formContent = new FormUrlEncodedContent(new[] {
-                new KeyValuePair<string, string>("username",username),
-                new KeyValuePair<string, string>("password",password),
-                new KeyValuePair<string, string>("scope","roster user department"),
-                new KeyValuePair<string,string>("grant_type","password")
-            });
-
-            
-             
-            
-
-            
-
-            try
-            {
-                Console.WriteLine(client.BaseAddress + "oauth/token/");
-                httpresponse = await client.PostAsync("oauth/token/", formContent);
-                var tokenStr = await httpresponse.Content.ReadAsStringAsync();
-
-                
-
-                token = JObject.Parse(tokenStr);
-
-                this.username = username;
-
-                SaveUserName(username);
-                SaveToken(token, password);
-                
-
-            }
-            catch (Exception ex)
-            {                
-                mostRecentNetError = ex.Message;
-                UpdateStatus = NetworkStatus.ERROR;
-            }
-            UpdateStatus = NetworkStatus.IDLE;
-            
-         
-            
-            
-        }
+        }        
 
         public void ClearFileData()
         {
@@ -361,6 +303,66 @@ namespace TandaSpreadsheetTool
             }
         }
 
+#region NetworkRequests
+
+        public async void GetToken(string username, string password)
+        {
+
+            if (token != null | status != NetworkStatus.IDLE)
+            {
+                return;
+            }
+
+            UpdateStatus = NetworkStatus.BUSY;
+
+            client.DefaultRequestHeaders.Clear();
+
+
+
+            client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
+
+            var formContent = new FormUrlEncodedContent(new[] {
+                new KeyValuePair<string, string>("username",username),
+                new KeyValuePair<string, string>("password",password),
+                new KeyValuePair<string, string>("scope","roster user department"),
+                new KeyValuePair<string,string>("grant_type","password")
+            });
+
+
+
+
+
+
+
+            try
+            {
+                Console.WriteLine(client.BaseAddress + "oauth/token/");
+                httpresponse = await client.PostAsync("oauth/token/", formContent);
+                var tokenStr = await httpresponse.Content.ReadAsStringAsync();
+
+
+
+                token = JObject.Parse(tokenStr);
+
+                this.username = username;
+
+                SaveUserName(username);
+                SaveToken(token, password);
+
+
+            }
+            catch (Exception ex)
+            {
+                mostRecentNetError = ex.Message;
+                UpdateStatus = NetworkStatus.ERROR;
+            }
+            UpdateStatus = NetworkStatus.IDLE;
+
+
+
+
+        }
+
         public async void GetRooster(string containingDate)
         {
             UpdateStatus= NetworkStatus.BUSY;
@@ -398,8 +400,8 @@ namespace TandaSpreadsheetTool
             {
                 httpresponse = await client.GetAsync("v2/departments");
                 var payload = await httpresponse.Content.ReadAsStringAsync();
-
-                teams = JObject.Parse(payload);
+            
+                teams = JArray.Parse(payload);
             }
             catch (Exception ex)
             {
@@ -409,43 +411,9 @@ namespace TandaSpreadsheetTool
             UpdateStatus = NetworkStatus.IDLE;
         }
 
-        public async void GetStaff(int[] staffIds)
-        {
-            UpdateStatus = NetworkStatus.BUSY;
-            client.DefaultRequestHeaders.Clear();
-
-
-            client.DefaultRequestHeaders.Add("Authorization", "bearer " + token.GetValue("access_token"));
-
-
-            try
-            {
-
-                for (int i = 0; i < staffIds.Length; i++)
-                {
-                    httpresponse = await client.GetAsync("v2/users" + staffIds[i]);
-                    var payload = await httpresponse.Content.ReadAsStringAsync();
-                    var staffJson = JObject.Parse(payload);
-
-                    if (!staff.Contains(staffJson))
-                    {
-                        staff.Add(staffJson);
-                    }                    
-                }              
-
-               
-
-            }
-            catch (Exception ex)
-            {
-                mostRecentNetError = ex.Message;
-                UpdateStatus = NetworkStatus.ERROR;
-            }
-
-            UpdateStatus = NetworkStatus.IDLE;
-        }
+       
     
-        public async void GetStaff(int staffId)
+        public async void GetStaff()
         {
             UpdateStatus = NetworkStatus.BUSY;
             client.DefaultRequestHeaders.Clear();
@@ -457,18 +425,9 @@ namespace TandaSpreadsheetTool
             try
             {
                 
-                    httpresponse = await client.GetAsync("v2/users" + staffId);
+                    httpresponse = await client.GetAsync("v2/users");
                     var payload = await httpresponse.Content.ReadAsStringAsync();
-                var staffJson = JObject.Parse(payload);
-
-                if (!staff.Contains(staffJson))
-                {
-                    staff.Add(staffJson);
-                }
-                    
-                              
-
-
+                    staff = JArray.Parse(payload);
 
             }
             catch (Exception ex)
@@ -479,8 +438,9 @@ namespace TandaSpreadsheetTool
 
             UpdateStatus = NetworkStatus.IDLE;
         }
+#endregion
 
-       
+        
 
         public JObject Roster
         {
@@ -490,7 +450,7 @@ namespace TandaSpreadsheetTool
             }
         }
       
-        public JObject Teams
+        public JArray Teams
         {
             get
             {
@@ -498,11 +458,11 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        public JObject[] Staff
+        public JArray Staff
         {
             get
             {
-                return staff.ToArray();
+                return staff;
             }
         }
 
@@ -527,13 +487,7 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        public CurrentGet CurrentGetRequest
-        {
-            get
-            {
-                return requestQueue.Peek();
-            }
-        }
+        
 
        public bool Authenticated
         {
