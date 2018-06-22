@@ -88,9 +88,9 @@ namespace TandaSpreadsheetTool
                         break;
                         
                     case NetworkStatus.IDLE:
-                        if (networker.Rooster != null)
+                        if (networker.Roster != null)
                         {
-                            builder = new RosterBuilder(networker.Rooster);
+                            builder = new RosterBuilder(networker);
                         }
                         else
                         {

@@ -24,8 +24,12 @@ namespace TandaSpreadsheetTool
         JObject token;
 
         JObject rooster;
+        JObject teams;
+       List<JObject> staff;
 
         List<INetworkListener> listeners;
+
+        Queue<CurrentGet> requestQueue;
 
         HttpClient client;
         HttpResponseMessage httpresponse;
@@ -34,8 +38,9 @@ namespace TandaSpreadsheetTool
         {
            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-          
-            
+            requestQueue = new Queue<CurrentGet>();
+
+            staff = new List<JObject>();
 
             httpresponse = new HttpResponseMessage();
             httpresponse.EnsureSuccessStatusCode();
@@ -130,7 +135,7 @@ namespace TandaSpreadsheetTool
             var formContent = new FormUrlEncodedContent(new[] {
                 new KeyValuePair<string, string>("username",username),
                 new KeyValuePair<string, string>("password",password),
-                new KeyValuePair<string, string>("scope","roster"),
+                new KeyValuePair<string, string>("scope","roster user department"),
                 new KeyValuePair<string,string>("grant_type","password")
             });
 
@@ -358,7 +363,7 @@ namespace TandaSpreadsheetTool
 
         public async void GetRooster(string containingDate)
         {
-            status = NetworkStatus.BUSY;
+            UpdateStatus= NetworkStatus.BUSY;
             client.DefaultRequestHeaders.Clear();
            
 
@@ -384,7 +389,100 @@ namespace TandaSpreadsheetTool
             UpdateStatus = NetworkStatus.IDLE;
         }
 
-        public JObject Rooster
+        public async void GetDepartments()
+        {
+            UpdateStatus = NetworkStatus.BUSY;
+            client.DefaultRequestHeaders.Clear();
+            client.DefaultRequestHeaders.Add("Authorization", "bearer " + token.GetValue("access_token"));
+            try
+            {
+                httpresponse = await client.GetAsync("v2/departments");
+                var payload = await httpresponse.Content.ReadAsStringAsync();
+
+                teams = JObject.Parse(payload);
+            }
+            catch (Exception ex)
+            {
+                mostRecentNetError = ex.Message;
+                UpdateStatus = NetworkStatus.ERROR;
+            }
+            UpdateStatus = NetworkStatus.IDLE;
+        }
+
+        public async void GetStaff(int[] staffIds)
+        {
+            UpdateStatus = NetworkStatus.BUSY;
+            client.DefaultRequestHeaders.Clear();
+
+
+            client.DefaultRequestHeaders.Add("Authorization", "bearer " + token.GetValue("access_token"));
+
+
+            try
+            {
+
+                for (int i = 0; i < staffIds.Length; i++)
+                {
+                    httpresponse = await client.GetAsync("v2/users" + staffIds[i]);
+                    var payload = await httpresponse.Content.ReadAsStringAsync();
+                    var staffJson = JObject.Parse(payload);
+
+                    if (!staff.Contains(staffJson))
+                    {
+                        staff.Add(staffJson);
+                    }                    
+                }              
+
+               
+
+            }
+            catch (Exception ex)
+            {
+                mostRecentNetError = ex.Message;
+                UpdateStatus = NetworkStatus.ERROR;
+            }
+
+            UpdateStatus = NetworkStatus.IDLE;
+        }
+    
+        public async void GetStaff(int staffId)
+        {
+            UpdateStatus = NetworkStatus.BUSY;
+            client.DefaultRequestHeaders.Clear();
+
+
+            client.DefaultRequestHeaders.Add("Authorization", "bearer " + token.GetValue("access_token"));
+
+
+            try
+            {
+                
+                    httpresponse = await client.GetAsync("v2/users" + staffId);
+                    var payload = await httpresponse.Content.ReadAsStringAsync();
+                var staffJson = JObject.Parse(payload);
+
+                if (!staff.Contains(staffJson))
+                {
+                    staff.Add(staffJson);
+                }
+                    
+                              
+
+
+
+            }
+            catch (Exception ex)
+            {
+                mostRecentNetError = ex.Message;
+                UpdateStatus = NetworkStatus.ERROR;
+            }
+
+            UpdateStatus = NetworkStatus.IDLE;
+        }
+
+       
+
+        public JObject Roster
         {
             get
             {
@@ -392,6 +490,21 @@ namespace TandaSpreadsheetTool
             }
         }
       
+        public JObject Teams
+        {
+            get
+            {
+                return teams;
+            }
+        }
+
+        public JObject[] Staff
+        {
+            get
+            {
+                return staff.ToArray();
+            }
+        }
 
         private NetworkStatus UpdateStatus
         {
@@ -411,6 +524,14 @@ namespace TandaSpreadsheetTool
             get
             {
                 return status;
+            }
+        }
+
+        public CurrentGet CurrentGetRequest
+        {
+            get
+            {
+                return requestQueue.Peek();
             }
         }
 

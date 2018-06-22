@@ -16,6 +16,15 @@ namespace TandaSpreadsheetTool
         BUSY,IDLE,ERROR
     }
 
+    public enum CurrentGet
+    {
+        NONE,STAFF,TEAMS,ROSTER,TOKEN
+    }
+
+    
+
+
+
     public struct Roster
     {
         public int id;
@@ -49,20 +58,44 @@ namespace TandaSpreadsheetTool
 
     public struct FormattedRoster
     {
-        IList<Schedule> schedules;
-        string start;
-        string finish;
+        public IList<FormattedSchedule> schedules;
+        public string start;
+        public string finish;
         
             
+    }
+
+    public struct User
+    {
+      public int id;
+       public string name;
+        
+    }
+
+    struct Departments
+    {
+        public IList<Team> teams;
+    }
+
+    public struct Team
+    {
+        public int id;
+        public int location_id;
+        public string name;
+        public string export_name;
+        public string colour;
+        public IList<int> staff;
+        public IList<int> managers;
+
     }
 
     public struct FormattedSchedule
     {
         public string staff;
-        string startTime;
-        string endTime;
-        string startDate;
-        string team;
+        public string startTime;
+        public string endTime;
+        public string startDate;
+        public string team;
 
     }
 

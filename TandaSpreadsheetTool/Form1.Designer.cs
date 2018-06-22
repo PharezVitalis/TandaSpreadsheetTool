@@ -37,10 +37,10 @@
             this.lblUName = new System.Windows.Forms.Label();
             this.lblToContinue = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.btnFormat = new System.Windows.Forms.Button();
             this.lblInDate = new System.Windows.Forms.Label();
             this.txtBxDate = new System.Windows.Forms.TextBox();
             this.btnSaveJSON = new System.Windows.Forms.Button();
-            this.btnFormat = new System.Windows.Forms.Button();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -132,6 +132,15 @@
             this.pnlMain.TabIndex = 1;
             this.pnlMain.Visible = false;
             // 
+            // btnFormat
+            // 
+            this.btnFormat.Location = new System.Drawing.Point(54, 107);
+            this.btnFormat.Name = "btnFormat";
+            this.btnFormat.Size = new System.Drawing.Size(75, 23);
+            this.btnFormat.TabIndex = 5;
+            this.btnFormat.Text = "Format";
+            this.btnFormat.UseVisualStyleBackColor = true;
+            // 
             // lblInDate
             // 
             this.lblInDate.AutoSize = true;
@@ -154,18 +163,9 @@
             this.btnSaveJSON.Name = "btnSaveJSON";
             this.btnSaveJSON.Size = new System.Drawing.Size(75, 23);
             this.btnSaveJSON.TabIndex = 2;
-            this.btnSaveJSON.Text = "Save JSON";
+            this.btnSaveJSON.Text = "Get JSON";
             this.btnSaveJSON.UseVisualStyleBackColor = true;
             this.btnSaveJSON.Click += new System.EventHandler(this.btnTest_Click);
-            // 
-            // btnFormat
-            // 
-            this.btnFormat.Location = new System.Drawing.Point(54, 107);
-            this.btnFormat.Name = "btnFormat";
-            this.btnFormat.Size = new System.Drawing.Size(75, 23);
-            this.btnFormat.TabIndex = 5;
-            this.btnFormat.Text = "Format";
-            this.btnFormat.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
