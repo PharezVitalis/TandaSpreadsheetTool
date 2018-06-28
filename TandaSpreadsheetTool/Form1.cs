@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 
 namespace TandaSpreadsheetTool
@@ -25,6 +26,8 @@ namespace TandaSpreadsheetTool
             {
                 txtBxUName.Text = networker.LastUser;
             }
+
+            txtBxDate.Text = DateTime.Now.ToShortDateString();
            
         }
 
@@ -122,14 +125,19 @@ namespace TandaSpreadsheetTool
 
         public void FormattingComplete()
         {
-            MessageBox.Show("Saved File, Check MyDocuments/Tanda");
+            var dResult = MessageBox.Show("Saved JSON file to TandaJson, Open in explorer?", "Saved File", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
+
+            if (dResult == DialogResult.Yes)
+            {
+                Process.Start(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TandaJson"));
+            }
         }
 
         
 
         private void btnLogIn_Click(object sender, EventArgs e)
         {
-            lblLoad.Text = "Loading";
+            
             
 
             

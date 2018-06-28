@@ -55,7 +55,7 @@
             this.pnlLogIn.Controls.Add(this.lblToContinue);
             this.pnlLogIn.Location = new System.Drawing.Point(12, 12);
             this.pnlLogIn.Name = "pnlLogIn";
-            this.pnlLogIn.Size = new System.Drawing.Size(538, 190);
+            this.pnlLogIn.Size = new System.Drawing.Size(538, 142);
             this.pnlLogIn.TabIndex = 0;
             // 
             // lblLoad
@@ -124,9 +124,9 @@
             this.pnlMain.Controls.Add(this.lblInDate);
             this.pnlMain.Controls.Add(this.txtBxDate);
             this.pnlMain.Controls.Add(this.btnSaveJSON);
-            this.pnlMain.Location = new System.Drawing.Point(12, 208);
+            this.pnlMain.Location = new System.Drawing.Point(12, 12);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(538, 198);
+            this.pnlMain.Size = new System.Drawing.Size(538, 142);
             this.pnlMain.TabIndex = 1;
             this.pnlMain.Visible = false;
             // 
@@ -160,9 +160,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(558, 417);
+            this.ClientSize = new System.Drawing.Size(558, 173);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlLogIn);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
             this.Text = "Form1";
             this.pnlLogIn.ResumeLayout(false);

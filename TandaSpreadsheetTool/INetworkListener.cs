@@ -25,69 +25,96 @@ namespace TandaSpreadsheetTool
 
 
 
-    public struct Roster
+    public class Roster
     {
         public int id;
-        public IList<Day> schedules;
-        public string start;
-        public string finish;
-        public int updated_at;
+        public List<Day> schedules { get; set; }
+        public string start { get; set; }
+        public string finish { get; set; }
+        public int updated_at { get; set; }
+
+       public Roster()
+        {
+            schedules = new List<Day>();
+        }
+
     }
 
-    public struct Day
+    public class Day
     {
-        public string date;
-        public IList<Schedule> schedules;
+        public string date { get; set; }
+        public List<Schedule> schedules { get; set; }
+
+        public Day()
+        {
+            schedules = new List<Schedule>();
+        }
     }
 
-    public struct StaffHolder
+    public class StaffHolder
     {
-        public IList<User> staff;
+        public List<User> staff { get; set; }
+        
+        public StaffHolder()
+        {
+            staff = new List<User>();
+        }
+
     }
 
     public struct Schedule
     {
-        public int id;
-        public int roster_id;
-        public int user_id;
-        public int start;
+        public object id;
+        public object roster_id;
+        public object user_id;
+        public object start;
         public object finish;
-        public object[] breaks;
-        public int automatic_break_length;
-        public int department_id;
-        public object shift_detail_id;
-        public object last_published_at;
-        public int updated_at;
+       
+        public object department_id;
+       
+      
         
     }
 
-    public struct FormattedRoster
+    public class FormattedRoster
     {
-        public IList<FormattedSchedule> schedules;
-        public string start;
-        public string finish;
+
+
+        public List<FormattedSchedule> schedules { get; set; }
+        public string start { get; set; }
+        public string finish { get; set; }
         
+        public FormattedRoster()
+        {
+            schedules = new List<FormattedSchedule>();
+        }
             
     }
 
     public struct User
     {
-      public int id;
+         public int id;
        public string name;
         
     }
 
     
 
-    public struct Team
+    public class Team
     {
-        public int id;
-        public int location_id;
-        public string name;
-        public string export_name;
-        public string colour;
-        public IList<int> staff;
-        public IList<int> managers;
+        public int id { get; set; }
+
+        public string name { get; set; }
+
+        public string colour { get; set; }
+        public List<int> staff { get; set; }
+        public List<int> managers { get; set; }
+
+        public Team()
+        {
+            staff = new List<int>();
+            managers = new List<int>();
+        }
 
     }
 

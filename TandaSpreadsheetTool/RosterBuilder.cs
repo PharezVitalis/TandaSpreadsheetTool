@@ -50,7 +50,7 @@ namespace TandaSpreadsheetTool
             }
 
            
-            rosterObj = JsonConvert.DeserializeObject<Roster>(networker.Roster.ToString());
+          rosterObj = JsonConvert.DeserializeObject<Roster>(networker.Roster.ToString());
 
            
         }
@@ -69,12 +69,19 @@ namespace TandaSpreadsheetTool
                 {
                     var currentSchedule = currentDate.schedules[j];
 
-                    var currentStaffId = currentSchedule.user_id;
+                   
 
-                    if (!lstStaffIds.Contains(currentStaffId))
+                    
+                    if (currentSchedule.user_id != null)
                     {
-                        lstStaffIds.Add(currentStaffId);
+                        var currentStaffId = Convert.ToInt32(currentSchedule.user_id);
+
+                        if (!lstStaffIds.Contains(currentStaffId))
+                        {
+                            lstStaffIds.Add(currentStaffId);
+                        }
                     }
+                    
                 }
             }
 
@@ -88,16 +95,22 @@ namespace TandaSpreadsheetTool
         public void SaveRoster()
         {
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TandaJson");
-            
+
+           
+
             Directory.CreateDirectory(path);
             try
             {
-                File.WriteAllText(path + "/Roster "+ DateTime.Now.ToString()+".json", JsonConvert.SerializeObject(formRoster).ToString());
+                var outText = JsonConvert.SerializeObject(formRoster).ToString();
+
+
+                File.WriteAllText(path + "/Roster " + DateTime.Now.ToString("dd MM yy - hh mm") + ".json", outText);
+
                 form.FormattingComplete();
             }
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine("Failed to Save file");
+                Console.WriteLine("Failed to Save file: " +e.Message+" path:"+path);
             }
             
         }
@@ -145,6 +158,7 @@ namespace TandaSpreadsheetTool
 
             formRoster.start = FormatDate(rosterObj.start);
             formRoster.finish = FormatDate(rosterObj.finish);
+           
 
             for (int i = 0; i < rosterObj.schedules.Count; i++)
             {
@@ -152,8 +166,8 @@ namespace TandaSpreadsheetTool
 
                 for (int j = 0; j < currentDay.schedules.Count; j++)
                 {
-                    //NRE here
-                    formRoster.schedules.Add(GenerateSchedule(currentDay.schedules[j]));
+                    var newSchedule = GenerateSchedule(currentDay.schedules[j]);
+                    formRoster.schedules.Add(newSchedule);
 
                     
                 }
@@ -175,27 +189,48 @@ namespace TandaSpreadsheetTool
 
             for (int i = 0; i < staffObjs.Count; i++)
             {
-                if(unformSchedule.user_id == staffObjs[i].id)
+                if (unformSchedule.user_id != null)
                 {
-                    outSchedule.staff = staffObjs[i].name;
-                    break;
+                    var currentUserId = Convert.ToInt32(unformSchedule.user_id);
+
+                    if (currentUserId == staffObjs[i].id)
+                    {
+                        outSchedule.staff = staffObjs[i].name;
+                        break;
+                    }
                 }
+               
             }
 
-            var startTime = new DateTime(unformSchedule.start * 10000000);
+            var startUnix = Convert.ToInt64(unformSchedule.start);
+            Console.WriteLine(startUnix);
 
-            outSchedule.startDate = startTime.Date.ToString("MM dd, yyyy");
+            var startTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            startTime = startTime.AddSeconds(startUnix);
+
+         
+
+            outSchedule.startDate = startTime.ToString("dd/MM/yyyy");
             outSchedule.startTime = startTime.ToString("HH:mm");
             if(unformSchedule.finish != null)
             {
+                var endTime = new DateTime(1970,1,1,0,0,0,0);
+               endTime= endTime.AddSeconds(Convert.ToInt64(unformSchedule.finish));
                 
-                outSchedule.endTime = new DateTime((long)unformSchedule.finish * 10000000).ToString("HH:mm");
+
+                outSchedule.endTime = endTime.ToString("HH:mm");
+                
             }
             
 
             for (int i = 0; i < teamObjs.Count; i++)
             {
-                if (unformSchedule.department_id == teamObjs[i].id)
+                if(unformSchedule.department_id== null)
+                {
+                    break;
+                }
+
+                if (Convert.ToInt32(unformSchedule.department_id) == teamObjs[i].id)
                 {
                     outSchedule.team = teamObjs[i].name;
                     break;
@@ -204,6 +239,7 @@ namespace TandaSpreadsheetTool
 
             return outSchedule;
         }
+
 
         public void NetStatusChanged(NetworkStatus status)
         {
@@ -279,7 +315,7 @@ namespace TandaSpreadsheetTool
             }
         }
 
-       
+      
 
     }
 }
