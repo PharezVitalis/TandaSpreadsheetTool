@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text;
 using System.Security.Cryptography;
+using System.Threading.Tasks;
 
 namespace TandaSpreadsheetTool
 {
@@ -15,7 +15,7 @@ namespace TandaSpreadsheetTool
 
         NetworkStatus status = NetworkStatus.IDLE;
 
-        string mostRecentNetError = "";
+        string mostRecentError = "";
 
         protected string userNameKey = "iv7jlwbcx#hcq&*";
 
@@ -23,7 +23,7 @@ namespace TandaSpreadsheetTool
 
         JObject token;
 
-        JObject rooster;
+        JObject roster;
         JArray teams;
         JArray staff;
 
@@ -37,9 +37,6 @@ namespace TandaSpreadsheetTool
         public Networker()
         {
            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-
-          
-
            
 
             httpresponse = new HttpResponseMessage();
@@ -88,9 +85,10 @@ namespace TandaSpreadsheetTool
 
                        
                     }
-                    catch
+                    catch (Exception e)
                     {
                         Console.WriteLine("Failed to read file");
+                        mostRecentError = e.Message;
                         return false;
                     }
                 }
@@ -127,6 +125,7 @@ namespace TandaSpreadsheetTool
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
+                    mostRecentError = ex.Message;
                 }
             }
 
@@ -136,9 +135,9 @@ namespace TandaSpreadsheetTool
                 {
                     File.Delete(AppDomain.CurrentDomain.BaseDirectory + "ud.wpn");
                 }
-                catch
+                catch (Exception ex)
                 {
-
+                    mostRecentError = ex.Message;
                 }
                 
             }
@@ -158,6 +157,7 @@ namespace TandaSpreadsheetTool
             catch(Exception ex)
             {
                 Console.WriteLine("Failed to Save User Data");
+                mostRecentError = ex.Message;
             }
         }
 
@@ -180,7 +180,7 @@ namespace TandaSpreadsheetTool
             
             catch(Exception e)
             {
-
+                mostRecentError = e.Message;
             }
 
              
@@ -211,11 +211,13 @@ namespace TandaSpreadsheetTool
             }
             catch(Exception e)
             {
+                mostRecentError = e.Message;
+
                 Console.WriteLine("Failed to save network information " + e.Message);
             }
         }
 
-        public static string Encrypt(string data, string key)
+        public  string Encrypt(string data, string key)
         {
             var DES = new TripleDESCryptoServiceProvider();
 
@@ -242,13 +244,14 @@ namespace TandaSpreadsheetTool
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
-
+                mostRecentError = ex.Message;
+              
                 return "FAILED";
             }
             
         }
 
-        private static byte[] GetKey(string password)
+        private  byte[] GetKey(string password)
         {
             string key = null;
             if (Encoding.UTF8.GetByteCount(password) < 24)
@@ -263,7 +266,7 @@ namespace TandaSpreadsheetTool
             return Encoding.UTF8.GetBytes(key);
         }
 
-        public static string Decrypt(string data, string key)
+        public  string Decrypt(string data, string key)
         {
             var DES = new TripleDESCryptoServiceProvider();
             DES.Mode = CipherMode.ECB;
@@ -289,28 +292,23 @@ namespace TandaSpreadsheetTool
             }
             catch (Exception ex)
             {
+                mostRecentError = ex.Message;
                 Console.WriteLine(ex.Message);
                 return "FAILED";
             }
            
         }
 
-        public string LastNetErrMsg
-        {
-            get
-            {
-                return mostRecentNetError;
-            }
-        }
+       
 
 #region NetworkRequests
 
-        public async void GetToken(string username, string password)
+        public async Task<JObject> GetToken(string username, string password)
         {
 
             if (token != null | status != NetworkStatus.IDLE)
             {
-                return;
+                return null;
             }
 
             UpdateStatus = NetworkStatus.BUSY;
@@ -353,17 +351,17 @@ namespace TandaSpreadsheetTool
             }
             catch (Exception ex)
             {
-                mostRecentNetError = ex.Message;
+                mostRecentError = ex.Message;
                 UpdateStatus = NetworkStatus.ERROR;
             }
             UpdateStatus = NetworkStatus.IDLE;
 
 
-
+            return token;
 
         }
 
-        public async void GetRooster(string containingDate)
+        public async Task<JObject> GetRooster(string containingDate)
         {
             UpdateStatus= NetworkStatus.BUSY;
             client.DefaultRequestHeaders.Clear();
@@ -379,19 +377,21 @@ namespace TandaSpreadsheetTool
                 httpresponse = await client.GetAsync("v2/rosters/on/" + containingDate);
                 var payload = await httpresponse.Content.ReadAsStringAsync();
 
-                rooster = JObject.Parse(payload);
+                roster = JObject.Parse(payload);
                
             }
             catch (Exception ex)
             {
-                mostRecentNetError = ex.Message;
+                mostRecentError = ex.Message;
                 UpdateStatus = NetworkStatus.ERROR;
             }
 
             UpdateStatus = NetworkStatus.IDLE;
+
+            return roster;
         }
 
-        public async void GetDepartments()
+        public async Task<JArray> GetDepartments()
         {
             UpdateStatus = NetworkStatus.BUSY;
             client.DefaultRequestHeaders.Clear();
@@ -405,9 +405,11 @@ namespace TandaSpreadsheetTool
             }
             catch (Exception ex)
             {
-                mostRecentNetError = ex.Message;
+                mostRecentError = ex.Message;
                 UpdateStatus = NetworkStatus.ERROR;
             }
+
+            return teams;
             UpdateStatus = NetworkStatus.IDLE;
         }
 
@@ -432,21 +434,24 @@ namespace TandaSpreadsheetTool
             }
             catch (Exception ex)
             {
-                mostRecentNetError = ex.Message;
+                mostRecentError = ex.Message;
                 UpdateStatus = NetworkStatus.ERROR;
             }
 
             UpdateStatus = NetworkStatus.IDLE;
         }
-#endregion
+        #endregion
 
-        
+
+#region Acessors
+
+
 
         public JObject Roster
         {
             get
             {
-                return rooster;
+                return roster;
             }
         }
       
@@ -487,9 +492,15 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        
+        public string LastNetErrMsg
+        {
+            get
+            {
+                return mostRecentError;
+            }
+        }
 
-       public bool Authenticated
+        public bool Authenticated
         {
             get
             {
@@ -512,7 +523,7 @@ namespace TandaSpreadsheetTool
                 return !File.Exists(AppDomain.CurrentDomain.BaseDirectory + "data.wpn");
             }
         }
-
+        #endregion
         ~Networker()
         {
             client.CancelPendingRequests();

@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using System.Threading;
 
 namespace TandaSpreadsheetTool
 {
@@ -10,13 +12,14 @@ namespace TandaSpreadsheetTool
         Networker networker;
         RosterBuilder builder;
 
+       
+
         bool gettingToken;
-        
 
         public Form1()
         {
             InitializeComponent();
-            
+
             
             networker = new Networker();
 
@@ -30,6 +33,8 @@ namespace TandaSpreadsheetTool
             txtBxDate.Text = DateTime.Now.ToShortDateString();
            
         }
+
+        
 
         void ShowMainPanel()
         {
@@ -58,8 +63,7 @@ namespace TandaSpreadsheetTool
 
                         ShowMainPanel();
 
-                        txtBxUName.Enabled = true;
-                        txtBxPwd.Enabled = true;
+                      
 
                         gettingToken = false;
                         networker.Unsubscribe(this);
@@ -125,27 +129,22 @@ namespace TandaSpreadsheetTool
 
         public void FormattingComplete()
         {
-            var dResult = MessageBox.Show("Saved JSON file to TandaJson, Open in explorer?", "Saved File", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Information);
-
-            if (dResult == DialogResult.Yes)
+           if (ckBxOpenFolder.Checked)
             {
                 Process.Start(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TandaJson"));
             }
+            else
+            {
+                MessageBox.Show("Saved File to Documents/TandaJson");
+            }
+                
+            
         }
-
-        
 
         private void btnLogIn_Click(object sender, EventArgs e)
         {
-            
-            
-
-            
             if (networker.LastUser != "")
             {
-                
-               
-
                 if (object.Equals(txtBxUName.Text,networker.LastUser))
                 {
                   if (networker.SignIn(txtBxPwd.Text))

@@ -40,6 +40,7 @@
             this.lblInDate = new System.Windows.Forms.Label();
             this.txtBxDate = new System.Windows.Forms.TextBox();
             this.btnSaveJSON = new System.Windows.Forms.Button();
+            this.ckBxOpenFolder = new System.Windows.Forms.CheckBox();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -121,6 +122,7 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.ckBxOpenFolder);
             this.pnlMain.Controls.Add(this.lblInDate);
             this.pnlMain.Controls.Add(this.txtBxDate);
             this.pnlMain.Controls.Add(this.btnSaveJSON);
@@ -156,6 +158,16 @@
             this.btnSaveJSON.UseVisualStyleBackColor = true;
             this.btnSaveJSON.Click += new System.EventHandler(this.btnTest_Click);
             // 
+            // ckBxOpenFolder
+            // 
+            this.ckBxOpenFolder.AutoSize = true;
+            this.ckBxOpenFolder.Location = new System.Drawing.Point(23, 52);
+            this.ckBxOpenFolder.Name = "ckBxOpenFolder";
+            this.ckBxOpenFolder.Size = new System.Drawing.Size(169, 17);
+            this.ckBxOpenFolder.TabIndex = 5;
+            this.ckBxOpenFolder.Text = "Open Folder When Complete?";
+            this.ckBxOpenFolder.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -165,7 +177,7 @@
             this.Controls.Add(this.pnlLogIn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Tanda Roster Spreadsheet Tool";
             this.pnlLogIn.ResumeLayout(false);
             this.pnlLogIn.PerformLayout();
             this.pnlMain.ResumeLayout(false);
@@ -188,6 +200,7 @@
         private System.Windows.Forms.Button btnSaveJSON;
         private System.Windows.Forms.Label lblInDate;
         private System.Windows.Forms.TextBox txtBxDate;
+        private System.Windows.Forms.CheckBox ckBxOpenFolder;
     }
 }
 
