@@ -23,7 +23,15 @@ namespace TandaSpreadsheetTool
 
     
    
+    public class FormattedTimeTable
+    {
+      public List<Roster> rosters { get; set; }
 
+        public FormattedTimeTable()
+        {
+            rosters = new List<Roster>();
+        }
+    }
 
     public class Roster
     {

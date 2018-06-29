@@ -50,7 +50,9 @@ namespace TandaSpreadsheetTool
            
           if (autoGetData)
             {
-
+                GetStaff();
+                GetTeams();
+                hasTeams = true;
             }
 
            
@@ -99,11 +101,20 @@ namespace TandaSpreadsheetTool
             var from = BuildDate(dateFrom);
             var to = BuildDate(dateTo);
 
+
             int weeks =(int) (to - from).TotalDays / 7;
 
             var rosters = new JObject[weeks];
 
+            if (!hasTeams)
+            {
+                GetTeams();
+                GetStaff();
+            }
+
             currentGet = CurrentGet.ROSTER;
+
+
             for (int i = 0; i < rosters.Length; i++)
             {
                 rosters[i] = await networker.GetRooster(from.AddDays(7 * i).ToShortDateString());
@@ -112,6 +123,16 @@ namespace TandaSpreadsheetTool
            
 
             currentGet = CurrentGet.NONE;
+
+            // format rosters
+
+            //put them into 1 json object
+
+            // save the object
+        
+            
+
+
 
         }
 
