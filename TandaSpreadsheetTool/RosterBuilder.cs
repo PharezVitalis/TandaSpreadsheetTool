@@ -124,14 +124,35 @@ namespace TandaSpreadsheetTool
 
             currentGet = CurrentGet.NONE;
 
+
+            var outRoster = new FormattedRoster();
+
+            outRoster.start = dateFrom;
+            outRoster.finish = dateTo;
+
             // format rosters
+            for (int i = 0; i < rosters.Length; i++)
+            {
+                var currentRoster = JsonConvert.DeserializeObject<Roster>(rosters[i].ToString());
 
-            //put them into 1 json object
+                for (int j = 0; j < currentRoster.schedules.Count; j++)
+                {
+                    var currentDay = currentRoster.schedules[j];
 
-            // save the object
-        
+                    for (int k = 0; k < currentDay.schedules.Count; k++)
+                    {
+                        var currentSchedule = currentDay.schedules[j];
+
+                        outRoster.schedules.Add(GenerateSchedule(currentSchedule));
+                    }
+                }
+
+               
+            }
+           
             
 
+           
 
 
         }
@@ -177,14 +198,50 @@ namespace TandaSpreadsheetTool
 
         }
 
-       
-
         string FormatDate(string date)
         {     
             return date.Substring(8, 2) + "/" + date.Substring(5, 2) + "/" + date.Substring(0, 4);
         }
 
+        void Save(string path, string data)
+        {
+            var serializedData = Serialize(data);
 
+            File.WriteAllBytes(path, serializedData);
+
+           
+            
+        }
+
+        object Load(string path)
+        {
+            return Deserialize(File.ReadAllBytes(path));
+        }
+
+        public byte[] Serialize(string data)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (BinaryWriter writer = new BinaryWriter(ms))
+                {
+                    writer.Write(data);
+                }
+                return ms.ToArray();
+            }
+
+        }
+
+        public string Deserialize(byte[] data)
+        {
+            string outStr = "";
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                outStr += Convert.ToChar(data[i]);
+            }
+
+            return outStr;
+        }
 
         private FormattedSchedule GenerateSchedule(Schedule unformSchedule)
         {

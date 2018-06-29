@@ -21,17 +21,6 @@ namespace TandaSpreadsheetTool
         NONE,STAFF,TEAMS,ROSTER
     }
 
-    
-   
-    public class FormattedTimeTable
-    {
-      public List<Roster> rosters { get; set; }
-
-        public FormattedTimeTable()
-        {
-            rosters = new List<Roster>();
-        }
-    }
 
     public class Roster
     {
@@ -79,15 +68,11 @@ namespace TandaSpreadsheetTool
         public object finish;
        
         public object department_id;
-       
-      
         
     }
 
     public class FormattedRoster
     {
-
-
         public List<FormattedSchedule> schedules { get; set; }
         public string start { get; set; }
         public string finish { get; set; }
@@ -105,8 +90,6 @@ namespace TandaSpreadsheetTool
        public string name;
         
     }
-
-    
 
     public class Team
     {
