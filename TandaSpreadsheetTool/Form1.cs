@@ -98,7 +98,7 @@ namespace TandaSpreadsheetTool
                         if (networker.Roster != null)
                         {
                             builder = new RosterBuilder(networker, this);
-                            builder.CreateFormattedRoster();
+                           // builder.CreateFormattedRoster();
                         }
                         else
                         {

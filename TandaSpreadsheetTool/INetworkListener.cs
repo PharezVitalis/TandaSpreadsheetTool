@@ -18,7 +18,7 @@ namespace TandaSpreadsheetTool
 
     public enum CurrentGet
     {
-        NONE,STAFF,TEAMS,
+        NONE,STAFF,TEAMS,ROSTER
     }
 
     

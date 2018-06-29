@@ -409,13 +409,15 @@ namespace TandaSpreadsheetTool
                 UpdateStatus = NetworkStatus.ERROR;
             }
 
-            return teams;
+            
             UpdateStatus = NetworkStatus.IDLE;
+
+            return teams;
         }
 
        
     
-        public async void GetStaff()
+        public async Task<JArray> GetStaff()
         {
             UpdateStatus = NetworkStatus.BUSY;
             client.DefaultRequestHeaders.Clear();
@@ -438,7 +440,10 @@ namespace TandaSpreadsheetTool
                 UpdateStatus = NetworkStatus.ERROR;
             }
 
+            
             UpdateStatus = NetworkStatus.IDLE;
+
+            return staff;
         }
         #endregion
 

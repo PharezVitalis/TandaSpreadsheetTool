@@ -10,18 +10,19 @@ namespace TandaSpreadsheetTool
     {
         
         Networker networker;
-        Roster rosterObj;
+     
         Form1 form;
 
         int maxTries;
         int currentTries = 0;
 
-       
-        
-        List<Team> teamObjs;
+        bool hasTeams = false;
+
         List<User> staffObjs;
 
-        CurrentGet currentGet = CurrentGet.NONE;
+        List<Team> teamObjs;
+
+    CurrentGet currentGet = CurrentGet.NONE;
 
       
 
@@ -29,19 +30,16 @@ namespace TandaSpreadsheetTool
 
         FormattedRoster formRoster;
 
-        public RosterBuilder(Networker networker, Form1 form, int maxTries = 5 )
+        public RosterBuilder(Networker networker, Form1 form, int maxTries = 5, bool autoGetData = true )
         {
             this.maxTries = maxTries;
 
             this.networker = networker;
             this.form = form;
-
-            
-
         
           
             staffObjs = new List<User>();
-            rosterObj = new Roster();
+            
             teamObjs = new List<Team>();
 
             if (networker.Roster == null)
@@ -50,138 +48,122 @@ namespace TandaSpreadsheetTool
             }
 
            
-          rosterObj = JsonConvert.DeserializeObject<Roster>(networker.Roster.ToString());
+          if (autoGetData)
+            {
+
+            }
 
            
         }
 
-       public void CreateFormattedRoster()
+        public async void GetStaff()
         {
-            var lstStaffIds = new List<int>();
+            currentGet = CurrentGet.STAFF;
 
-            
-
-            for (int i = 0; i < rosterObj.schedules.Count; i++)
-            {
-                var currentDate = rosterObj.schedules[i];
-
-                for (int j = 0; j < currentDate.schedules.Count; j++)
-                {
-                    var currentSchedule = currentDate.schedules[j];
-
-                   
-
-                    
-                    if (currentSchedule.user_id != null)
-                    {
-                        var currentStaffId = Convert.ToInt32(currentSchedule.user_id);
-
-                        if (!lstStaffIds.Contains(currentStaffId))
-                        {
-                            lstStaffIds.Add(currentStaffId);
-                        }
-                    }
-                    
-                }
-            }
-
-            staffIds = lstStaffIds.ToArray();
-
-            networker.Subscribe(this);
-            currentGet = CurrentGet.TEAMS;
-            networker.GetDepartments();
-        }
-
-        public void SaveRoster()
-        {
-            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TandaJson");
-
-           
-
-            Directory.CreateDirectory(path);
-            try
-            {
-                var outText = JsonConvert.SerializeObject(formRoster).ToString();
-                
-
-                File.WriteAllText(path + "/Roster " + DateTime.Now.ToString("dd MM yy - hh mm") + ".json", outText);
-
-                form.FormattingComplete();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Failed to Save file: " +e.Message+" path:"+path);
-            }
-            
-        }
-
-        private void GenerateStaffObjects()
-        {
-            var staffJArr = networker.Staff;
-
-            if (staffJArr == null)
-            {
-                return;
-            }
-            staffObjs.Clear();
-
-            
+            var staffJArr = await networker.GetStaff();
 
             for (int i = 0; i < staffJArr.Count; i++)
             {
-                staffObjs.Add(JsonConvert.DeserializeObject<User>(staffJArr[i].ToString()));
+                var staff = JsonConvert.DeserializeObject<User>(staffJArr[i].ToString());
+
+                if (!staffObjs.Contains(staff))
+                {
+                    staffObjs.Add(staff);
+                }                
             }
 
-            
-
-           
+            currentGet = CurrentGet.NONE;
         }
 
-       private void BuildRoster()
+        public async void GetTeams()
         {
+            currentGet = CurrentGet.TEAMS;
 
-            
-                
+            var teamsArr = await networker.GetDepartments();
 
-                GenerateStaffObjects();
-
-
-
-            var teamJArr = networker.Teams;
-
-            for (int i = 0; i <teamJArr.Count ; i++)
+            for (int i = 0; i < teamsArr.Count; i++)
             {
-                teamObjs.Add(JsonConvert.DeserializeObject<Team>(teamJArr[i].ToString()));
-            }
+                var team = JsonConvert.DeserializeObject<Team>(teamsArr[i].ToString());
 
-            formRoster = new FormattedRoster();
-
-            formRoster.start = FormatDate(rosterObj.start);
-            formRoster.finish = FormatDate(rosterObj.finish);
-           
-
-            for (int i = 0; i < rosterObj.schedules.Count; i++)
-            {
-                var currentDay = rosterObj.schedules[i];
-
-                for (int j = 0; j < currentDay.schedules.Count; j++)
+                if (!teamObjs.Contains(team))
                 {
-                    var newSchedule = GenerateSchedule(currentDay.schedules[j]);
-                    formRoster.schedules.Add(newSchedule);
-
-                    
+                    teamObjs.Add(team);
                 }
             }
 
-            SaveRoster();
-           
+            currentGet = CurrentGet.NONE;
         }
+
+         public async void BuildRoster(string dateFrom, string dateTo)
+        {
+            var from = BuildDate(dateFrom);
+            var to = BuildDate(dateTo);
+
+            int weeks =(int) (to - from).TotalDays / 7;
+
+            var rosters = new JObject[weeks];
+
+            currentGet = CurrentGet.ROSTER;
+            for (int i = 0; i < rosters.Length; i++)
+            {
+                rosters[i] = await networker.GetRooster(from.AddDays(7 * i).ToShortDateString());
+                
+            }
+           
+
+            currentGet = CurrentGet.NONE;
+
+        }
+
+        public DateTime BuildDate(string date)
+        {
+            var outDate = new DateTime();
+
+           outDate=outDate.AddDays(Convert.ToInt32(date.Substring(0, 2)));
+           outDate= outDate.AddMonths(Convert.ToInt32(date.Substring(3, 2)));
+            
+            if (date.Length < 10)
+            {
+                int years = Convert.ToInt32(date.Substring(6, 2));
+                if (years > DateTime.Now.Year)
+                {
+                    years += 1900;
+                }
+                else
+                {
+                    years += 2000;
+                }
+                outDate = outDate.AddYears(years);
+            }
+            else
+            {
+                outDate = outDate.AddYears(Convert.ToInt32(date.Substring(6, 4)));
+            }
+
+            return outDate;
+        }
+
+        public DateTime UnixToDate(int unixValue)
+        {
+            var date = new DateTime(1970, 1, 1);
+            date = date.AddSeconds(unixValue);
+
+            return date;
+        }
+
+       public void NetStatusChanged(NetworkStatus status)
+        {
+
+        }
+
+       
 
         string FormatDate(string date)
-        {                  
-
+        {     
             return date.Substring(8, 2) + "/" + date.Substring(5, 2) + "/" + date.Substring(0, 4);
         }
+
+
 
         private FormattedSchedule GenerateSchedule(Schedule unformSchedule)
         {
@@ -241,79 +223,8 @@ namespace TandaSpreadsheetTool
         }
 
 
-        public void NetStatusChanged(NetworkStatus status)
-        {
-            switch (currentGet)
-            {
-                case CurrentGet.TEAMS:
-                    
-                    if (status == NetworkStatus.IDLE)
-                    {
-                        if (networker.Teams == null)
-                        {
-                            currentTries++;
-                            if(currentTries >= maxTries)
-                            {
-                                //failed
-                                networker.Unsubscribe(this);
-                                currentGet = CurrentGet.NONE;
-                            }
-                            else
-                            {
-                                networker.GetDepartments();
-                            }
-                            
-                        }
-                        else
-                        {
-                            currentTries = 0;
-                            currentGet = CurrentGet.STAFF;
-                            networker.GetStaff();
-
-                        }
-                    }
-                  else if (status == NetworkStatus.ERROR)
-                    {
-                        Console.WriteLine("It failes to get the teams: "+networker.LastNetErrMsg);
-                    }
-
-                    break;
-
-                case CurrentGet.STAFF:
-
-                    if (status == NetworkStatus.IDLE)
-                    {
-                        if (networker.Staff == null)
-                        {
-                            currentTries++;
-                            if (currentTries >= maxTries)
-                            {
-                                //failed
-                                networker.Unsubscribe(this);
-                                currentGet = CurrentGet.NONE;
-                            }
-                            else
-                            {
-                                networker.GetStaff();
-                            }
-                            
-                        }
-                        else
-                        {
-                            networker.Unsubscribe(this);
-                            currentTries = 0;
-                            BuildRoster();
-
-                        }
-                    }
-                    else if (status == NetworkStatus.ERROR)
-                    {
-                        Console.WriteLine("It failes to get the staff ");
-                        
-                    }
-                    break;
-            }
-        }
+       
+        
 
       
 

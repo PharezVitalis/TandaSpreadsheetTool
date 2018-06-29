@@ -16,7 +16,7 @@ namespace TandaSpreadsheetTool
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new T());
+            Application.Run(new Form1());
         }
     }
 }
