@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace TandaSpreadsheetTool
 {
@@ -17,6 +18,7 @@ namespace TandaSpreadsheetTool
         int currentTries = 0;
 
         bool hasTeams = false;
+       
 
         List<User> staffObjs;
 
@@ -26,9 +28,9 @@ namespace TandaSpreadsheetTool
 
       
 
-        int[] staffIds;
+  
 
-        FormattedRoster formRoster;
+       
 
         public RosterBuilder(Networker networker, Form1 form, int maxTries = 5, bool autoGetData = true )
         {
@@ -36,7 +38,8 @@ namespace TandaSpreadsheetTool
 
             this.networker = networker;
             this.form = form;
-        
+
+            
           
             staffObjs = new List<User>();
             
@@ -57,6 +60,7 @@ namespace TandaSpreadsheetTool
 
            
         }
+
 
         public async void GetStaff()
         {
@@ -96,7 +100,7 @@ namespace TandaSpreadsheetTool
             currentGet = CurrentGet.NONE;
         }
 
-         public async void BuildRoster(string dateFrom, string dateTo)
+       public async Task<FormattedRoster> BuildRoster(string dateFrom, string dateTo)
         {
             var from = BuildDate(dateFrom);
             var to = BuildDate(dateTo);
@@ -115,9 +119,11 @@ namespace TandaSpreadsheetTool
             currentGet = CurrentGet.ROSTER;
 
 
-            for (int i = 0; i < rosters.Length; i++)
+            for (int i = 0; i < weeks; i++)
             {
-                rosters[i] = await networker.GetRooster(from.AddDays(7 * i).ToShortDateString());
+                string date = from.AddDays(7 * i).ToShortDateString();
+                date = FormatDate(date);
+                rosters[i] = await networker.GetRooster(date);
                 
             }
            
@@ -128,7 +134,7 @@ namespace TandaSpreadsheetTool
             var outRoster = new FormattedRoster();
 
             outRoster.start = dateFrom;
-            outRoster.finish = dateTo;
+          
 
             // format rosters
             for (int i = 0; i < rosters.Length; i++)
@@ -149,15 +155,15 @@ namespace TandaSpreadsheetTool
 
                
             }
-           
-            
-
-           
+            outRoster.finish = outRoster.schedules[outRoster.schedules.Count - 1].startDate;
 
 
+            return outRoster;
+
+         
         }
 
-        public DateTime BuildDate(string date)
+        public static DateTime BuildDate(string date)
         {
             var outDate = new DateTime();
 
@@ -185,10 +191,12 @@ namespace TandaSpreadsheetTool
             return outDate;
         }
 
-        public DateTime UnixToDate(int unixValue)
+        public static DateTime UnixToDate(int unixValue)
         {
             var date = new DateTime(1970, 1, 1);
             date = date.AddSeconds(unixValue);
+
+
 
             return date;
         }
@@ -198,12 +206,12 @@ namespace TandaSpreadsheetTool
 
         }
 
-        string FormatDate(string date)
+       public static string FormatDate(string date)
         {     
             return date.Substring(8, 2) + "/" + date.Substring(5, 2) + "/" + date.Substring(0, 4);
         }
 
-        void Save(string path, string data)
+        public static void Save(string path, string data)
         {
             var serializedData = Serialize(data);
 
@@ -213,12 +221,12 @@ namespace TandaSpreadsheetTool
             
         }
 
-        object Load(string path)
+       public static object Load(string path)
         {
             return Deserialize(File.ReadAllBytes(path));
         }
 
-        public byte[] Serialize(string data)
+        public static byte[] Serialize(string data)
         {
             using (MemoryStream ms = new MemoryStream())
             {
@@ -231,7 +239,7 @@ namespace TandaSpreadsheetTool
 
         }
 
-        public string Deserialize(byte[] data)
+        public static string Deserialize(byte[] data)
         {
             string outStr = "";
 

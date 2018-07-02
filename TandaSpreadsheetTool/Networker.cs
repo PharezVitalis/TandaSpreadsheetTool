@@ -303,12 +303,12 @@ namespace TandaSpreadsheetTool
 
 #region NetworkRequests
 
-        public async Task<JObject> GetToken(string username, string password)
+        public async Task<bool> GetToken(string username, string password)
         {
 
             if (token != null | status != NetworkStatus.IDLE)
             {
-                return null;
+                return false;
             }
 
             UpdateStatus = NetworkStatus.BUSY;
@@ -353,11 +353,12 @@ namespace TandaSpreadsheetTool
             {
                 mostRecentError = ex.Message;
                 UpdateStatus = NetworkStatus.ERROR;
+                return false;
             }
             UpdateStatus = NetworkStatus.IDLE;
 
 
-            return token;
+            return true;
 
         }
 
@@ -414,8 +415,6 @@ namespace TandaSpreadsheetTool
 
             return teams;
         }
-
-       
     
         public async Task<JArray> GetStaff()
         {

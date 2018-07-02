@@ -2,19 +2,20 @@
 using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Threading;
 
 namespace TandaSpreadsheetTool
 {
-    public partial class Form1 : Form, INetworkListener
+    public partial class Form1 : Form
     {
         Networker networker;
         RosterBuilder builder;
+        Thread bgThread;
+        List<FormattedRoster> rosters;
 
-       
-
-        bool gettingToken;
+      
 
         public Form1()
         {
@@ -22,7 +23,7 @@ namespace TandaSpreadsheetTool
 
             
             networker = new Networker();
-
+            rosters = new List<FormattedRoster>();
             networker.LoadUsername();
 
             if(networker.LastUser != "")
@@ -30,11 +31,12 @@ namespace TandaSpreadsheetTool
                 txtBxUName.Text = networker.LastUser;
             }
 
-            txtBxDate.Text = DateTime.Now.ToShortDateString();
+            txtBxDateFrom.Text = DateTime.Now.AddDays(-7).ToShortDateString();
+            txtBxDateTo.Text = DateTime.Now.ToShortDateString();
+
+            
            
         }
-
-        
 
         void ShowMainPanel()
         {
@@ -48,83 +50,122 @@ namespace TandaSpreadsheetTool
             pnlLogIn.Visible = true;
         }
 
-        public void NetStatusChanged(NetworkStatus newStatus)
+        void EnableLogInPnl()
         {
-            if (gettingToken)
+            pnlLogIn.Enabled = true;
+            txtBxPwd.Text = "";
+        }
+        void LoggedIn()
+        {
+            pnlLogIn.Visible = false;
+            txtBxPwd.Text = "";
+            pnlMain.Visible = true;
+        }
+        void SetUserNameToOld()
+        {
+            txtBxUName.Text = networker.LastUser;
+            txtBxPwd.Text = "";
+        }
+
+        async  void LogIn()
+        {
+            
+            if (networker.LastUser != "")
             {
-                switch (newStatus)
+                if (object.Equals(txtBxUName.Text, networker.LastUser))
                 {
-                    case NetworkStatus.BUSY:
-
-                        break;
-
-                    case NetworkStatus.IDLE:
-                        MessageBox.Show("Connected successfully");
-
-                        ShowMainPanel();
-
+                    if (networker.SignIn(txtBxPwd.Text))
+                    {
+                        Invoke(new MethodInvoker(LoggedIn));
+                        builder = new RosterBuilder(networker, this);
                       
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to Authenticate", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
-                        gettingToken = false;
-                        networker.Unsubscribe(this);
-                        break;
+                        Invoke(new MethodInvoker(EnableLogInPnl));
+                    }
 
-                    case NetworkStatus.ERROR:
+                }
+                else
+                {
+                    var dResult = MessageBox.Show("The username is different from the stored username, only one user may be signed in. Sign previous user out?"
+                        , "Sign out Old User?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                    if (dResult == DialogResult.Yes)
+                    {
 
-                        MessageBox.Show(networker.LastNetErrMsg, "Network Operation Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        lblLoad.Text = "";
-                        gettingToken = false;
+                     
+                        networker.ClearFileData();
+                        
 
-                        btnLogIn.Enabled = true;
+                      var gotToken = await  networker.GetToken(txtBxUName.Text, txtBxPwd.Text);
 
-                        txtBxUName.Enabled = true;
-                        txtBxPwd.Enabled = true;
+                        if (!gotToken)
+                        {
+                            Invoke(new MethodInvoker(EnableLogInPnl));
+                            MessageBox.Show("Log In failed: " + networker.LastNetErrMsg, "Log In Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else
+                        {
+                            builder = new RosterBuilder(networker, this);
+                            Invoke(new MethodInvoker(LoggedIn));
+                        }
+                    }
+                    else
+                    {
+                        Invoke(new MethodInvoker(EnableLogInPnl));
+                        Invoke(new MethodInvoker(SetUserNameToOld));
 
-                        networker.Unsubscribe(this);
-                        break;
-
-
+                    }
                 }
             }
             else
             {
-                switch (newStatus)
+                var gotToken = await networker.GetToken(txtBxUName.Text, txtBxPwd.Text);
+
+                if (!gotToken)
                 {
-                    case NetworkStatus.BUSY:
-
-                        break;
-                        
-                    case NetworkStatus.IDLE:
-                        if (networker.Roster != null)
-                        {
-                            builder = new RosterBuilder(networker, this);
-                           // builder.CreateFormattedRoster();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Failed to get File");
-                        }
-
-                        btnSaveJSON.Enabled = true;
-
-
-
-                        networker.Unsubscribe(this);
-                        break;
-
-                    case NetworkStatus.ERROR:
-
-                        MessageBox.Show(networker.LastNetErrMsg, "Network Operation Failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                        lblLoad.Text = "";
-                        gettingToken = false;
-
-                        btnSaveJSON.Enabled = true;
-                        btnLogIn.Enabled = true;
-
-                        networker.Unsubscribe(this);
-                        break;
+                    Invoke(new MethodInvoker(EnableLogInPnl));
+                    MessageBox.Show("Log In failed: " + networker.LastNetErrMsg, "Log In Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
+                else
+                {
+                    builder = new RosterBuilder(networker, this);
+                    Invoke(new MethodInvoker(LoggedIn));
+                }
+
+
             }
+
+          
+
+           
+        }
+
+       async void MakeRoster()
+        {
+            var dateFrom = txtBxDateFrom.Text;
+            var dateTo = txtBxDateTo.Text;
+
+            if (dateFrom.Length != 8 & dateFrom.Length != 10)
+            {
+                MessageBox.Show("Invalid date use DD-MM-YY format", "Invalid Date", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (dateTo.Length != 8 & dateTo.Length != 10)
+            {
+                MessageBox.Show("Invalid date use DD-MM-YY format", "Invalid Date", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            
+           var newRoster= await builder.BuildRoster(dateFrom, dateTo);
+
+            rosters.Add(newRoster);
+            MessageBox.Show("Added roster");
+            btnSaveJSON.Enabled = true;
         }
 
         public void FormattingComplete()
@@ -143,118 +184,18 @@ namespace TandaSpreadsheetTool
 
         private void btnLogIn_Click(object sender, EventArgs e)
         {
-            if (networker.LastUser != "")
-            {
-                if (object.Equals(txtBxUName.Text,networker.LastUser))
-                {
-                  if (networker.SignIn(txtBxPwd.Text))
-                    {
-                        ShowMainPanel();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Failed to Authenticate", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    }
-
-                }
-                else
-                {
-                    var dResult = MessageBox.Show("The username is different from the stored username, only one user may be signed in. Sign previous user out?"
-                        , "Sign out Old User?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
-                    if (dResult == DialogResult.Yes)
-                    {
-
-                        txtBxPwd.Text = "";
-                        btnLogIn.Enabled = false;
-                        txtBxUName.Enabled = false;
-                        txtBxPwd.Enabled = false;
-                        networker.ClearFileData();
-                        networker.Subscribe(this);
-                        gettingToken = true;
-                        networker.GetToken(txtBxUName.Text, txtBxPwd.Text);
-                    }
-                    else 
-                    {
-                        txtBxUName.Text = networker.LastUser;
-                    }
-                }
-            }
-            else
-            {
-
-
-                ShowMainPanel();
-                networker.Subscribe(this);
-                gettingToken = true;
-                networker.GetToken(txtBxUName.Text, txtBxPwd.Text);
-                
-            }
-
-
-            txtBxPwd.Text = "";
-
-
+            bgThread = new Thread(() => LogIn());
+            pnlLogIn.Enabled = false;
+            bgThread.Start();
         }
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-           
+            btnSaveJSON.Enabled = false;
 
-            if(txtBxDate.Text.Length!=8 & txtBxDate.Text.Length != 10)
-            {
-                MessageBox.Show("Invalid date use DD-MM-YY format","Invalid Date",MessageBoxButtons.OK,MessageBoxIcon.Warning);               
-            }
-            else
-            {
-                var formattedDate = "";
+            bgThread = new Thread(new ThreadStart(MakeRoster));
+            bgThread.Start();
 
-                if (txtBxDate.Text.Length == 10)
-                {
-                     formattedDate = txtBxDate.Text.Substring(6, 4);
-                    formattedDate += "-";
-                    formattedDate += txtBxDate.Text.Substring(3, 2);
-                    formattedDate += "-";
-                    formattedDate += txtBxDate.Text.Substring(0, 2);
-                    Console.WriteLine(formattedDate);
-                }
-                else
-                {
-                    try
-                    {
-                        var testInt = Convert.ToInt32(txtBxDate.Text.Substring(6, 1));
-                         formattedDate = "";
-                        if(testInt == 9)
-                        {
-                            formattedDate = "19";
-                            
-                        }
-                        else
-                        {
-                            formattedDate = "20";
-                        }
-                        formattedDate += txtBxDate.Text.Substring(6, 2);
-                        formattedDate += "-";
-                        formattedDate += txtBxDate.Text.Substring(3, 2);
-                        formattedDate += "-";
-                        formattedDate += txtBxDate.Text.Substring(0, 2);
-                        Console.WriteLine(formattedDate);
-                    }
-                    catch 
-                    {
-                        MessageBox.Show("Invalid date use DD-MM-YY format", "Invalid Date", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
-                }
-
-                 networker.Subscribe(this);
-                networker.GetRooster(formattedDate);
-                btnSaveJSON.Enabled = false;
-            }
-
-            
-
-
-             
         }
 
         
