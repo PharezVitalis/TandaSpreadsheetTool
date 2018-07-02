@@ -161,7 +161,7 @@ namespace TandaSpreadsheetTool
             }
 
             
-           var newRoster= await builder.BuildRoster(dateFrom, dateTo);
+          FormattedRoster newRoster= await builder.BuildRoster(dateFrom, dateTo);
 
             rosters.Add(newRoster);
             MessageBox.Show("Added roster");
@@ -184,6 +184,7 @@ namespace TandaSpreadsheetTool
 
         private void btnLogIn_Click(object sender, EventArgs e)
         {
+         
             bgThread = new Thread(() => LogIn());
             pnlLogIn.Enabled = false;
             bgThread.Start();
@@ -191,10 +192,23 @@ namespace TandaSpreadsheetTool
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            btnSaveJSON.Enabled = false;
+           
 
-            bgThread = new Thread(new ThreadStart(MakeRoster));
-            bgThread.Start();
+            if (builder!=null)
+            {
+               
+                    btnSaveJSON.Enabled = false;
+                    bgThread = new Thread(new ThreadStart(MakeRoster));
+                    bgThread.Start();
+                
+            }
+            else
+            {
+                builder = new RosterBuilder(networker, this);
+            }
+            
+
+            
 
         }
 

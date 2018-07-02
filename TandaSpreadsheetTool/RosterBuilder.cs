@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TandaSpreadsheetTool
 {
-    class RosterBuilder:INetworkListener
+    class RosterBuilder
     {
         
         Networker networker;
@@ -15,24 +15,24 @@ namespace TandaSpreadsheetTool
         Form1 form;
 
         int maxTries;
-        int currentTries = 0;
+        
 
-        bool hasTeams = false;
+       
        
 
         List<User> staffObjs;
 
         List<Team> teamObjs;
 
-    CurrentGet currentGet = CurrentGet.NONE;
 
+        bool hasTeams;
       
 
   
 
        
 
-        public RosterBuilder(Networker networker, Form1 form, int maxTries = 5, bool autoGetData = true )
+        public RosterBuilder(Networker networker, Form1 form, int maxTries = 5  )
         {
             this.maxTries = maxTries;
 
@@ -45,63 +45,76 @@ namespace TandaSpreadsheetTool
             
             teamObjs = new List<Team>();
 
-            if (networker.Roster == null)
-            {
-                return;
-            }
-
            
-          if (autoGetData)
-            {
-                GetStaff();
-                GetTeams();
-                hasTeams = true;
-            }
+
 
            
         }
 
 
-        public async void GetStaff()
+        public async Task<bool> GetStaff()
         {
-            currentGet = CurrentGet.STAFF;
+           
 
             var staffJArr = await networker.GetStaff();
-
-            for (int i = 0; i < staffJArr.Count; i++)
+            try
             {
-                var staff = JsonConvert.DeserializeObject<User>(staffJArr[i].ToString());
 
-                if (!staffObjs.Contains(staff))
+
+                for (int i = 0; i < staffJArr.Count; i++)
                 {
-                    staffObjs.Add(staff);
-                }                
-            }
+                    var staff = JsonConvert.DeserializeObject<User>(staffJArr[i].ToString());
 
-            currentGet = CurrentGet.NONE;
-        }
-
-        public async void GetTeams()
-        {
-            currentGet = CurrentGet.TEAMS;
-
-            var teamsArr = await networker.GetDepartments();
-
-            for (int i = 0; i < teamsArr.Count; i++)
-            {
-                var team = JsonConvert.DeserializeObject<Team>(teamsArr[i].ToString());
-
-                if (!teamObjs.Contains(team))
-                {
-                    teamObjs.Add(team);
+                    if (!staffObjs.Contains(staff))
+                    {
+                        staffObjs.Add(staff);
+                    }
                 }
             }
 
-            currentGet = CurrentGet.NONE;
+            catch
+            {
+                
+                return false;
+            }
+           
+            return true;
+
+        }
+
+        public async Task<bool> GetTeams()
+        {
+            
+
+            var teamsArr = await networker.GetDepartments();
+
+            try
+            {
+                for (int i = 0; i < teamsArr.Count; i++)
+                {
+                    var team = JsonConvert.DeserializeObject<Team>(teamsArr[i].ToString());
+
+                    if (!teamObjs.Contains(team))
+                    {
+                        teamObjs.Add(team);
+                    }
+                }
+            }
+            catch
+            {
+               
+                return false;
+            }
+           
+
+            return true;
         }
 
        public async Task<FormattedRoster> BuildRoster(string dateFrom, string dateTo)
         {
+            var currentTries = 0;
+            
+
             var from = BuildDate(dateFrom);
             var to = BuildDate(dateTo);
 
@@ -112,11 +125,35 @@ namespace TandaSpreadsheetTool
 
             if (!hasTeams)
             {
-                GetTeams();
-                GetStaff();
+                bool gotTeams = false;
+                bool gotStaff = false;
+                while (!gotTeams & currentTries<maxTries )
+                {
+                    gotTeams = await GetTeams();
+                    
+
+                    currentTries++;
+                }
+                currentTries = 0;
+
+                while (!gotStaff & currentTries < maxTries)
+                {
+                    gotStaff = await GetStaff();
+
+
+                    currentTries++;
+                }
+                currentTries = 0;
+
+                if (gotStaff & gotTeams)
+                {
+                    hasTeams = true;
+                }
+                else return null;
+
             }
 
-            currentGet = CurrentGet.ROSTER;
+            
 
 
             for (int i = 0; i < weeks; i++)
@@ -128,7 +165,7 @@ namespace TandaSpreadsheetTool
             }
            
 
-            currentGet = CurrentGet.NONE;
+            
 
 
             var outRoster = new FormattedRoster();
@@ -147,7 +184,7 @@ namespace TandaSpreadsheetTool
 
                     for (int k = 0; k < currentDay.schedules.Count; k++)
                     {
-                        var currentSchedule = currentDay.schedules[j];
+                        var currentSchedule = currentDay.schedules[k];
 
                         outRoster.schedules.Add(GenerateSchedule(currentSchedule));
                     }
@@ -173,7 +210,7 @@ namespace TandaSpreadsheetTool
             if (date.Length < 10)
             {
                 int years = Convert.ToInt32(date.Substring(6, 2));
-                if (years > DateTime.Now.Year)
+                if (years > (DateTime.Now.Year - 2000))
                 {
                     years += 1900;
                 }
@@ -201,10 +238,6 @@ namespace TandaSpreadsheetTool
             return date;
         }
 
-       public void NetStatusChanged(NetworkStatus status)
-        {
-
-        }
 
        public static string FormatDate(string date)
         {     
@@ -250,6 +283,8 @@ namespace TandaSpreadsheetTool
 
             return outStr;
         }
+
+       
 
         private FormattedSchedule GenerateSchedule(Schedule unformSchedule)
         {
