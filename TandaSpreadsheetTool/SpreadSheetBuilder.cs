@@ -22,8 +22,8 @@ namespace TandaSpreadsheetTool
         public SpreadSheetBuilder()
         {
             rosterList = new List<FormattedRoster>();
-            workbook = new Workbook();
-            worksheet = new Worksheet();
+           // workbook = new Workbook();
+          //  worksheet = new Worksheet();
             
         }
 
@@ -35,6 +35,7 @@ namespace TandaSpreadsheetTool
         {
             rosterList.Remove(roster);
         }
+
 
         public void CreateDocument()
         {
@@ -52,6 +53,12 @@ namespace TandaSpreadsheetTool
             try
             {
                 app = new Application();
+                app.ScreenUpdating = false;
+                app.Visible = true;
+
+                //remove this line, for testing only - slows down the process a great deal
+                app.ScreenUpdating = true;
+
                 workbook = app.Workbooks.Add(1);
                 worksheet = (Worksheet)workbook.Sheets[1];
             }
@@ -63,13 +70,13 @@ namespace TandaSpreadsheetTool
 
             
 
-            worksheet.Cells[0, 0] = roster.start ;
+            worksheet.Cells[1, 1].Value = roster.start ;
 
             
 
-            worksheet.Range[worksheet.Cells[0, 0], worksheet.Cells[0, 0]].Merge();
+            worksheet.Range[worksheet.Cells[1, 1], worksheet.Cells[2, 2]].Merge();
 
-            var lastDate = new DateTime();
+            var lastDate = new DateTime(1970,1,1);
 
             int pointPosition = 0;
 
@@ -79,31 +86,82 @@ namespace TandaSpreadsheetTool
             {
                 var currentDate = roster.schedules[i].startDate;
 
-                if (lastDate != currentDate)
+                if ((currentDate - lastDate).Days>0)
                 {
-                    worksheet.Cells[1, pointPosition + 2] = currentDate.Day.ToString();
-                    worksheet.Cells[2, pointPosition + 2] = currentDate.ToString("dd/MM/yyyy");
+                    worksheet.Cells[2, pointPosition + 4] = GetDay(currentDate.DayOfWeek);
+                    worksheet.Cells[3, pointPosition + 4] = currentDate.ToString("dd/MM/yyyy");
                     pointPosition++;
                     lastDate = currentDate;
                 }
             }
+            
 
-            worksheet.Range[worksheet.Cells[1, 2], worksheet.Cells[1, pointPosition + 2]].Interior.Color = headerColours[0];
-            worksheet.Range[worksheet.Cells[2, 2], worksheet.Cells[2, pointPosition + 2]].Interior.Color = headerColours[1];
-
+            worksheet.Range[worksheet.Cells[2, 2], worksheet.Cells[2, pointPosition + 3]].Interior.Color = headerColours[0];
+            worksheet.Range[worksheet.Cells[3, 2], worksheet.Cells[3, pointPosition + 3]].Interior.Color = headerColours[1];
+            
             pointPosition = 0;
 
 
             for (int i = 0; i < roster.schedules.Count; i++)
             {
+                var nameIndex = -1;
                 var currentSchedule = roster.schedules[i];
+                var scheduleX = 2;
+                
 
-                for (int j = 0; j < pointPosition+1; j++)
+                for (int j = 1; j < pointPosition; j++)
                 {
-                    if (worksheet.Cells[j,1].)
+                    var cellValue = Convert.ToString(worksheet.Cells[j + 4, 2].Value);
+
+                    if (cellValue == currentSchedule.staff)
+                    {
+                        nameIndex = j;
+                        break;
+                    }
                 }
+                
+
+                if (nameIndex == -1)
+                {
+                    pointPosition++;
+                    worksheet.Cells[pointPosition + 3, 2] = currentSchedule.staff;
+                    nameIndex = pointPosition;
+                }
+               
+                
+                    while (currentSchedule.startDate.ToShortDateString() != Convert.ToString(worksheet.Cells[3,scheduleX].Value))
+                {
+                    scheduleX++;
+                }
+                var newCellValue = (currentSchedule.team)+": "+ currentSchedule.startTime + " - " + currentSchedule.endTime;
+                
+                worksheet.Cells[nameIndex+3, scheduleX] = newCellValue;
             }
+
+            
+            
            
+        }
+
+        public string GetDay(DayOfWeek day)
+        {
+            switch (day)
+            {
+                case DayOfWeek.Friday:
+                    return "Friday";
+                case DayOfWeek.Monday:
+                    return "Monday";
+                case DayOfWeek.Saturday:
+                    return "Saturday";
+                case DayOfWeek.Sunday:
+                    return "Sunday";
+                case DayOfWeek.Thursday:
+                    return "Thursday";
+                case DayOfWeek.Tuesday:
+                    return "Tuesday";
+                default:
+                    return "Wednesday";
+            }
         }
 
     }

@@ -11,8 +11,9 @@ namespace TandaSpreadsheetTool
     {
         Networker networker;
         RosterBuilder builder;
+        SpreadSheetBuilder sheetBuilder;
         Thread bgThread;
-        List<FormattedRoster> rosters;
+       FormattedRoster roster;
 
       
 
@@ -22,7 +23,8 @@ namespace TandaSpreadsheetTool
 
             
             networker = new Networker();
-            rosters = new List<FormattedRoster>();
+            
+            sheetBuilder = new SpreadSheetBuilder();
             networker.LoadUsername();
 
             if(networker.LastUser != "")
@@ -56,6 +58,7 @@ namespace TandaSpreadsheetTool
             txtBxPwd.Text = "";
         }
         void LoggedIn()
+
         {
             pnlLogIn.Visible = false;
             txtBxPwd.Text = "";
@@ -161,9 +164,9 @@ namespace TandaSpreadsheetTool
                 Console.WriteLine(aoe.Message);
 
             }
-         
-            
-            rosters.Add(newRoster);
+
+
+            roster = newRoster;
           
          Invoke( new  MethodInvoker(EnableJsonBtn));
         }
@@ -171,20 +174,11 @@ namespace TandaSpreadsheetTool
         void EnableJsonBtn()
         {
             btnSaveJSON.Enabled = true;
-        }
 
-        public void FormattingComplete()
-        {
-           if (ckBxOpenFolder.Checked)
+            if (roster != null)
             {
-                Process.Start(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TandaJson"));
+                btnOpenExcel.Enabled = true;
             }
-            else
-            {
-                MessageBox.Show("Saved File to Documents/TandaJson");
-            }
-                
-            
         }
 
         private void btnLogIn_Click(object sender, EventArgs e)
@@ -218,6 +212,10 @@ namespace TandaSpreadsheetTool
 
         }
 
-        
+        private void btnOpenExcel_Click(object sender, EventArgs e)
+        {
+            sheetBuilder.AddRoster(roster);
+            sheetBuilder.CreateDocument();
+        }
     }
 }

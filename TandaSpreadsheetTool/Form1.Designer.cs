@@ -37,12 +37,13 @@
             this.lblUName = new System.Windows.Forms.Label();
             this.lblToContinue = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.dtPFrom = new System.Windows.Forms.DateTimePicker();
+            this.dtPTo = new System.Windows.Forms.DateTimePicker();
             this.lblDateTo = new System.Windows.Forms.Label();
             this.ckBxOpenFolder = new System.Windows.Forms.CheckBox();
             this.lblInDate = new System.Windows.Forms.Label();
             this.btnSaveJSON = new System.Windows.Forms.Button();
-            this.dtPTo = new System.Windows.Forms.DateTimePicker();
-            this.dtPFrom = new System.Windows.Forms.DateTimePicker();
+            this.btnOpenExcel = new System.Windows.Forms.Button();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -124,6 +125,7 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.btnOpenExcel);
             this.pnlMain.Controls.Add(this.dtPFrom);
             this.pnlMain.Controls.Add(this.dtPTo);
             this.pnlMain.Controls.Add(this.lblDateTo);
@@ -135,6 +137,20 @@
             this.pnlMain.Size = new System.Drawing.Size(538, 142);
             this.pnlMain.TabIndex = 1;
             this.pnlMain.Visible = false;
+            // 
+            // dtPFrom
+            // 
+            this.dtPFrom.Location = new System.Drawing.Point(72, 18);
+            this.dtPFrom.Name = "dtPFrom";
+            this.dtPFrom.Size = new System.Drawing.Size(200, 20);
+            this.dtPFrom.TabIndex = 1;
+            // 
+            // dtPTo
+            // 
+            this.dtPTo.Location = new System.Drawing.Point(72, 67);
+            this.dtPTo.Name = "dtPTo";
+            this.dtPTo.Size = new System.Drawing.Size(200, 20);
+            this.dtPTo.TabIndex = 2;
             // 
             // lblDateTo
             // 
@@ -166,7 +182,7 @@
             // 
             // btnSaveJSON
             // 
-            this.btnSaveJSON.Location = new System.Drawing.Point(378, 96);
+            this.btnSaveJSON.Location = new System.Drawing.Point(314, 73);
             this.btnSaveJSON.Name = "btnSaveJSON";
             this.btnSaveJSON.Size = new System.Drawing.Size(75, 23);
             this.btnSaveJSON.TabIndex = 4;
@@ -174,19 +190,16 @@
             this.btnSaveJSON.UseVisualStyleBackColor = true;
             this.btnSaveJSON.Click += new System.EventHandler(this.btnTest_Click);
             // 
-            // dtPTo
+            // btnOpenExcel
             // 
-            this.dtPTo.Location = new System.Drawing.Point(72, 67);
-            this.dtPTo.Name = "dtPTo";
-            this.dtPTo.Size = new System.Drawing.Size(200, 20);
-            this.dtPTo.TabIndex = 2;
-            // 
-            // dtPFrom
-            // 
-            this.dtPFrom.Location = new System.Drawing.Point(72, 18);
-            this.dtPFrom.Name = "dtPFrom";
-            this.dtPFrom.Size = new System.Drawing.Size(200, 20);
-            this.dtPFrom.TabIndex = 1;
+            this.btnOpenExcel.Enabled = false;
+            this.btnOpenExcel.Location = new System.Drawing.Point(10, 112);
+            this.btnOpenExcel.Name = "btnOpenExcel";
+            this.btnOpenExcel.Size = new System.Drawing.Size(136, 23);
+            this.btnOpenExcel.TabIndex = 7;
+            this.btnOpenExcel.Text = "Open In Excel";
+            this.btnOpenExcel.UseVisualStyleBackColor = true;
+            this.btnOpenExcel.Click += new System.EventHandler(this.btnOpenExcel_Click);
             // 
             // Form1
             // 
@@ -223,6 +236,7 @@
         private System.Windows.Forms.Label lblDateTo;
         private System.Windows.Forms.DateTimePicker dtPFrom;
         private System.Windows.Forms.DateTimePicker dtPTo;
+        private System.Windows.Forms.Button btnOpenExcel;
     }
 }
 
