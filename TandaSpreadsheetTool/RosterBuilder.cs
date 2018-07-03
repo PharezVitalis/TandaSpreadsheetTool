@@ -196,7 +196,7 @@ namespace TandaSpreadsheetTool
 
                
             }
-            outRoster.finish = outRoster.schedules[outRoster.schedules.Count - 1].startDate;
+            outRoster.finish = outRoster.schedules[outRoster.schedules.Count - 1].startDate.ToShortDateString();
 
 
             return outRoster;
@@ -317,10 +317,10 @@ namespace TandaSpreadsheetTool
             var startTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             startTime = startTime.AddSeconds(startUnix);
 
-         
 
-            outSchedule.startDate = startTime.ToString("dd/MM/yyyy");
-            outSchedule.startTime = startTime.ToString("HH:mm");
+
+            outSchedule.startDate = startTime;
+            outSchedule.startTime = startTime.ToShortTimeString();
             if(unformSchedule.finish != null)
             {
                 var endTime = new DateTime(1970,1,1,0,0,0,0);

@@ -1,5 +1,6 @@
 ﻿
 
+using System;
 using System.Collections.Generic;
 
 namespace TandaSpreadsheetTool
@@ -116,7 +117,7 @@ namespace TandaSpreadsheetTool
         public string staff;
         public string startTime;
         public string endTime;
-        public string startDate;
+        public DateTime startDate;
         public string teamNameShort;
         public string team;
 
