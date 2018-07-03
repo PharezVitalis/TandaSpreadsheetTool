@@ -362,7 +362,7 @@ namespace TandaSpreadsheetTool
 
         }
 
-        public async Task<JObject> GetRooster(string containingDate)
+        public async Task<JObject> GetRooster(DateTime containingDate)
         {
             UpdateStatus= NetworkStatus.BUSY;
             client.DefaultRequestHeaders.Clear();
@@ -375,7 +375,8 @@ namespace TandaSpreadsheetTool
 
             try
             {
-                httpresponse = await client.GetAsync("v2/rosters/on/" + containingDate);
+                httpresponse = await client.GetAsync("v2/rosters/on/" + containingDate.ToString("yyyy-MM-dd"));
+                
                 var payload = await httpresponse.Content.ReadAsStringAsync();
 
                 roster = JObject.Parse(payload);

@@ -97,6 +97,8 @@ namespace TandaSpreadsheetTool
 
         public string name { get; set; }
 
+        public string export_name { get; set; }
+
         public string colour { get; set; }
         public List<int> staff { get; set; }
         public List<int> managers { get; set; }
@@ -115,6 +117,7 @@ namespace TandaSpreadsheetTool
         public string startTime;
         public string endTime;
         public string startDate;
+        public string teamNameShort;
         public string team;
 
     }

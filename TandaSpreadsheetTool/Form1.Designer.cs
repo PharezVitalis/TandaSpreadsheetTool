@@ -37,12 +37,12 @@
             this.lblUName = new System.Windows.Forms.Label();
             this.lblToContinue = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
-            this.txtBxDateTo = new System.Windows.Forms.TextBox();
             this.lblDateTo = new System.Windows.Forms.Label();
             this.ckBxOpenFolder = new System.Windows.Forms.CheckBox();
             this.lblInDate = new System.Windows.Forms.Label();
-            this.txtBxDateFrom = new System.Windows.Forms.TextBox();
             this.btnSaveJSON = new System.Windows.Forms.Button();
+            this.dtPTo = new System.Windows.Forms.DateTimePicker();
+            this.dtPFrom = new System.Windows.Forms.DateTimePicker();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -124,11 +124,11 @@
             // 
             // pnlMain
             // 
-            this.pnlMain.Controls.Add(this.txtBxDateTo);
+            this.pnlMain.Controls.Add(this.dtPFrom);
+            this.pnlMain.Controls.Add(this.dtPTo);
             this.pnlMain.Controls.Add(this.lblDateTo);
             this.pnlMain.Controls.Add(this.ckBxOpenFolder);
             this.pnlMain.Controls.Add(this.lblInDate);
-            this.pnlMain.Controls.Add(this.txtBxDateFrom);
             this.pnlMain.Controls.Add(this.btnSaveJSON);
             this.pnlMain.Location = new System.Drawing.Point(12, 12);
             this.pnlMain.Name = "pnlMain";
@@ -136,17 +136,10 @@
             this.pnlMain.TabIndex = 1;
             this.pnlMain.Visible = false;
             // 
-            // txtBxDateTo
-            // 
-            this.txtBxDateTo.Location = new System.Drawing.Point(380, 15);
-            this.txtBxDateTo.Name = "txtBxDateTo";
-            this.txtBxDateTo.Size = new System.Drawing.Size(154, 20);
-            this.txtBxDateTo.TabIndex = 7;
-            // 
             // lblDateTo
             // 
             this.lblDateTo.AutoSize = true;
-            this.lblDateTo.Location = new System.Drawing.Point(325, 18);
+            this.lblDateTo.Location = new System.Drawing.Point(14, 73);
             this.lblDateTo.Name = "lblDateTo";
             this.lblDateTo.Size = new System.Drawing.Size(49, 13);
             this.lblDateTo.TabIndex = 6;
@@ -155,38 +148,45 @@
             // ckBxOpenFolder
             // 
             this.ckBxOpenFolder.AutoSize = true;
-            this.ckBxOpenFolder.Location = new System.Drawing.Point(23, 52);
+            this.ckBxOpenFolder.Location = new System.Drawing.Point(337, 45);
             this.ckBxOpenFolder.Name = "ckBxOpenFolder";
             this.ckBxOpenFolder.Size = new System.Drawing.Size(169, 17);
-            this.ckBxOpenFolder.TabIndex = 5;
+            this.ckBxOpenFolder.TabIndex = 3;
             this.ckBxOpenFolder.Text = "Open Folder When Complete?";
             this.ckBxOpenFolder.UseVisualStyleBackColor = true;
             // 
             // lblInDate
             // 
             this.lblInDate.AutoSize = true;
-            this.lblInDate.Location = new System.Drawing.Point(20, 18);
+            this.lblInDate.Location = new System.Drawing.Point(7, 23);
             this.lblInDate.Name = "lblInDate";
-            this.lblInDate.Size = new System.Drawing.Size(122, 13);
+            this.lblInDate.Size = new System.Drawing.Size(59, 13);
             this.lblInDate.TabIndex = 4;
-            this.lblInDate.Text = "From Date (DD-MM-YY):";
-            // 
-            // txtBxDateFrom
-            // 
-            this.txtBxDateFrom.Location = new System.Drawing.Point(149, 15);
-            this.txtBxDateFrom.Name = "txtBxDateFrom";
-            this.txtBxDateFrom.Size = new System.Drawing.Size(154, 20);
-            this.txtBxDateFrom.TabIndex = 3;
+            this.lblInDate.Text = "From Date:";
             // 
             // btnSaveJSON
             // 
-            this.btnSaveJSON.Location = new System.Drawing.Point(228, 52);
+            this.btnSaveJSON.Location = new System.Drawing.Point(378, 96);
             this.btnSaveJSON.Name = "btnSaveJSON";
             this.btnSaveJSON.Size = new System.Drawing.Size(75, 23);
-            this.btnSaveJSON.TabIndex = 2;
+            this.btnSaveJSON.TabIndex = 4;
             this.btnSaveJSON.Text = "Get JSON";
             this.btnSaveJSON.UseVisualStyleBackColor = true;
             this.btnSaveJSON.Click += new System.EventHandler(this.btnTest_Click);
+            // 
+            // dtPTo
+            // 
+            this.dtPTo.Location = new System.Drawing.Point(72, 67);
+            this.dtPTo.Name = "dtPTo";
+            this.dtPTo.Size = new System.Drawing.Size(200, 20);
+            this.dtPTo.TabIndex = 2;
+            // 
+            // dtPFrom
+            // 
+            this.dtPFrom.Location = new System.Drawing.Point(72, 18);
+            this.dtPFrom.Name = "dtPFrom";
+            this.dtPFrom.Size = new System.Drawing.Size(200, 20);
+            this.dtPFrom.TabIndex = 1;
             // 
             // Form1
             // 
@@ -219,10 +219,10 @@
         private System.Windows.Forms.Panel pnlMain;
         private System.Windows.Forms.Button btnSaveJSON;
         private System.Windows.Forms.Label lblInDate;
-        private System.Windows.Forms.TextBox txtBxDateFrom;
         private System.Windows.Forms.CheckBox ckBxOpenFolder;
-        private System.Windows.Forms.TextBox txtBxDateTo;
         private System.Windows.Forms.Label lblDateTo;
+        private System.Windows.Forms.DateTimePicker dtPFrom;
+        private System.Windows.Forms.DateTimePicker dtPTo;
     }
 }
 

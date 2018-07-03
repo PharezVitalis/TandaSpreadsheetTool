@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using System.Threading;
 
 namespace TandaSpreadsheetTool
@@ -31,10 +30,11 @@ namespace TandaSpreadsheetTool
                 txtBxUName.Text = networker.LastUser;
             }
 
-            txtBxDateFrom.Text = DateTime.Now.AddDays(-7).ToShortDateString();
-            txtBxDateTo.Text = DateTime.Now.ToShortDateString();
 
-            
+            dtPFrom.Value = DateTime.Now.AddDays(-7);
+            dtPTo.Value = DateTime.Now;
+
+            AcceptButton = btnLogIn;
            
         }
 
@@ -60,6 +60,7 @@ namespace TandaSpreadsheetTool
             pnlLogIn.Visible = false;
             txtBxPwd.Text = "";
             pnlMain.Visible = true;
+            AcceptButton = btnSaveJSON;
         }
         void SetUserNameToOld()
         {
@@ -145,26 +146,30 @@ namespace TandaSpreadsheetTool
 
        async void MakeRoster()
         {
-            var dateFrom = txtBxDateFrom.Text;
-            var dateTo = txtBxDateTo.Text;
+            var dateFrom = dtPFrom.Value;
+            var dateTo = dtPTo.Value;
 
-            if (dateFrom.Length != 8 & dateFrom.Length != 10)
+            var newRoster = new FormattedRoster();
+
+            try
             {
-                MessageBox.Show("Invalid date use DD-MM-YY format", "Invalid Date", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                 newRoster = await builder.BuildRoster(dateFrom, dateTo);
             }
-
-            if (dateTo.Length != 8 & dateTo.Length != 10)
+            catch (ArgumentOutOfRangeException aoe)
             {
-                MessageBox.Show("Invalid date use DD-MM-YY format", "Invalid Date", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                Console.WriteLine(aoe.ActualValue);
+                Console.WriteLine(aoe.Message);
 
+            }
+         
             
-          FormattedRoster newRoster= await builder.BuildRoster(dateFrom, dateTo);
-
             rosters.Add(newRoster);
-            MessageBox.Show("Added roster");
+          
+         Invoke( new  MethodInvoker(EnableJsonBtn));
+        }
+
+        void EnableJsonBtn()
+        {
             btnSaveJSON.Enabled = true;
         }
 
@@ -198,8 +203,9 @@ namespace TandaSpreadsheetTool
             {
                
                     btnSaveJSON.Enabled = false;
-                    bgThread = new Thread(new ThreadStart(MakeRoster));
-                    bgThread.Start();
+                bgThread = new Thread(new ThreadStart(MakeRoster));
+                bgThread.Start();
+              
                 
             }
             else

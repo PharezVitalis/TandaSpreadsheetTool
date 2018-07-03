@@ -110,16 +110,13 @@ namespace TandaSpreadsheetTool
             return true;
         }
 
-       public async Task<FormattedRoster> BuildRoster(string dateFrom, string dateTo)
+       public async Task<FormattedRoster> BuildRoster(DateTime dateFrom, DateTime dateTo)
         {
             var currentTries = 0;
-            
-
-            var from = BuildDate(dateFrom);
-            var to = BuildDate(dateTo);
+           
 
 
-            int weeks =(int) (to - from).TotalDays / 7;
+            int weeks =(int) (dateTo - dateFrom ).TotalDays / 7;
 
             var rosters = new JObject[weeks];
 
@@ -149,18 +146,23 @@ namespace TandaSpreadsheetTool
                 {
                     hasTeams = true;
                 }
-                else return null;
+                else
+                {
+                   
+                    return null;
+                }
 
             }
 
-            
 
+            var currentDate = dateFrom;
 
             for (int i = 0; i < weeks; i++)
             {
-                string date = from.AddDays(7 * i).ToShortDateString();
-                date = FormatDate(date);
-                rosters[i] = await networker.GetRooster(date);
+               
+                rosters[i] = await networker.GetRooster(dateFrom);
+
+                currentDate = currentDate.AddDays(7);
                 
             }
            
@@ -170,7 +172,9 @@ namespace TandaSpreadsheetTool
 
             var outRoster = new FormattedRoster();
 
-            outRoster.start = dateFrom;
+            outRoster.start = dateFrom.ToShortDateString();
+
+          
           
 
             // format rosters
@@ -202,30 +206,32 @@ namespace TandaSpreadsheetTool
 
         public static DateTime BuildDate(string date)
         {
-            var outDate = new DateTime();
+            int days = 0;
+            int months = 0;
+            int years = 0;
 
-           outDate=outDate.AddDays(Convert.ToInt32(date.Substring(0, 2)));
-           outDate= outDate.AddMonths(Convert.ToInt32(date.Substring(3, 2)));
-            
-            if (date.Length < 10)
+            try
             {
-                int years = Convert.ToInt32(date.Substring(6, 2));
-                if (years > (DateTime.Now.Year - 2000))
+            days = Convert.ToInt32(date.Substring(0, 2));
+                months = Convert.ToInt32(date.Substring(3, 2));
+                if (date.Length > 8)
                 {
-                    years += 1900;
+                    years = Convert.ToInt32(date.Substring(6, 4));
                 }
                 else
                 {
-                    years += 2000;
+                    years = 2000 + (Convert.ToInt32(date.Substring(6, 2)));
                 }
-                outDate = outDate.AddYears(years);
             }
-            else
+            catch (Exception e)
             {
-                outDate = outDate.AddYears(Convert.ToInt32(date.Substring(6, 4)));
+
+                Console.WriteLine(e.Message);
+                return new DateTime(1970, 1, 1);
+                
             }
 
-            return outDate;
+            return new DateTime(years, months, days);
         }
 
         public static DateTime UnixToDate(int unixValue)
@@ -241,7 +247,7 @@ namespace TandaSpreadsheetTool
 
        public static string FormatDate(string date)
         {     
-            return date.Substring(8, 2) + "/" + date.Substring(5, 2) + "/" + date.Substring(0, 4);
+            return date.Substring(6, 4) + "/" + date.Substring(3, 2) + "/" + date.Substring(0, 2);
         }
 
         public static void Save(string path, string data)
@@ -336,6 +342,7 @@ namespace TandaSpreadsheetTool
                 if (Convert.ToInt32(unformSchedule.department_id) == teamObjs[i].id)
                 {
                     outSchedule.team = teamObjs[i].name;
+                    outSchedule.teamNameShort = teamObjs[i].export_name;
                     break;
                 }
             }
