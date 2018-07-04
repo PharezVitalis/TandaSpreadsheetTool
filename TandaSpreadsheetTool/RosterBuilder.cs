@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace TandaSpreadsheetTool
 {
@@ -29,7 +30,13 @@ namespace TandaSpreadsheetTool
       
 
   
-
+        public static string Path
+        {
+            get
+            {
+                return Environment.CurrentDirectory + "\\" + "Data"+"\\";
+            }
+        }
        
 
         public RosterBuilder(Networker networker, Form1 form, int maxTries = 5  )
@@ -52,11 +59,48 @@ namespace TandaSpreadsheetTool
         }
 
 
-        public async Task<bool> GetStaff()
+     public string LastStaffUpdate
         {
-           
+            get
+            {
+                if (File.Exists(Path + "staff.json"))
+                {
+                    return File.GetLastWriteTime(Path + "staff.json").ToLongDateString();  
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
 
-            var staffJArr = await networker.GetStaff();
+        public async Task<bool> GetStaff(bool forceUpdate = false)
+        {
+            var staffJArr = new JArray();
+            var readFromFile = false;
+
+            if (!forceUpdate & File.Exists(Path+"staff.json" )) 
+            {
+                var fileData = Load(Path + "staff.json");
+                try
+                {
+                    staffJArr = JArray.Parse(fileData);
+                    readFromFile = true;
+                }
+                catch
+                {
+                    File.Delete(Path + "staff.json");
+                    staffJArr = await networker.GetStaff();
+                }
+                
+                
+                
+            }
+            else
+            {
+                staffJArr = await networker.GetStaff();
+            }
+             
             try
             {
 
@@ -77,16 +121,80 @@ namespace TandaSpreadsheetTool
                 
                 return false;
             }
-           
+
+            if (!readFromFile)
+            {
+                string[] removedFields = { "date_of_birth", "passcode" , "user_levels", "preferred_hours", "active", "email",
+                    "photo", "phone","normalised_phone","time_zone", "created_at" };
+
+
+                for (int i = 0; i < staffJArr.Count; i++)
+                {
+                    var currentToken = staffJArr[i];
+                    var container = currentToken as JContainer;
+
+                    if (container == null)
+                    {
+                        continue;
+                    }
+                    var removeList = new List<JToken>();
+
+                    foreach (var jt in container.Children())
+                    {
+                        var p = jt as JProperty;
+
+
+                        if (p != null & removedFields.Contains(p.Name))
+                        {
+                            removeList.Add(jt);
+                        }
+
+                    }
+
+                    foreach (var el in removeList)
+                    {
+                        el.Remove();
+                    }
+
+                }
+                Save(Path + "staff.json", staffJArr.ToString());
+            }
+            
+
+
             return true;
 
         }
 
-        public async Task<bool> GetTeams()
+        public async Task<bool> GetTeams(bool forceUpdate = false)
         {
-            
+            var teamsArr = new JArray();
+            bool readFromFile = false;
 
-            var teamsArr = await networker.GetDepartments();
+            if (!forceUpdate & File.Exists(Path + "teams.json"))
+            {
+                var fileData = Load(Path + "teams.json");
+                try
+                {
+                    teamsArr = JArray.Parse(fileData);
+                    readFromFile = true;
+                }
+                catch
+                {
+                    File.Delete(Path + "teams.json");
+                    teamsArr = await networker.GetStaff();
+                }
+
+
+
+            }
+            else
+            {
+                teamsArr = await networker.GetDepartments();
+            }
+
+
+         
 
             try
             {
@@ -105,7 +213,12 @@ namespace TandaSpreadsheetTool
                
                 return false;
             }
-           
+
+            if (!readFromFile)
+            {
+                Save(Path + "teams.json", teamsArr.ToString());
+            }
+
 
             return true;
         }
@@ -283,7 +396,6 @@ namespace TandaSpreadsheetTool
             return date;
         }
 
-
         public static string FormatDate(string date)
         {     
             return date.Substring(6, 4) + "/" + date.Substring(3, 2) + "/" + date.Substring(0, 2);
@@ -299,7 +411,7 @@ namespace TandaSpreadsheetTool
             
         }
 
-       public static object Load(string path)
+       public static string Load(string path)
         {
             return Deserialize(File.ReadAllBytes(path));
         }
@@ -328,8 +440,6 @@ namespace TandaSpreadsheetTool
 
             return outStr;
         }
-
-       
 
         private FormattedSchedule GenerateSchedule(Schedule unformSchedule)
         {

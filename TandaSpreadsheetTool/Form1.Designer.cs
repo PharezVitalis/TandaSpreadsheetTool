@@ -37,13 +37,15 @@
             this.lblUName = new System.Windows.Forms.Label();
             this.lblToContinue = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.btnOpenExcel = new System.Windows.Forms.Button();
             this.dtPFrom = new System.Windows.Forms.DateTimePicker();
             this.dtPTo = new System.Windows.Forms.DateTimePicker();
             this.lblDateTo = new System.Windows.Forms.Label();
-            this.ckBxOpenFolder = new System.Windows.Forms.CheckBox();
             this.lblInDate = new System.Windows.Forms.Label();
             this.btnSaveJSON = new System.Windows.Forms.Button();
-            this.btnOpenExcel = new System.Windows.Forms.Button();
+            this.lblLastUpdated = new System.Windows.Forms.Label();
+            this.lblStatus = new System.Windows.Forms.Label();
+            this.btnUpdateStaff = new System.Windows.Forms.Button();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -125,11 +127,13 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.btnUpdateStaff);
+            this.pnlMain.Controls.Add(this.lblStatus);
+            this.pnlMain.Controls.Add(this.lblLastUpdated);
             this.pnlMain.Controls.Add(this.btnOpenExcel);
             this.pnlMain.Controls.Add(this.dtPFrom);
             this.pnlMain.Controls.Add(this.dtPTo);
             this.pnlMain.Controls.Add(this.lblDateTo);
-            this.pnlMain.Controls.Add(this.ckBxOpenFolder);
             this.pnlMain.Controls.Add(this.lblInDate);
             this.pnlMain.Controls.Add(this.btnSaveJSON);
             this.pnlMain.Location = new System.Drawing.Point(12, 12);
@@ -137,6 +141,17 @@
             this.pnlMain.Size = new System.Drawing.Size(538, 142);
             this.pnlMain.TabIndex = 1;
             this.pnlMain.Visible = false;
+            // 
+            // btnOpenExcel
+            // 
+            this.btnOpenExcel.Enabled = false;
+            this.btnOpenExcel.Location = new System.Drawing.Point(10, 112);
+            this.btnOpenExcel.Name = "btnOpenExcel";
+            this.btnOpenExcel.Size = new System.Drawing.Size(150, 23);
+            this.btnOpenExcel.TabIndex = 7;
+            this.btnOpenExcel.Text = "Open In Excel";
+            this.btnOpenExcel.UseVisualStyleBackColor = true;
+            this.btnOpenExcel.Click += new System.EventHandler(this.btnOpenExcel_Click);
             // 
             // dtPFrom
             // 
@@ -161,16 +176,6 @@
             this.lblDateTo.TabIndex = 6;
             this.lblDateTo.Text = "Date To:";
             // 
-            // ckBxOpenFolder
-            // 
-            this.ckBxOpenFolder.AutoSize = true;
-            this.ckBxOpenFolder.Location = new System.Drawing.Point(337, 45);
-            this.ckBxOpenFolder.Name = "ckBxOpenFolder";
-            this.ckBxOpenFolder.Size = new System.Drawing.Size(169, 17);
-            this.ckBxOpenFolder.TabIndex = 3;
-            this.ckBxOpenFolder.Text = "Open Folder When Complete?";
-            this.ckBxOpenFolder.UseVisualStyleBackColor = true;
-            // 
             // lblInDate
             // 
             this.lblInDate.AutoSize = true;
@@ -182,24 +187,40 @@
             // 
             // btnSaveJSON
             // 
-            this.btnSaveJSON.Location = new System.Drawing.Point(314, 73);
+            this.btnSaveJSON.Location = new System.Drawing.Point(166, 112);
             this.btnSaveJSON.Name = "btnSaveJSON";
-            this.btnSaveJSON.Size = new System.Drawing.Size(75, 23);
+            this.btnSaveJSON.Size = new System.Drawing.Size(150, 23);
             this.btnSaveJSON.TabIndex = 4;
-            this.btnSaveJSON.Text = "Get JSON";
+            this.btnSaveJSON.Text = "Get Roster (JSON)";
             this.btnSaveJSON.UseVisualStyleBackColor = true;
             this.btnSaveJSON.Click += new System.EventHandler(this.btnTest_Click);
             // 
-            // btnOpenExcel
+            // lblLastUpdated
             // 
-            this.btnOpenExcel.Enabled = false;
-            this.btnOpenExcel.Location = new System.Drawing.Point(10, 112);
-            this.btnOpenExcel.Name = "btnOpenExcel";
-            this.btnOpenExcel.Size = new System.Drawing.Size(136, 23);
-            this.btnOpenExcel.TabIndex = 7;
-            this.btnOpenExcel.Text = "Open In Excel";
-            this.btnOpenExcel.UseVisualStyleBackColor = true;
-            this.btnOpenExcel.Click += new System.EventHandler(this.btnOpenExcel_Click);
+            this.lblLastUpdated.AutoSize = true;
+            this.lblLastUpdated.Location = new System.Drawing.Point(352, 93);
+            this.lblLastUpdated.Name = "lblLastUpdated";
+            this.lblLastUpdated.Size = new System.Drawing.Size(118, 13);
+            this.lblLastUpdated.TabIndex = 9;
+            this.lblLastUpdated.Text = "Staff List Last Updated:";
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(355, 24);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(0, 13);
+            this.lblStatus.TabIndex = 11;
+            // 
+            // btnUpdateStaff
+            // 
+            this.btnUpdateStaff.Location = new System.Drawing.Point(371, 112);
+            this.btnUpdateStaff.Name = "btnUpdateStaff";
+            this.btnUpdateStaff.Size = new System.Drawing.Size(150, 23);
+            this.btnUpdateStaff.TabIndex = 12;
+            this.btnUpdateStaff.Text = "Update Staff List";
+            this.btnUpdateStaff.UseVisualStyleBackColor = true;
+            this.btnUpdateStaff.Click += new System.EventHandler(this.btnUpdateStaff_Click);
             // 
             // Form1
             // 
@@ -209,6 +230,7 @@
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlLogIn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "Tanda Roster Spreadsheet Tool";
             this.pnlLogIn.ResumeLayout(false);
@@ -232,11 +254,13 @@
         private System.Windows.Forms.Panel pnlMain;
         private System.Windows.Forms.Button btnSaveJSON;
         private System.Windows.Forms.Label lblInDate;
-        private System.Windows.Forms.CheckBox ckBxOpenFolder;
         private System.Windows.Forms.Label lblDateTo;
         private System.Windows.Forms.DateTimePicker dtPFrom;
         private System.Windows.Forms.DateTimePicker dtPTo;
         private System.Windows.Forms.Button btnOpenExcel;
+        private System.Windows.Forms.Label lblStatus;
+        private System.Windows.Forms.Label lblLastUpdated;
+        private System.Windows.Forms.Button btnUpdateStaff;
     }
 }
 

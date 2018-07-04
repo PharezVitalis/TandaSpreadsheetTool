@@ -51,7 +51,7 @@ namespace TandaSpreadsheetTool
 
         public bool SignIn(string password)
         {
-            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "data.wpn") & password != "")
+            if (File.Exists(RosterBuilder.Path + "data.wpn") & password != "")
             {
                 if (password != "")
                 {
@@ -60,7 +60,7 @@ namespace TandaSpreadsheetTool
                     {
 
 
-                        using (FileStream file = new FileStream(AppDomain.CurrentDomain.BaseDirectory + "data.wpn", FileMode.Open))
+                        using (FileStream file = new FileStream(RosterBuilder.Path + "data.wpn", FileMode.Open))
                         {
                             byte[] data = new byte[file.Length];
 
@@ -152,7 +152,7 @@ namespace TandaSpreadsheetTool
 
             try
             {
-                File.WriteAllBytes(AppDomain.CurrentDomain.BaseDirectory + "ud.wpn", storedBytes);
+                File.WriteAllBytes(RosterBuilder.Path + "ud.wpn", storedBytes);
             }
             catch(Exception ex)
             {
@@ -163,7 +163,7 @@ namespace TandaSpreadsheetTool
 
         public string LoadUsername()
         {
-            if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + "ud.wpn"))
+            if (!File.Exists(RosterBuilder.Path  + "ud.wpn"))
             {
                 return "";
             }
@@ -173,7 +173,7 @@ namespace TandaSpreadsheetTool
 
             try
             {
-                fileData = File.ReadAllBytes(AppDomain.CurrentDomain.BaseDirectory + "ud.wpn");
+                fileData = File.ReadAllBytes(RosterBuilder.Path + "ud.wpn");
                 username = Decrypt(Encoding.UTF8.GetString(fileData), userNameKey);
                 
             }
@@ -207,7 +207,7 @@ namespace TandaSpreadsheetTool
 
             try
             {
-                File.WriteAllBytes(AppDomain.CurrentDomain.BaseDirectory + "data.wpn", outBytes);
+                File.WriteAllBytes(RosterBuilder.Path+ "data.wpn", outBytes);
             }
             catch(Exception e)
             {

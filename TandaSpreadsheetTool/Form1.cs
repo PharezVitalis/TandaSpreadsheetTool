@@ -23,6 +23,8 @@ namespace TandaSpreadsheetTool
 
             
             networker = new Networker();
+
+            Directory.CreateDirectory(RosterBuilder.Path);
             
             sheetBuilder = new SpreadSheetBuilder();
             networker.LoadUsername();
@@ -174,7 +176,7 @@ namespace TandaSpreadsheetTool
         void EnableJsonBtn()
         {
             btnSaveJSON.Enabled = true;
-
+            btnUpdateStaff.Enabled = true;
             if (roster != null)
             {
                 btnOpenExcel.Enabled = true;
@@ -191,24 +193,24 @@ namespace TandaSpreadsheetTool
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-           
-
-            if (builder!=null)
+            if (builder==null)
             {
+                builder = new RosterBuilder(networker, this);
                
-                    btnSaveJSON.Enabled = false;
+                
+            }
+
+            btnSaveJSON.Enabled = false;
+            btnUpdateStaff.Enabled = false;
+            if (!bgThread.IsAlive)
+            {
                 bgThread = new Thread(new ThreadStart(MakeRoster));
                 bgThread.Start();
-              
-                
             }
             else
             {
-                builder = new RosterBuilder(networker, this);
+                MessageBox.Show("Task Aborted: Background processes are still running");
             }
-            
-
-            
 
         }
 
@@ -216,6 +218,36 @@ namespace TandaSpreadsheetTool
         {
             sheetBuilder.AddRoster(roster);
             sheetBuilder.CreateDocument();
+        }
+
+        async private void RefreshStaffList()
+        {
+            await builder.GetStaff(true);
+            await builder.GetTeams(true);
+            Invoke(new MethodInvoker(EnableJsonBtn));
+        }
+
+
+        private void btnUpdateStaff_Click(object sender, EventArgs e)
+        {
+            if (builder == null)
+            {
+                builder = new RosterBuilder(networker, this);
+
+            }
+
+            btnSaveJSON.Enabled = false;
+            btnUpdateStaff.Enabled = false;
+
+            if (!bgThread.IsAlive)
+            {
+                bgThread = new Thread(new ThreadStart(RefreshStaffList));
+                bgThread.Start();
+            }
+            else
+            {
+                MessageBox.Show("Task Aborted: Background processes are still running");
+            }
         }
     }
 }
