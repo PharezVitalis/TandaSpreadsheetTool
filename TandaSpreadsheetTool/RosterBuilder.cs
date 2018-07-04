@@ -350,10 +350,9 @@ namespace TandaSpreadsheetTool
                
             }
 
-            var startUnix = Convert.ToInt32(unformSchedule.start);
            
 
-            var startTime = UnixToDate(startUnix);
+            var startTime = UnixToDate(Convert.ToInt32(unformSchedule.start));
 
 
 
@@ -361,8 +360,7 @@ namespace TandaSpreadsheetTool
             outSchedule.startTime = startTime.ToShortTimeString();
             if(unformSchedule.finish != null)
             {
-                var endTime = new DateTime(1970,1,1,0,0,0,0);
-               endTime= endTime.AddSeconds(Convert.ToInt64(unformSchedule.finish));
+                var endTime = UnixToDate(Convert.ToInt32(unformSchedule.finish));
                 
 
                 outSchedule.endTime = endTime.ToString("HH:mm");
