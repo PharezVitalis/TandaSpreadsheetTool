@@ -118,7 +118,23 @@ namespace TandaSpreadsheetTool
 
             int weeks =(int) (dateTo - dateFrom ).TotalDays / 7;
 
-            var rosters = new JObject[weeks];
+            var rosters = (dateFrom.DayOfWeek != DayOfWeek.Monday)? new JObject[weeks+1]: new JObject[weeks];
+
+            var currentDate = dateFrom;
+
+            for (int i = 0; i < weeks; i++)
+            {
+
+                rosters[i] = await networker.GetRooster(dateFrom);
+
+                currentDate = currentDate.AddDays(7);
+
+            }
+            if (dateFrom.DayOfWeek!= DayOfWeek.Monday)
+            {
+                rosters[rosters.Length - 1] = await networker.GetRooster(dateTo);
+            }
+            
 
             if (!hasTeams)
             {
@@ -155,24 +171,14 @@ namespace TandaSpreadsheetTool
             }
 
 
-            var currentDate = dateFrom;
-
-            for (int i = 0; i < weeks; i++)
-            {
-               
-                rosters[i] = await networker.GetRooster(dateFrom);
-
-                currentDate = currentDate.AddDays(7);
-                
-            }
            
 
+          
             
-
 
             var outRoster = new FormattedRoster();
 
-            outRoster.start = dateFrom.ToShortDateString();
+            
 
           
           
@@ -189,14 +195,24 @@ namespace TandaSpreadsheetTool
                     for (int k = 0; k < currentDay.schedules.Count; k++)
                     {
                         var currentSchedule = currentDay.schedules[k];
+                        currentDate = UnixToDate(Convert.ToInt32(currentSchedule.start));
 
+
+                        if ((currentDate - dateFrom).Days < 0)
+                        {
+
+                        }
+                        else if ((dateTo - currentDate).Days < 0)
+                        {
+                            break;
+                        }
                         outRoster.schedules.Add(GenerateSchedule(currentSchedule));
                     }
                 }
 
                
             }
-            outRoster.finish = outRoster.schedules[outRoster.schedules.Count - 1].startDate.ToShortDateString();
+            outRoster.finish = outRoster.schedules[outRoster.schedules.Count - 1].startDate;
 
 
             return outRoster;
@@ -244,8 +260,18 @@ namespace TandaSpreadsheetTool
             return date;
         }
 
+        public static DateTime UnixToDate(long unixValue)
+        {
+            var date = new DateTime(1970, 1, 1);
+            date = date.AddSeconds(unixValue);
 
-       public static string FormatDate(string date)
+
+
+            return date;
+        }
+
+
+        public static string FormatDate(string date)
         {     
             return date.Substring(6, 4) + "/" + date.Substring(3, 2) + "/" + date.Substring(0, 2);
         }
@@ -311,11 +337,10 @@ namespace TandaSpreadsheetTool
                
             }
 
-            var startUnix = Convert.ToInt64(unformSchedule.start);
-            Console.WriteLine(startUnix);
+            var startUnix = Convert.ToInt32(unformSchedule.start);
+           
 
-            var startTime = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            startTime = startTime.AddSeconds(startUnix);
+            var startTime = UnixToDate(startUnix);
 
 
 

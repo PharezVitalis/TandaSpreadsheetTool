@@ -27,7 +27,7 @@ namespace TandaSpreadsheetTool
     {
         public int id;
         public List<Day> schedules { get; set; }
-        public string start { get; set; }
+        public DateTime start { get; set; }
         public string finish { get; set; }
         public int updated_at { get; set; }
 
@@ -75,8 +75,8 @@ namespace TandaSpreadsheetTool
     public class FormattedRoster
     {
         public List<FormattedSchedule> schedules { get; set; }
-        public string start { get; set; }
-        public string finish { get; set; }
+        public DateTime start { get; set; }
+        public DateTime finish { get; set; }
         
         public FormattedRoster()
         {

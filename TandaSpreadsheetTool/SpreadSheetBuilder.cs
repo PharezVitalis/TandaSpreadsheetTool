@@ -70,7 +70,7 @@ namespace TandaSpreadsheetTool
 
             
 
-            worksheet.Cells[1, 1].Value = roster.start ;
+            worksheet.Cells[1, 1].Value = roster.start.ToString("dd/MM/yyyy") ;
 
             
 
@@ -78,36 +78,34 @@ namespace TandaSpreadsheetTool
 
             var lastDate = new DateTime(1970,1,1);
 
-            int pointPosition = 0;
 
-         
 
-            for (int i = 0; i < roster.schedules.Count; i++)
+
+
+
+
+            //   worksheet.Range[worksheet.Cells[2, 2], worksheet.Cells[2, pointPosition + 3]].Interior.Color = headerColours[0];
+            //   worksheet.Range[worksheet.Cells[3, 2], worksheet.Cells[3, pointPosition + 3]].Interior.Color = headerColours[1];
+
+            int nOfDays = Convert.ToInt32((roster.finish - roster.start).TotalDays);
+
+            for (int i = 0; i < nOfDays; i++)
             {
-                var currentDate = roster.schedules[i].startDate;
-
-                if ((currentDate - lastDate).Days>0)
-                {
-                    worksheet.Cells[2, pointPosition + 4] = GetDay(currentDate.DayOfWeek);
-                    worksheet.Cells[3, pointPosition + 4] = currentDate.ToString("dd/MM/yyyy");
-                    pointPosition++;
-                    lastDate = currentDate;
-                }
+                var date = roster.start.AddDays(i);
+                worksheet.Cells[2, i + 3] = Enum.GetName(typeof(DayOfWeek), date.DayOfWeek);
+                worksheet.Cells[3, i + 3] = date.ToShortDateString();
             }
-            
 
-            worksheet.Range[worksheet.Cells[2, 2], worksheet.Cells[2, pointPosition + 3]].Interior.Color = headerColours[0];
-            worksheet.Range[worksheet.Cells[3, 2], worksheet.Cells[3, pointPosition + 3]].Interior.Color = headerColours[1];
-            
-            pointPosition = 0;
-
+          var  pointPosition = 0;
+           
 
             for (int i = 0; i < roster.schedules.Count; i++)
             {
-                var nameIndex = -1;
+               var  nameIndex = -1;
                 var currentSchedule = roster.schedules[i];
-                var scheduleX = 2;
+                var scheduleX = 0;
                 
+           
 
                 for (int j = 1; j < pointPosition; j++)
                 {
@@ -124,18 +122,17 @@ namespace TandaSpreadsheetTool
                 if (nameIndex == -1)
                 {
                     pointPosition++;
-                    worksheet.Cells[pointPosition + 3, 2] = currentSchedule.staff;
+                    worksheet.Cells[pointPosition + 4, 2] = currentSchedule.staff;
                     nameIndex = pointPosition;
+                    
                 }
+                //make it work out how far along it must go from the date
+
+                scheduleX = Convert.ToInt32(( roster.start - currentSchedule.startDate).TotalDays);
                
-                
-                    while (currentSchedule.startDate.ToShortDateString() != Convert.ToString(worksheet.Cells[3,scheduleX].Value))
-                {
-                    scheduleX++;
-                }
                 var newCellValue = (currentSchedule.team)+": "+ currentSchedule.startTime + " - " + currentSchedule.endTime;
                 
-                worksheet.Cells[nameIndex+3, scheduleX] = newCellValue;
+                worksheet.Cells[nameIndex +4,scheduleX+3] = newCellValue;
             }
 
             
@@ -143,26 +140,7 @@ namespace TandaSpreadsheetTool
            
         }
 
-        public string GetDay(DayOfWeek day)
-        {
-            switch (day)
-            {
-                case DayOfWeek.Friday:
-                    return "Friday";
-                case DayOfWeek.Monday:
-                    return "Monday";
-                case DayOfWeek.Saturday:
-                    return "Saturday";
-                case DayOfWeek.Sunday:
-                    return "Sunday";
-                case DayOfWeek.Thursday:
-                    return "Thursday";
-                case DayOfWeek.Tuesday:
-                    return "Tuesday";
-                default:
-                    return "Wednesday";
-            }
-        }
+     
 
     }
   
