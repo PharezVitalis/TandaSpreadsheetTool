@@ -128,7 +128,7 @@ namespace TandaSpreadsheetTool
                 }
                 //make it work out how far along it must go from the date
 
-                scheduleX = Convert.ToInt32(( roster.start - currentSchedule.startDate).TotalDays);
+                scheduleX = ( currentSchedule.startDate - roster.start ).Days;
                
                 var newCellValue = (currentSchedule.team)+": "+ currentSchedule.startTime + " - " + currentSchedule.endTime;
                 

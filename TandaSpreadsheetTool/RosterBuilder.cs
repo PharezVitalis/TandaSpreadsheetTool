@@ -110,11 +110,23 @@ namespace TandaSpreadsheetTool
             return true;
         }
 
+        public static DateTime SetToTime(DateTime day, int hours, int minutes)
+        {
+            
+            
+            day = day - day.TimeOfDay;
+           day= day.AddHours(hours);
+            day =day.AddMinutes(minutes);
+            return day;
+
+        }
+
        public async Task<FormattedRoster> BuildRoster(DateTime dateFrom, DateTime dateTo)
         {
             var currentTries = 0;
            
-
+            dateFrom = SetToTime(dateFrom,0,0);
+            dateTo = SetToTime(dateTo, 23, 59);
 
             int weeks =(int) (dateTo - dateFrom ).TotalDays / 7;
 
@@ -198,11 +210,11 @@ namespace TandaSpreadsheetTool
                         currentDate = UnixToDate(Convert.ToInt32(currentSchedule.start));
 
 
-                        if ((currentDate - dateFrom).Days < 0)
+                        if (currentDate.CompareTo(dateFrom)<0)
                         {
-
+                            continue;
                         }
-                        else if ((dateTo - currentDate).Days < 0)
+                        else if (dateTo.CompareTo(currentDate)< 0)
                         {
                             break;
                         }
@@ -212,8 +224,8 @@ namespace TandaSpreadsheetTool
 
                
             }
-            outRoster.finish = outRoster.schedules[outRoster.schedules.Count - 1].startDate;
-
+            outRoster.finish = dateTo;
+            outRoster.start = dateFrom;
 
             return outRoster;
 
@@ -254,6 +266,7 @@ namespace TandaSpreadsheetTool
         {
             var date = new DateTime(1970, 1, 1);
             date = date.AddSeconds(unixValue);
+            date = date.ToLocalTime();
 
 
 
@@ -262,9 +275,9 @@ namespace TandaSpreadsheetTool
 
         public static DateTime UnixToDate(long unixValue)
         {
-            var date = new DateTime(1970, 1, 1);
+            var date = new DateTime(1970, 1, 1,0,0,0);
             date = date.AddSeconds(unixValue);
-
+            date = date.ToLocalTime();
 
 
             return date;
