@@ -125,36 +125,15 @@ namespace TandaSpreadsheetTool
             if (!readFromFile)
             {
                 string[] removedFields = { "date_of_birth", "passcode" , "user_levels", "preferred_hours", "active", "email",
-                    "photo", "phone","normalised_phone","time_zone", "created_at" };
+                    "photo", "phone","normalised_phone","time_zone", "created_at", "employment_start_date", "employee_id",
+                "department_ids","award_template_id", "award_tag_ids", "report_department_id",  "managed_department_ids",
+               "utc_offset",  "part_time_fixed_hours","qualifications","updated_at" };
 
 
                 for (int i = 0; i < staffJArr.Count; i++)
                 {
                     var currentToken = staffJArr[i];
-                    var container = currentToken as JContainer;
-
-                    if (container == null)
-                    {
-                        continue;
-                    }
-                    var removeList = new List<JToken>();
-
-                    foreach (var jt in container.Children())
-                    {
-                        var p = jt as JProperty;
-
-
-                        if (p != null & removedFields.Contains(p.Name))
-                        {
-                            removeList.Add(jt);
-                        }
-
-                    }
-
-                    foreach (var el in removeList)
-                    {
-                        el.Remove();
-                    }
+                    RemoveFields(currentToken, removedFields);
 
                 }
                 Save(Path + "staff.json", staffJArr.ToString());
@@ -164,6 +143,28 @@ namespace TandaSpreadsheetTool
 
             return true;
 
+        }
+
+        private void RemoveFields( JToken token, string[] fields)
+        {
+            JContainer container = token as JContainer;
+            if (container == null) return;
+
+            List<JToken> removeList = new List<JToken>();
+            foreach (JToken el in container.Children())
+            {
+                JProperty p = el as JProperty;
+                if (p != null && fields.Contains(p.Name))
+                {
+                    removeList.Add(el);
+                }
+                RemoveFields( el, fields);
+            }
+
+            foreach (JToken el in removeList)
+            {
+                el.Remove();
+            }
         }
 
         public async Task<bool> GetTeams(bool forceUpdate = false)

@@ -52,7 +52,16 @@ namespace TandaSpreadsheetTool
 
             try
             {
-                app = new Application();
+                if (app == null)
+                {
+                    app = (Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel Application");
+
+                    if (app == null)
+                    {
+                        app = new Application();
+                    }
+                }
+              
                 app.ScreenUpdating = false;
                 app.Visible = true;
 
