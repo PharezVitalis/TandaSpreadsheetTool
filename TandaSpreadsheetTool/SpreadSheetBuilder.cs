@@ -7,17 +7,22 @@ using System.Collections.Generic;
 using Microsoft.Office;
 using Microsoft.Office.Interop.Excel;
 using System.Drawing;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.ComTypes;
+
 
 namespace TandaSpreadsheetTool
 {
     class SpreadSheetBuilder
     {
+       
+
         List<FormattedRoster> rosterList;
+        private Process excelProcess;
         private Application app;
         private Workbook workbook;
         private Worksheet worksheet;
-        private Range range;
-        private Color[] headerColours = { Color.LawnGreen, Color.SkyBlue, Color.SlateBlue, Color.PaleGreen, Color.LightGreen };
 
         public SpreadSheetBuilder()
         {
@@ -54,15 +59,21 @@ namespace TandaSpreadsheetTool
             {
                 if (app == null)
                 {
-                    app = (Application)System.Runtime.InteropServices.Marshal.GetActiveObject("Excel Application");
+                    //  var excelProcess = Process.GetProcessesByName("excel");
 
-                    if (app == null)
+
+                    try
+                    {
+                        app =(Application) Marshal.GetActiveObject("Excel.Application");
+                    }
+                    catch
                     {
                         app = new Application();
                     }
+                   
                 }
               
-                app.ScreenUpdating = false;
+              //  app.ScreenUpdating = false;
                 app.Visible = true;
 
                 //remove this line, for testing only - slows down the process a great deal
@@ -79,22 +90,27 @@ namespace TandaSpreadsheetTool
 
             
 
-            worksheet.Cells[1, 1].Value = roster.start.ToString("dd/MM/yyyy") ;
+            worksheet.Cells[1, 1].Value = "Roster: "+roster.start.ToString("dd/MM/yyyy") +" - " +roster.finish.ToShortDateString() ;
 
-            
+            var cellHeading = worksheet.Cells[3, 2];
+            cellHeading.Value = "Name";
+            cellHeading.Font.Bold = true;
+            cellHeading.Interior.Color = ColorTranslator.FromHtml("#3d85c6");
 
-            worksheet.Range[worksheet.Cells[1, 1], worksheet.Cells[2, 2]].Merge();
+            var titleRange = worksheet.Range[worksheet.Cells[1, 1], worksheet.Cells[2, 2]];
+
+            titleRange.Merge();
+            var titleFont = titleRange.Font;
+
+            titleFont.Bold = true;
+            titleFont.Size = 18;
 
             var lastDate = new DateTime(1970,1,1);
+            
 
-
-
-
-
-
-
-            //   worksheet.Range[worksheet.Cells[2, 2], worksheet.Cells[2, pointPosition + 3]].Interior.Color = headerColours[0];
-            //   worksheet.Range[worksheet.Cells[3, 2], worksheet.Cells[3, pointPosition + 3]].Interior.Color = headerColours[1];
+                
+           
+          
 
             int nOfDays = Convert.ToInt32((roster.finish - roster.start).TotalDays);
 
@@ -105,7 +121,7 @@ namespace TandaSpreadsheetTool
                 worksheet.Cells[3, i + 3] = date.ToShortDateString();
             }
 
-          var  pointPosition = 0;
+          var  pointPosition = 4;
            
 
             for (int i = 0; i < roster.schedules.Count; i++)
@@ -116,11 +132,11 @@ namespace TandaSpreadsheetTool
                 
            
 
-                for (int j = 1; j < pointPosition; j++)
+                for (int j = 4; j < pointPosition; j++)
                 {
-                    var cellValue = Convert.ToString(worksheet.Cells[j + 4, 2].Value);
+                    var cellValue = Convert.ToString(worksheet.Cells[j , 2].Value);
 
-                    if (cellValue == currentSchedule.staff)
+                    if (Equals(cellValue,currentSchedule.staff))
                     {
                         nameIndex = j;
                         break;
@@ -131,25 +147,116 @@ namespace TandaSpreadsheetTool
                 if (nameIndex == -1)
                 {
                     pointPosition++;
-                    worksheet.Cells[pointPosition + 4, 2] = currentSchedule.staff;
+                    worksheet.Cells[pointPosition, 2] = currentSchedule.staff;
+                   
                     nameIndex = pointPosition;
                     
                 }
-                //make it work out how far along it must go from the date
+             
 
-                scheduleX = ( currentSchedule.startDate - roster.start ).Days;
+                scheduleX = ( currentSchedule.startDate - roster.start ).Days+3;
                
                 var newCellValue = (currentSchedule.team)+": "+ currentSchedule.startTime + " - " + currentSchedule.endTime;
-                
-                worksheet.Cells[nameIndex +4,scheduleX+3] = newCellValue;
+
+                var cell = worksheet.Cells[nameIndex , scheduleX ];
+
+               cell.Value  = newCellValue;
+
+
+                cell.Interior.Color = ColorTranslator.FromHtml(currentSchedule.teamColour);
+
+            }
+
+            int columnCount = nOfDays + 2;
+
+            for (int i = 1; i <= columnCount ; i++)
+            {
+                worksheet.Columns[i].ColumnWidth = 24;
+            }
+            for (int i = 3; i <= columnCount; i++)
+            {
+                worksheet.Cells[2, i].Interior.Color = ColorTranslator.FromHtml("#38761d");
+                worksheet.Cells[3, i].Interior.Color = ColorTranslator.FromHtml("#93c47d");
+            }
+
+            worksheet.Cells[2, 1].EntireRow.Font.Bold = true;
+            worksheet.Cells[3, 1].EntireRow.Font.Bold = true;
+
+            var tableRange = worksheet.Cells.Range[worksheet.Cells[2, 2], worksheet.Cells[ pointPosition , columnCount]];
+
+
+            
+            foreach (var cell in tableRange)
+            {
+                var dRAlignL = cell.Borders[XlBordersIndex.xlEdgeLeft];
+                var dRAlignR = cell.Borders[XlBordersIndex.xlEdgeRight];
+                var dRAlignU = cell.Borders[XlBordersIndex.xlEdgeTop];
+                var dRAlignD = cell.Borders[XlBordersIndex.xlEdgeBottom];
+
+                dRAlignL.Color = Color.Black;
+                dRAlignR.Color = Color.Black;
+                dRAlignU.Color = Color.Black;
+                dRAlignD.Color = Color.Black;
+
+                dRAlignU = null;
+                dRAlignR = null;
+                dRAlignL = null;
+                dRAlignD = null;
+
+
+
+                var interior = cell.Interior;
+                if (Convert.ToInt32(interior.Color) ==16777216 )
+                {
+                    interior.color = Color.FromArgb(206, 206, 206);
+                }
+
+            }
+
+           
+            
+            worksheet.Range[worksheet.Cells[4,2],worksheet.Cells[pointPosition,2]].Interior.Color = ColorTranslator.FromHtml("#cfe2f3");
+
+
+
+
+            var tableRangeStyle = tableRange.Style;
+
+            tableRangeStyle.HorizontalAlignment = XlHAlign.xlHAlignLeft;
+
+            var dataRange = worksheet.Range[worksheet.Cells[4, 3], worksheet.Cells[pointPosition+3, columnCount]];
+
+           
+            titleRange = null;
+            titleFont = null;
+            tableRange = null;
+           
+            
+
+            // WARNING MEMORY LEAKS, SET ALL EXCEL VARIABLES TO NULL
+        }
+
+        ~SpreadSheetBuilder()
+        {
+            //anything class property from excel must be disposed here
+            if (app != null)
+            {
+                Marshal.ReleaseComObject(app);
+            }
+            
+            if (workbook != null)
+            {
+                Marshal.ReleaseComObject(workbook);
+            }
+            
+            if (worksheet != null)
+            {
+                Marshal.ReleaseComObject(worksheet);
             }
 
             
-            
            
         }
-
-     
 
     }
   

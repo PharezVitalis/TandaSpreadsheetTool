@@ -71,7 +71,7 @@ namespace TandaSpreadsheetTool
         public object department_id;
         
     }
-
+    [Serializable]
     public class FormattedRoster
     {
         public List<FormattedSchedule> schedules { get; set; }
@@ -84,6 +84,8 @@ namespace TandaSpreadsheetTool
         }
             
     }
+
+    
 
     public struct User
     {
@@ -112,6 +114,7 @@ namespace TandaSpreadsheetTool
 
     }
 
+    [Serializable]
     public struct FormattedSchedule
     {
         public string staff;
@@ -120,6 +123,7 @@ namespace TandaSpreadsheetTool
         public DateTime startDate;
         public string teamNameShort;
         public string team;
+        public string teamColour;
 
     }
 

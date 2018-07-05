@@ -37,15 +37,17 @@
             this.lblUName = new System.Windows.Forms.Label();
             this.lblToContinue = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.lstBxRosters = new System.Windows.Forms.ListBox();
+            this.ckBxSaveJson = new System.Windows.Forms.CheckBox();
+            this.btnUpdateStaff = new System.Windows.Forms.Button();
+            this.lblStatus = new System.Windows.Forms.Label();
+            this.lblLastUpdated = new System.Windows.Forms.Label();
             this.btnOpenExcel = new System.Windows.Forms.Button();
             this.dtPFrom = new System.Windows.Forms.DateTimePicker();
             this.dtPTo = new System.Windows.Forms.DateTimePicker();
             this.lblDateTo = new System.Windows.Forms.Label();
             this.lblInDate = new System.Windows.Forms.Label();
-            this.btnSaveJSON = new System.Windows.Forms.Button();
-            this.lblLastUpdated = new System.Windows.Forms.Label();
-            this.lblStatus = new System.Windows.Forms.Label();
-            this.btnUpdateStaff = new System.Windows.Forms.Button();
+            this.btnGetJSON = new System.Windows.Forms.Button();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -61,7 +63,7 @@
             this.pnlLogIn.Controls.Add(this.lblToContinue);
             this.pnlLogIn.Location = new System.Drawing.Point(12, 12);
             this.pnlLogIn.Name = "pnlLogIn";
-            this.pnlLogIn.Size = new System.Drawing.Size(538, 142);
+            this.pnlLogIn.Size = new System.Drawing.Size(733, 142);
             this.pnlLogIn.TabIndex = 0;
             // 
             // lblLoad
@@ -127,6 +129,8 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.lstBxRosters);
+            this.pnlMain.Controls.Add(this.ckBxSaveJson);
             this.pnlMain.Controls.Add(this.btnUpdateStaff);
             this.pnlMain.Controls.Add(this.lblStatus);
             this.pnlMain.Controls.Add(this.lblLastUpdated);
@@ -135,12 +139,59 @@
             this.pnlMain.Controls.Add(this.dtPTo);
             this.pnlMain.Controls.Add(this.lblDateTo);
             this.pnlMain.Controls.Add(this.lblInDate);
-            this.pnlMain.Controls.Add(this.btnSaveJSON);
-            this.pnlMain.Location = new System.Drawing.Point(12, 12);
+            this.pnlMain.Controls.Add(this.btnGetJSON);
+            this.pnlMain.Location = new System.Drawing.Point(12, 160);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(538, 142);
+            this.pnlMain.Size = new System.Drawing.Size(733, 142);
             this.pnlMain.TabIndex = 1;
             this.pnlMain.Visible = false;
+            // 
+            // lstBxRosters
+            // 
+            this.lstBxRosters.FormattingEnabled = true;
+            this.lstBxRosters.Location = new System.Drawing.Point(543, 8);
+            this.lstBxRosters.Name = "lstBxRosters";
+            this.lstBxRosters.Size = new System.Drawing.Size(150, 95);
+            this.lstBxRosters.TabIndex = 14;
+            // 
+            // ckBxSaveJson
+            // 
+            this.ckBxSaveJson.AutoSize = true;
+            this.ckBxSaveJson.Checked = true;
+            this.ckBxSaveJson.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckBxSaveJson.Location = new System.Drawing.Point(205, 12);
+            this.ckBxSaveJson.Name = "ckBxSaveJson";
+            this.ckBxSaveJson.Size = new System.Drawing.Size(130, 17);
+            this.ckBxSaveJson.TabIndex = 13;
+            this.ckBxSaveJson.Text = "Save Roster Data File";
+            this.ckBxSaveJson.UseVisualStyleBackColor = true;
+            // 
+            // btnUpdateStaff
+            // 
+            this.btnUpdateStaff.Location = new System.Drawing.Point(203, 112);
+            this.btnUpdateStaff.Name = "btnUpdateStaff";
+            this.btnUpdateStaff.Size = new System.Drawing.Size(150, 23);
+            this.btnUpdateStaff.TabIndex = 12;
+            this.btnUpdateStaff.Text = "Update Staff List";
+            this.btnUpdateStaff.UseVisualStyleBackColor = true;
+            this.btnUpdateStaff.Click += new System.EventHandler(this.btnUpdateStaff_Click);
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(355, 24);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(0, 13);
+            this.lblStatus.TabIndex = 11;
+            // 
+            // lblLastUpdated
+            // 
+            this.lblLastUpdated.AutoSize = true;
+            this.lblLastUpdated.Location = new System.Drawing.Point(202, 90);
+            this.lblLastUpdated.Name = "lblLastUpdated";
+            this.lblLastUpdated.Size = new System.Drawing.Size(118, 13);
+            this.lblLastUpdated.TabIndex = 9;
+            this.lblLastUpdated.Text = "Staff List Last Updated:";
             // 
             // btnOpenExcel
             // 
@@ -155,22 +206,22 @@
             // 
             // dtPFrom
             // 
-            this.dtPFrom.Location = new System.Drawing.Point(72, 18);
+            this.dtPFrom.Location = new System.Drawing.Point(79, 8);
             this.dtPFrom.Name = "dtPFrom";
-            this.dtPFrom.Size = new System.Drawing.Size(200, 20);
+            this.dtPFrom.Size = new System.Drawing.Size(118, 20);
             this.dtPFrom.TabIndex = 1;
             // 
             // dtPTo
             // 
-            this.dtPTo.Location = new System.Drawing.Point(72, 67);
+            this.dtPTo.Location = new System.Drawing.Point(79, 36);
             this.dtPTo.Name = "dtPTo";
-            this.dtPTo.Size = new System.Drawing.Size(200, 20);
+            this.dtPTo.Size = new System.Drawing.Size(118, 20);
             this.dtPTo.TabIndex = 2;
             // 
             // lblDateTo
             // 
             this.lblDateTo.AutoSize = true;
-            this.lblDateTo.Location = new System.Drawing.Point(14, 73);
+            this.lblDateTo.Location = new System.Drawing.Point(24, 42);
             this.lblDateTo.Name = "lblDateTo";
             this.lblDateTo.Size = new System.Drawing.Size(49, 13);
             this.lblDateTo.TabIndex = 6;
@@ -179,54 +230,27 @@
             // lblInDate
             // 
             this.lblInDate.AutoSize = true;
-            this.lblInDate.Location = new System.Drawing.Point(7, 23);
+            this.lblInDate.Location = new System.Drawing.Point(14, 13);
             this.lblInDate.Name = "lblInDate";
             this.lblInDate.Size = new System.Drawing.Size(59, 13);
             this.lblInDate.TabIndex = 4;
             this.lblInDate.Text = "From Date:";
             // 
-            // btnSaveJSON
+            // btnGetJSON
             // 
-            this.btnSaveJSON.Location = new System.Drawing.Point(166, 112);
-            this.btnSaveJSON.Name = "btnSaveJSON";
-            this.btnSaveJSON.Size = new System.Drawing.Size(150, 23);
-            this.btnSaveJSON.TabIndex = 4;
-            this.btnSaveJSON.Text = "Get Roster (JSON)";
-            this.btnSaveJSON.UseVisualStyleBackColor = true;
-            this.btnSaveJSON.Click += new System.EventHandler(this.btnTest_Click);
-            // 
-            // lblLastUpdated
-            // 
-            this.lblLastUpdated.AutoSize = true;
-            this.lblLastUpdated.Location = new System.Drawing.Point(352, 93);
-            this.lblLastUpdated.Name = "lblLastUpdated";
-            this.lblLastUpdated.Size = new System.Drawing.Size(118, 13);
-            this.lblLastUpdated.TabIndex = 9;
-            this.lblLastUpdated.Text = "Staff List Last Updated:";
-            // 
-            // lblStatus
-            // 
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(355, 24);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(0, 13);
-            this.lblStatus.TabIndex = 11;
-            // 
-            // btnUpdateStaff
-            // 
-            this.btnUpdateStaff.Location = new System.Drawing.Point(371, 112);
-            this.btnUpdateStaff.Name = "btnUpdateStaff";
-            this.btnUpdateStaff.Size = new System.Drawing.Size(150, 23);
-            this.btnUpdateStaff.TabIndex = 12;
-            this.btnUpdateStaff.Text = "Update Staff List";
-            this.btnUpdateStaff.UseVisualStyleBackColor = true;
-            this.btnUpdateStaff.Click += new System.EventHandler(this.btnUpdateStaff_Click);
+            this.btnGetJSON.Location = new System.Drawing.Point(203, 37);
+            this.btnGetJSON.Name = "btnGetJSON";
+            this.btnGetJSON.Size = new System.Drawing.Size(150, 23);
+            this.btnGetJSON.TabIndex = 4;
+            this.btnGetJSON.Text = "Get Roster (JSON)";
+            this.btnGetJSON.UseVisualStyleBackColor = true;
+            this.btnGetJSON.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(558, 173);
+            this.ClientSize = new System.Drawing.Size(757, 306);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlLogIn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -252,7 +276,7 @@
         private System.Windows.Forms.Button btnLogIn;
         private System.Windows.Forms.Label lblLoad;
         private System.Windows.Forms.Panel pnlMain;
-        private System.Windows.Forms.Button btnSaveJSON;
+        private System.Windows.Forms.Button btnGetJSON;
         private System.Windows.Forms.Label lblInDate;
         private System.Windows.Forms.Label lblDateTo;
         private System.Windows.Forms.DateTimePicker dtPFrom;
@@ -261,6 +285,8 @@
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.Label lblLastUpdated;
         private System.Windows.Forms.Button btnUpdateStaff;
+        private System.Windows.Forms.CheckBox ckBxSaveJson;
+        private System.Windows.Forms.ListBox lstBxRosters;
     }
 }
 

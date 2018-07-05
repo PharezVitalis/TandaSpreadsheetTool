@@ -13,8 +13,8 @@ namespace TandaSpreadsheetTool
         RosterBuilder builder;
         SpreadSheetBuilder sheetBuilder;
         Thread bgThread;
-       FormattedRoster roster;
-
+        FormattedRoster roster;
+        List<FormattedRoster> rosters;
       
 
         public Form1()
@@ -27,8 +27,8 @@ namespace TandaSpreadsheetTool
             builder = new RosterBuilder(networker, this);
 
             Directory.CreateDirectory(RosterBuilder.Path);
-            
-            
+
+            rosters = new List<FormattedRoster>();
             networker.LoadUsername();
 
 
@@ -69,7 +69,7 @@ namespace TandaSpreadsheetTool
             pnlLogIn.Visible = false;
             txtBxPwd.Text = "";
             pnlMain.Visible = true;
-            AcceptButton = btnSaveJSON;
+            AcceptButton = btnGetJSON;
         }
         void SetUserNameToOld()
         {
@@ -82,7 +82,7 @@ namespace TandaSpreadsheetTool
             
             if (networker.LastUser != "")
             {
-                if (object.Equals(txtBxUName.Text, networker.LastUser))
+                if (Equals(txtBxUName.Text, networker.LastUser))
                 {
                     if (networker.LoadToken(txtBxPwd.Text))
                     {
@@ -174,12 +174,14 @@ namespace TandaSpreadsheetTool
 
             roster = newRoster;
           
+
+
          Invoke( new  MethodInvoker(EnableJsonBtn));
         }
 
         void EnableJsonBtn()
         {
-            btnSaveJSON.Enabled = true;
+            btnGetJSON.Enabled = true;
             btnUpdateStaff.Enabled = true;
             if (roster != null)
             {
@@ -204,7 +206,7 @@ namespace TandaSpreadsheetTool
                 
             }
 
-            btnSaveJSON.Enabled = false;
+            btnGetJSON.Enabled = false;
             btnUpdateStaff.Enabled = false;
             if (!bgThread.IsAlive)
             {
@@ -224,6 +226,7 @@ namespace TandaSpreadsheetTool
             sheetBuilder.CreateDocument();
         }
 
+
         async private void RefreshStaffList()
         {
             await builder.GetStaff(true);
@@ -240,7 +243,7 @@ namespace TandaSpreadsheetTool
 
             }
 
-            btnSaveJSON.Enabled = false;
+            btnGetJSON.Enabled = false;
             btnUpdateStaff.Enabled = false;
 
             if (!bgThread.IsAlive)

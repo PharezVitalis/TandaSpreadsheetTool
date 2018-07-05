@@ -269,7 +269,7 @@ namespace TandaSpreadsheetTool
             for (int i = 0; i < weeks; i++)
             {
 
-                rosters[i] = await networker.GetRooster(dateFrom);
+                rosters[i] = await networker.GetRooster(currentDate);
 
                 currentDate = currentDate.AddDays(7);
 
@@ -426,8 +426,6 @@ namespace TandaSpreadsheetTool
             return date.Substring(6, 4) + "/" + date.Substring(3, 2) + "/" + date.Substring(0, 2);
         }
 
-      
-
         public int RetryDelay
         {
             get
@@ -436,7 +434,7 @@ namespace TandaSpreadsheetTool
             }
             set
             {
-                if (value < 1500)
+                if (value < 1500 && value > 0)
                 {
                     retryDelay = value;
                 }
@@ -450,11 +448,6 @@ namespace TandaSpreadsheetTool
                 }
             }
         }
-
-
-        
-
-        
 
         private FormattedSchedule GenerateSchedule(Schedule unformSchedule)
         {
@@ -483,6 +476,8 @@ namespace TandaSpreadsheetTool
 
             outSchedule.startDate = startTime;
             outSchedule.startTime = startTime.ToShortTimeString();
+            
+
             if(unformSchedule.finish != null)
             {
                 var endTime = UnixToDate(Convert.ToInt32(unformSchedule.finish));
@@ -504,6 +499,7 @@ namespace TandaSpreadsheetTool
                 {
                     outSchedule.team = teamObjs[i].name;
                     outSchedule.teamNameShort = teamObjs[i].export_name;
+                    outSchedule.teamColour = teamObjs[i].colour;
                     break;
                 }
             }
