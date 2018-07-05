@@ -23,17 +23,21 @@ namespace TandaSpreadsheetTool
 
             
             networker = new Networker();
+            sheetBuilder = new SpreadSheetBuilder();
+            builder = new RosterBuilder(networker, this);
 
             Directory.CreateDirectory(RosterBuilder.Path);
             
-            sheetBuilder = new SpreadSheetBuilder();
+            
             networker.LoadUsername();
+
 
             if(networker.LastUser != "")
             {
                 txtBxUName.Text = networker.LastUser;
             }
 
+         
 
             dtPFrom.Value = DateTime.Now.AddDays(-7);
             dtPTo.Value = DateTime.Now;
@@ -80,10 +84,10 @@ namespace TandaSpreadsheetTool
             {
                 if (object.Equals(txtBxUName.Text, networker.LastUser))
                 {
-                    if (networker.SignIn(txtBxPwd.Text))
+                    if (networker.LoadToken(txtBxPwd.Text))
                     {
                         Invoke(new MethodInvoker(LoggedIn));
-                        builder = new RosterBuilder(networker, this);
+                         
                       
                     }
                     else
@@ -114,7 +118,7 @@ namespace TandaSpreadsheetTool
                         }
                         else
                         {
-                            builder = new RosterBuilder(networker, this);
+                             
                             Invoke(new MethodInvoker(LoggedIn));
                         }
                     }
@@ -137,7 +141,7 @@ namespace TandaSpreadsheetTool
                 }
                 else
                 {
-                    builder = new RosterBuilder(networker, this);
+                     
                     Invoke(new MethodInvoker(LoggedIn));
                 }
 
@@ -195,7 +199,7 @@ namespace TandaSpreadsheetTool
         {
             if (builder==null)
             {
-                builder = new RosterBuilder(networker, this);
+                 
                
                 
             }
@@ -232,7 +236,7 @@ namespace TandaSpreadsheetTool
         {
             if (builder == null)
             {
-                builder = new RosterBuilder(networker, this);
+                 
 
             }
 

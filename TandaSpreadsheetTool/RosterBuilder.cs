@@ -16,6 +16,7 @@ namespace TandaSpreadsheetTool
         Form1 form;
 
         int maxTries;
+        int retryDelay;
         
 
        
@@ -26,9 +27,10 @@ namespace TandaSpreadsheetTool
         List<Team> teamObjs;
 
 
-        bool hasTeams;
-      
+        bool hasStaff = false;
+        bool hasTeams = false;
 
+        DateTime staffLstLastUpdated;
   
         public static string Path
         {
@@ -39,13 +41,13 @@ namespace TandaSpreadsheetTool
         }
        
 
-        public RosterBuilder(Networker networker, Form1 form, int maxTries = 5  )
+        public RosterBuilder(Networker networker, Form1 form, int maxTries = 5, int retryDelay = 500  )
         {
             this.maxTries = maxTries;
 
             this.networker = networker;
             this.form = form;
-
+            this.retryDelay = retryDelay;
             
           
             staffObjs = new List<User>();
@@ -81,14 +83,16 @@ namespace TandaSpreadsheetTool
 
             if (!forceUpdate & File.Exists(Path+"staff.json" )) 
             {
-                var fileData = Load(Path + "staff.json");
+                var fileData = File.ReadAllText(Path+"staff.json");
                 try
                 {
                     staffJArr = JArray.Parse(fileData);
+                   staffLstLastUpdated = File.GetLastAccessTime(Path + "staff.json");
                     readFromFile = true;
                 }
-                catch
+                catch 
                 {
+                    Console.WriteLine("ERROR GETTING STAFF FROM FILE");
                     File.Delete(Path + "staff.json");
                     staffJArr = await networker.GetStaff();
                 }
@@ -116,9 +120,10 @@ namespace TandaSpreadsheetTool
                 }
             }
 
-            catch
+            catch 
             {
-                
+                Console.WriteLine("error deserializing users");
+                hasStaff = false;
                 return false;
             }
 
@@ -129,6 +134,7 @@ namespace TandaSpreadsheetTool
                 "department_ids","award_template_id", "award_tag_ids", "report_department_id",  "managed_department_ids",
                "utc_offset",  "part_time_fixed_hours","qualifications","updated_at" };
 
+                staffLstLastUpdated = DateTime.Now;
 
                 for (int i = 0; i < staffJArr.Count; i++)
                 {
@@ -136,14 +142,24 @@ namespace TandaSpreadsheetTool
                     RemoveFields(currentToken, removedFields);
 
                 }
-                Save(Path + "staff.json", staffJArr.ToString());
+                File.WriteAllText(Path + "staff.json", staffJArr.ToString());
             }
-            
 
 
+
+            hasStaff = true;
             return true;
 
         }
+
+        public string LastUpdated
+        {
+            get
+            {
+                return staffLstLastUpdated.ToShortDateString();
+            }
+        }
+
 
         private void RemoveFields( JToken token, string[] fields)
         {
@@ -174,7 +190,7 @@ namespace TandaSpreadsheetTool
 
             if (!forceUpdate & File.Exists(Path + "teams.json"))
             {
-                var fileData = Load(Path + "teams.json");
+                var fileData = File.ReadAllText(Path + "teams.json");
                 try
                 {
                     teamsArr = JArray.Parse(fileData);
@@ -182,6 +198,7 @@ namespace TandaSpreadsheetTool
                 }
                 catch
                 {
+                    Console.WriteLine("ERROR GETTING TEAMS FROM FILE");
                     File.Delete(Path + "teams.json");
                     teamsArr = await networker.GetStaff();
                 }
@@ -209,18 +226,19 @@ namespace TandaSpreadsheetTool
                     }
                 }
             }
-            catch
+            catch 
             {
-               
+                Console.WriteLine("Error deserializing teams");
+                hasTeams = false;
                 return false;
             }
 
             if (!readFromFile)
             {
-                Save(Path + "teams.json", teamsArr.ToString());
+                File.WriteAllText(Path + "teams.json", teamsArr.ToString());
             }
 
-
+            hasTeams = true;
             return true;
         }
 
@@ -260,53 +278,61 @@ namespace TandaSpreadsheetTool
             {
                 rosters[rosters.Length - 1] = await networker.GetRooster(dateTo);
             }
-            
 
             if (!hasTeams)
             {
-                bool gotTeams = false;
-                bool gotStaff = false;
-                while (!gotTeams & currentTries<maxTries )
+                currentTries = 0;
+                while(true)
                 {
-                    gotTeams = await GetTeams();
-                    
+                    await GetTeams();
 
                     currentTries++;
+                    if (!hasTeams)
+                    {
+                        if (currentTries < maxTries)
+                        {
+                            System.Threading.Thread.Sleep(retryDelay);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
-                currentTries = 0;
-
-                while (!gotStaff & currentTries < maxTries)
-                {
-                    gotStaff = await GetStaff();
-
-
-                    currentTries++;
-                }
-                currentTries = 0;
-
-                if (gotStaff & gotTeams)
-                {
-                    hasTeams = true;
-                }
-                else
-                {
-                   
-                    return null;
-                }
-
             }
+        
 
-
-           
-
-          
+            if (!hasStaff)
+            {
+                currentTries = 0;
+                while (true)
+                {
+                    await GetStaff();
+                    currentTries++;
+                    if(!hasStaff)
+                    {
+                        if (currentTries < maxTries)
+                        {
+                            System.Threading.Thread.Sleep(retryDelay);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
             
 
             var outRoster = new FormattedRoster();
-
-            
-
-          
           
 
             // format rosters
@@ -342,8 +368,6 @@ namespace TandaSpreadsheetTool
             outRoster.start = dateFrom;
 
             return outRoster;
-
-         
         }
 
         public static DateTime BuildDate(string date)
@@ -402,45 +426,35 @@ namespace TandaSpreadsheetTool
             return date.Substring(6, 4) + "/" + date.Substring(3, 2) + "/" + date.Substring(0, 2);
         }
 
-        public static void Save(string path, string data)
+      
+
+        public int RetryDelay
         {
-            var serializedData = Serialize(data);
-
-            File.WriteAllBytes(path, serializedData);
-
-           
-            
-        }
-
-       public static string Load(string path)
-        {
-            return Deserialize(File.ReadAllBytes(path));
-        }
-
-        public static byte[] Serialize(string data)
-        {
-            using (MemoryStream ms = new MemoryStream())
+            get
             {
-                using (BinaryWriter writer = new BinaryWriter(ms))
+                return retryDelay;
+            }
+            set
+            {
+                if (value < 1500)
                 {
-                    writer.Write(data);
+                    retryDelay = value;
                 }
-                return ms.ToArray();
+                else if (value < 0)
+                {
+                    retryDelay = 0;
+                }
+                else
+                {
+                    retryDelay = 1500;
+                }
             }
-
         }
 
-        public static string Deserialize(byte[] data)
-        {
-            string outStr = "";
 
-            for (int i = 0; i < data.Length; i++)
-            {
-                outStr += Convert.ToChar(data[i]);
-            }
+        
 
-            return outStr;
-        }
+        
 
         private FormattedSchedule GenerateSchedule(Schedule unformSchedule)
         {

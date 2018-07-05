@@ -49,7 +49,7 @@ namespace TandaSpreadsheetTool
             client.BaseAddress = new Uri("https://my.tanda.co/api/");
         }
 
-        public bool SignIn(string password)
+        public bool LoadToken(string password)
         {
             if (File.Exists(RosterBuilder.Path + "data.wpn") & password != "")
             {
@@ -66,14 +66,10 @@ namespace TandaSpreadsheetTool
 
                             file.Read(data, 0, (int)file.Length);
 
-                            var str = "";
-
-                            for (int i = 0; i < data.Length; i++)
-                            {
-                                str += (char)data[i];
-                            }
-
+                            var str = Encoding.UTF8.GetString(data);
+                          
                             str = Decrypt(str, password);
+                            password = "";
 
                             if (str == "FAILED")
                             {
@@ -87,7 +83,7 @@ namespace TandaSpreadsheetTool
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Failed to read file");
+                        Console.WriteLine("Failed to Load Token");
                         mostRecentError = e.Message;
                         return false;
                     }
@@ -364,26 +360,26 @@ namespace TandaSpreadsheetTool
 
         public async Task<JObject> GetRooster(DateTime containingDate)
         {
+            
+
             UpdateStatus= NetworkStatus.BUSY;
             client.DefaultRequestHeaders.Clear();
-           
-
-          
 
             client.DefaultRequestHeaders.Add("Authorization", "bearer " + token.GetValue("access_token"));
-           
+            var payload = "";
 
             try
             {
                 httpresponse = await client.GetAsync("v2/rosters/on/" + containingDate.ToString("yyyy-MM-dd"));
                 
-                var payload = await httpresponse.Content.ReadAsStringAsync();
+                 payload = await httpresponse.Content.ReadAsStringAsync();
 
                 roster = JObject.Parse(payload);
                
             }
             catch (Exception ex)
             {
+               
                 mostRecentError = ex.Message;
                 UpdateStatus = NetworkStatus.ERROR;
             }
@@ -407,6 +403,8 @@ namespace TandaSpreadsheetTool
             }
             catch (Exception ex)
             {
+              
+
                 mostRecentError = ex.Message;
                 UpdateStatus = NetworkStatus.ERROR;
             }
@@ -436,6 +434,7 @@ namespace TandaSpreadsheetTool
             }
             catch (Exception ex)
             {
+            
                 mostRecentError = ex.Message;
                 UpdateStatus = NetworkStatus.ERROR;
             }
