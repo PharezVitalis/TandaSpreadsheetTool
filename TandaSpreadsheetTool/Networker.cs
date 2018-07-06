@@ -51,7 +51,7 @@ namespace TandaSpreadsheetTool
 
         public bool LoadToken(string password)
         {
-            if (File.Exists(RosterBuilder.Path + "data.wpn") & password != "")
+            if (File.Exists(RosterManager.Path + "data.wpn") & password != "")
             {
                 if (password != "")
                 {
@@ -60,7 +60,7 @@ namespace TandaSpreadsheetTool
                     {
 
 
-                        using (FileStream file = new FileStream(RosterBuilder.Path + "data.wpn", FileMode.Open))
+                        using (FileStream file = new FileStream(RosterManager.Path + "data.wpn", FileMode.Open))
                         {
                             byte[] data = new byte[file.Length];
 
@@ -148,7 +148,7 @@ namespace TandaSpreadsheetTool
 
             try
             {
-                File.WriteAllBytes(RosterBuilder.Path + "ud.wpn", storedBytes);
+                File.WriteAllBytes(RosterManager.Path + "ud.wpn", storedBytes);
             }
             catch(Exception ex)
             {
@@ -159,7 +159,7 @@ namespace TandaSpreadsheetTool
 
         public string LoadUsername()
         {
-            if (!File.Exists(RosterBuilder.Path  + "ud.wpn"))
+            if (!File.Exists(RosterManager.Path  + "ud.wpn"))
             {
                 return "";
             }
@@ -169,7 +169,7 @@ namespace TandaSpreadsheetTool
 
             try
             {
-                fileData = File.ReadAllBytes(RosterBuilder.Path + "ud.wpn");
+                fileData = File.ReadAllBytes(RosterManager.Path + "ud.wpn");
                 username = Decrypt(Encoding.UTF8.GetString(fileData), userNameKey);
                 
             }
@@ -203,7 +203,7 @@ namespace TandaSpreadsheetTool
 
             try
             {
-                File.WriteAllBytes(RosterBuilder.Path+ "data.wpn", outBytes);
+                File.WriteAllBytes(RosterManager.Path+ "data.wpn", outBytes);
             }
             catch(Exception e)
             {
@@ -404,7 +404,7 @@ namespace TandaSpreadsheetTool
             catch (Exception ex)
             {
               
-
+               
                 mostRecentError = ex.Message;
                 UpdateStatus = NetworkStatus.ERROR;
             }

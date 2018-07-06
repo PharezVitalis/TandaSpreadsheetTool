@@ -10,11 +10,11 @@ namespace TandaSpreadsheetTool
     public partial class Form1 : Form
     {
         Networker networker;
-        RosterBuilder builder;
+        RosterManager builder;
         SpreadSheetBuilder sheetBuilder;
         Thread bgThread;
         FormattedRoster roster;
-        List<FormattedRoster> rosters;
+        
       
 
         public Form1()
@@ -24,11 +24,11 @@ namespace TandaSpreadsheetTool
             
             networker = new Networker();
             sheetBuilder = new SpreadSheetBuilder();
-            builder = new RosterBuilder(networker, this);
+            builder = new RosterManager(networker, this);
 
-            Directory.CreateDirectory(RosterBuilder.Path);
+            Directory.CreateDirectory(RosterManager.Path);
 
-            rosters = new List<FormattedRoster>();
+          
             networker.LoadUsername();
 
 
@@ -222,8 +222,8 @@ namespace TandaSpreadsheetTool
 
         private void btnOpenExcel_Click(object sender, EventArgs e)
         {
-            sheetBuilder.AddRoster(roster);
-            sheetBuilder.CreateDocument();
+            
+            sheetBuilder.CreateDocument(roster);
         }
 
 

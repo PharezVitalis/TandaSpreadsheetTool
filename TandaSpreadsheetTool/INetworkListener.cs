@@ -62,25 +62,24 @@ namespace TandaSpreadsheetTool
 
     public struct Schedule
     {
-        public object id;
+      
         public object roster_id;
         public object user_id;
         public object start;
         public object finish;
-       
         public object department_id;
         
     }
     [Serializable]
     public class FormattedRoster
     {
-        public List<FormattedSchedule> schedules { get; set; }
+        public List<FormattedStaff> staff {get; set; }
         public DateTime start { get; set; }
         public DateTime finish { get; set; }
         
         public FormattedRoster()
         {
-            schedules = new List<FormattedSchedule>();
+            staff = new List<FormattedStaff>();
         }
             
     }
@@ -92,6 +91,20 @@ namespace TandaSpreadsheetTool
          public int id;
        public string name;
         
+    }
+
+    public class FormattedStaff
+    {
+        public List<FormattedSchedule> schedules { get; set; }
+
+        public string name { get; set; }
+        public int id { get; set; }
+
+        public FormattedStaff()
+        {
+            schedules = new List<FormattedSchedule>();
+           
+        }
     }
 
     public class Team
@@ -117,7 +130,7 @@ namespace TandaSpreadsheetTool
     [Serializable]
     public struct FormattedSchedule
     {
-        public string staff;
+        
         public string startTime;
         public string endTime;
         public DateTime startDate;

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace TandaSpreadsheetTool
 {
-    class RosterBuilder
+    class RosterManager
     {
         
         Networker networker;
@@ -17,10 +17,10 @@ namespace TandaSpreadsheetTool
 
         int maxTries;
         int retryDelay;
-        
 
-       
-       
+
+
+        List<FormattedRoster> builtRosters;
 
         List<User> staffObjs;
 
@@ -41,7 +41,7 @@ namespace TandaSpreadsheetTool
         }
        
 
-        public RosterBuilder(Networker networker, Form1 form, int maxTries = 5, int retryDelay = 500  )
+        public RosterManager(Networker networker, Form1 form, int maxTries = 5, int retryDelay = 500  )
         {
             this.maxTries = maxTries;
 
@@ -256,6 +256,7 @@ namespace TandaSpreadsheetTool
        public async Task<FormattedRoster> BuildRoster(DateTime dateFrom, DateTime dateTo)
         {
             var currentTries = 0;
+            
            
             dateFrom = SetToTime(dateFrom,0,0);
             dateTo = SetToTime(dateTo, 23, 59);
@@ -330,40 +331,22 @@ namespace TandaSpreadsheetTool
                     }
                 }
             }
-            
 
-            var outRoster = new FormattedRoster();
-          
 
-            // format rosters
-            for (int i = 0; i < rosters.Length; i++)
+
+
+
+            // format rosters - adding all staff to the outroster will mean all staff in ESMS render in the spreadshee
+
+            var rosterObjs = new Roster[rosters.Length];
+
+            for (int i = 0; i < rosterObjs.Length; i++)
             {
-                var currentRoster = JsonConvert.DeserializeObject<Roster>(rosters[i].ToString());
-
-                for (int j = 0; j < currentRoster.schedules.Count; j++)
-                {
-                    var currentDay = currentRoster.schedules[j];
-
-                    for (int k = 0; k < currentDay.schedules.Count; k++)
-                    {
-                        var currentSchedule = currentDay.schedules[k];
-                        currentDate = UnixToDate(Convert.ToInt32(currentSchedule.start));
-
-
-                        if (currentDate.CompareTo(dateFrom)<0)
-                        {
-                            continue;
-                        }
-                        else if (dateTo.CompareTo(currentDate)< 0)
-                        {
-                            break;
-                        }
-                        outRoster.schedules.Add(GenerateSchedule(currentSchedule));
-                    }
-                }
-
-               
+              rosterObjs[i] = JsonConvert.DeserializeObject<Roster>(rosters[i].ToString());
             }
+
+            var outRoster = CreateRoster(rosterObjs);
+            
             outRoster.finish = dateTo;
             outRoster.start = dateFrom;
 
@@ -449,66 +432,106 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        private FormattedSchedule GenerateSchedule(Schedule unformSchedule)
+        private FormattedRoster CreateRoster(Roster[] rosters)
         {
-            var outSchedule = new FormattedSchedule();
 
-            for (int i = 0; i < staffObjs.Count; i++)
+            var roster = new FormattedRoster();
+
+            for (int i = 0; i < rosters.Length; i++)
             {
-                if (unformSchedule.user_id != null)
-                {
-                    var currentUserId = Convert.ToInt32(unformSchedule.user_id);
+                var currentRoster = rosters[i];
 
-                    if (currentUserId == staffObjs[i].id)
+                for (int j = 0; j < currentRoster.schedules.Count; j++)
+                {
+                    var currentDay = currentRoster.schedules[j];
+
+                    for (int k = 0; k < currentDay.schedules.Count; k++)
                     {
-                        outSchedule.staff = staffObjs[i].name;
-                        break;
+                        for (int l = 0; l < currentDay.schedules.Count ; l++)
+                        {
+                            var currentSchedule = currentDay.schedules[i];
+
+                            var staffIdObj = currentSchedule.user_id;
+
+                            int staffId = (staffIdObj != null) ? Convert.ToInt32(staffIdObj) : -1;
+                            
+                            if (staffId == -1)
+                            {
+                                continue;
+                            }
+                            
+                                var staffMember = roster.staff.Find(x => x.id ==staffId);
+
+                                if (staffMember == null)
+                                {
+                                    staffMember = new FormattedStaff();
+                                    staffMember.id = staffId;
+                                    staffMember.name = staffObjs.Find(x => x.id == staffId).name;
+                                    if(staffMember.name == null)
+                                    {
+                                        continue;
+                                    }
+                                    roster.staff.Add(staffMember);
+                                }
+                                
+
+                                var formattedSch = new FormattedSchedule();
+
+                                var start = currentSchedule.start;
+
+                                if (start != null)
+                                {
+                                    formattedSch.startDate = UnixToDate(Convert.ToInt32(start));
+                                }
+
+                               
+                                formattedSch.startTime = formattedSch.startDate.ToString("HH:mm");
+
+                                var teamId = currentSchedule.department_id;
+                               
+                                var team = (teamId !=null) ?teamObjs.Find(x => x.id == Convert.ToInt32(teamId)):null;
+
+                                if (currentSchedule.finish != null)
+                                {
+                                    formattedSch.endTime = UnixToDate(Convert.ToInt32(currentSchedule.finish)).ToString("HH:mm");
+                                }
+
+                                if (team != null)
+                                {
+                                    formattedSch.team = team.name;
+                                    formattedSch.teamColour = team.colour;
+                                    formattedSch.teamNameShort = team.export_name;
+                                }
+
+                                staffMember.schedules.Add(formattedSch);
+
+
+                            
+                            
+                            
+                        }
                     }
-                }
-               
-            }
 
-           
-
-            var startTime = UnixToDate(Convert.ToInt32(unformSchedule.start));
-
-
-
-            outSchedule.startDate = startTime;
-            outSchedule.startTime = startTime.ToShortTimeString();
-            
-
-            if(unformSchedule.finish != null)
-            {
-                var endTime = UnixToDate(Convert.ToInt32(unformSchedule.finish));
-                
-
-                outSchedule.endTime = endTime.ToString("HH:mm");
-                
-            }
-            
-
-            for (int i = 0; i < teamObjs.Count; i++)
-            {
-                if(unformSchedule.department_id== null)
-                {
-                    break;
                 }
 
-                if (Convert.ToInt32(unformSchedule.department_id) == teamObjs[i].id)
-                {
-                    outSchedule.team = teamObjs[i].name;
-                    outSchedule.teamNameShort = teamObjs[i].export_name;
-                    outSchedule.teamColour = teamObjs[i].colour;
-                    break;
-                }
+
+
+
             }
 
-            return outSchedule;
+            builtRosters.Add(roster);
+
+            return roster;
         }
 
 
-       
+        public FormattedRoster[] GetAllRosters
+        {
+            get
+            {
+                return builtRosters.ToArray();
+            }
+        }
         
 
       
