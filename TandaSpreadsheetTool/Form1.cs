@@ -13,7 +13,7 @@ namespace TandaSpreadsheetTool
         RosterManager builder;
         SpreadSheetBuilder sheetBuilder;
         Thread bgThread;
-        FormattedRoster roster;
+        FormattedRoster[] rosters;
         
       
 
@@ -24,9 +24,12 @@ namespace TandaSpreadsheetTool
             
             networker = new Networker();
             sheetBuilder = new SpreadSheetBuilder();
-            builder = new RosterManager(networker, this);
-
+            builder = new RosterManager(networker);
             Directory.CreateDirectory(RosterManager.Path);
+            Directory.CreateDirectory(RosterManager.Path + "Rosters");
+            builder.LoadRosters();
+
+            
 
           
             networker.LoadUsername();
@@ -63,6 +66,7 @@ namespace TandaSpreadsheetTool
             pnlLogIn.Enabled = true;
             txtBxPwd.Text = "";
         }
+
         void LoggedIn()
 
         {
@@ -71,6 +75,7 @@ namespace TandaSpreadsheetTool
             pnlMain.Visible = true;
             AcceptButton = btnGetJSON;
         }
+
         void SetUserNameToOld()
         {
             txtBxUName.Text = networker.LastUser;
@@ -118,7 +123,8 @@ namespace TandaSpreadsheetTool
                         }
                         else
                         {
-                             
+                            builder.LoadRosters();
+
                             Invoke(new MethodInvoker(LoggedIn));
                         }
                     }
@@ -172,21 +178,37 @@ namespace TandaSpreadsheetTool
             }
 
 
-            roster = newRoster;
-          
+
+            Invoke(new MethodInvoker(UpdateRosterList));
 
 
          Invoke( new  MethodInvoker(EnableJsonBtn));
+            
         }
 
         void EnableJsonBtn()
         {
             btnGetJSON.Enabled = true;
             btnUpdateStaff.Enabled = true;
-            if (roster != null)
+            if (rosters.Length>0)
             {
                 btnOpenExcel.Enabled = true;
             }
+        }
+
+        void UpdateRosterList()
+        {
+            rosters = builder.GetAllRosters();
+            lstBxRosters.Items.Clear();
+
+            for (int i = 0; i < rosters.Length; i++)
+            {
+                var roster = rosters[i];
+
+                var itemStr = roster.start.ToShortDateString() + " - " + roster.finish.ToShortDateString();
+                lstBxRosters.Items.Add(itemStr);
+            }
+            lstBxRosters.SelectedIndex = lstBxRosters.Items.Count - 1;
         }
 
         private void btnLogIn_Click(object sender, EventArgs e)
@@ -223,7 +245,7 @@ namespace TandaSpreadsheetTool
         private void btnOpenExcel_Click(object sender, EventArgs e)
         {
             //should be done on a seperate thread 
-            sheetBuilder.CreateDocument(roster);
+            sheetBuilder.CreateDocument(rosters[lstBxRosters.SelectedIndex]);
         }
 
 

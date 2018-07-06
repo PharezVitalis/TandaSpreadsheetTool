@@ -14,7 +14,7 @@ namespace TandaSpreadsheetTool
         
         Networker networker;
      
-        Form1 form;
+       
 
         int maxTries;
         int retryDelay;
@@ -42,12 +42,12 @@ namespace TandaSpreadsheetTool
         }
        
 
-        public RosterManager(Networker networker, Form1 form, int maxTries = 5, int retryDelay = 500  )
+        public RosterManager(Networker networker, int maxTries = 5, int retryDelay = 500  )
         {
             this.maxTries = maxTries;
 
             this.networker = networker;
-            this.form = form;
+          
             this.retryDelay = retryDelay;
             
           
@@ -55,14 +55,14 @@ namespace TandaSpreadsheetTool
             
             teamObjs = new List<Team>();
 
-           
+            builtRosters = new List<FormattedRoster>();
 
 
            
         }
 
 
-     public string LastStaffUpdate
+        public string LastStaffUpdate
         {
             get
             {
@@ -256,14 +256,14 @@ namespace TandaSpreadsheetTool
 
         public void LoadRosters()
         {
-            var rosterPath = Path + "\\Data\\Rosters";
+            var rosterPath = Path + "Rosters";
             var fileNames = Directory.GetFiles(rosterPath);
 
             for (int i = 0; i < fileNames.Length; i++)
             {
                 var file = fileNames[i];
 
-                if (file.Contains("roster") & file.Contains(".bin"))
+                if (file.Contains("Roster") & file.Contains(".bin"))
                 {
                     try
                     {
@@ -398,12 +398,13 @@ namespace TandaSpreadsheetTool
                 bf.Serialize(ms, outRoster);
 
                 var bytes = ms.ToArray();
-                var path = Path + "Data\\Roster\\ " + dateFrom.ToString("dd-MM-yy") + " - " + dateTo.ToString("dd-MM-YY") + ".bin";
+                var path = Path + "Rosters\\ " +"Roster"+ dateFrom.ToString("dd-MM-yyyy") + " - " + dateTo.ToString("dd-MM-yyyy") + ".bin";
 
                 File.WriteAllBytes(path,bytes);
                 ms.Dispose();
             }
 
+            builtRosters.Add(outRoster);
 
             return outRoster;
         }
@@ -574,18 +575,16 @@ namespace TandaSpreadsheetTool
 
             }
 
-            builtRosters.Add(roster);
-
+            
             return roster;
         }
 
 
-        public FormattedRoster[] GetAllRosters
+        public FormattedRoster[] GetAllRosters()
         {
-            get
-            {
+            
                 return builtRosters.ToArray();
-            }
+            
         }
         
 

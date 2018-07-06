@@ -26,11 +26,11 @@ namespace TandaSpreadsheetTool
             var officeType = Type.GetTypeFromProgID("Excel.Applcation");
             if (officeType == null)
             {
-               
+                Console.WriteLine("HAHAHAHA no.");
                 return;
             }
 
-
+            
             workbook = new Workbook();
             worksheet = new Worksheet();
             
