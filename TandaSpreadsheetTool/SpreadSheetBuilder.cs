@@ -1,9 +1,6 @@
 ﻿
 using System.IO;
 using System;
-using Newtonsoft;
-using Newtonsoft.Json;
-using System.Collections.Generic;
 using Microsoft.Office;
 using Microsoft.Office.Interop.Excel;
 using System.Drawing;
@@ -26,7 +23,14 @@ namespace TandaSpreadsheetTool
 
         public SpreadSheetBuilder()
         {
-           
+            var officeType = Type.GetTypeFromProgID("Excel.Applcation");
+            if (officeType == null)
+            {
+               
+                return;
+            }
+
+
             workbook = new Workbook();
             worksheet = new Worksheet();
             
@@ -35,8 +39,13 @@ namespace TandaSpreadsheetTool
        
 
 
-        public void CreateDocument(FormattedRoster roster)
+        public SpreadSheetStatus CreateDocument(FormattedRoster roster)
         {
+            var officeType = Type.GetTypeFromProgID("Excel.Applcation");
+            if (officeType == null)
+            {
+                return SpreadSheetStatus.NOTINSTALLED;
+            }
 
             try
             {
@@ -68,7 +77,7 @@ namespace TandaSpreadsheetTool
             catch
             {
                 Console.WriteLine("Something went wrong with creating an Excel sheet");
-                return;
+                return SpreadSheetStatus.FAILED;
             }
 
 
@@ -190,7 +199,7 @@ namespace TandaSpreadsheetTool
             titleFont = null;
             tableRange = null;
 
-
+            return SpreadSheetStatus.DONE;
 
             // WARNING MEMORY LEAKS, SET ALL EXCEL VARIABLES TO NULL
         }
@@ -213,10 +222,11 @@ namespace TandaSpreadsheetTool
                 Marshal.ReleaseComObject(worksheet);
             }
 
+
             
-           
         }
 
+        
     }
   
 

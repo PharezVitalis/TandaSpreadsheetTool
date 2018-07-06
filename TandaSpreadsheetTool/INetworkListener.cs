@@ -17,11 +17,12 @@ namespace TandaSpreadsheetTool
         BUSY,IDLE,ERROR
     }
 
-    public enum CurrentGet
+    public enum SpreadSheetStatus   
     {
-        NONE,STAFF,TEAMS,ROSTER
+        DONE,FAILED,NOTINSTALLED
     }
 
+    
 
     public class Roster
     {

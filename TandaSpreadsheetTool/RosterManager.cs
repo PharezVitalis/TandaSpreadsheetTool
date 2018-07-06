@@ -254,6 +254,37 @@ namespace TandaSpreadsheetTool
 
         }
 
+        public void LoadRosters()
+        {
+            var rosterPath = Path + "\\Data\\Rosters";
+            var fileNames = Directory.GetFiles(rosterPath);
+
+            for (int i = 0; i < fileNames.Length; i++)
+            {
+                var file = fileNames[i];
+
+                if (file.Contains("roster") & file.Contains(".bin"))
+                {
+                    try
+                    {
+                        using (var stream = File.Open(rosterPath + file, FileMode.Open))
+                        {
+                            var bf = new BinaryFormatter();
+
+                            var item = (FormattedRoster)bf.Deserialize(stream);
+                            builtRosters.Add(item);
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Failed to read file");
+                        continue;
+                    }
+
+                }
+            }
+        }
+
        public async Task<FormattedRoster> BuildRoster(DateTime dateFrom, DateTime dateTo, bool save = true)
         {
             var currentTries = 0;
@@ -367,9 +398,10 @@ namespace TandaSpreadsheetTool
                 bf.Serialize(ms, outRoster);
 
                 var bytes = ms.ToArray();
-                var path = Path + "Roster " + dateFrom.ToString("dd-MM-yy") + " - " + dateTo.ToString("dd-MM-YY") + ".bin";
+                var path = Path + "Data\\Roster\\ " + dateFrom.ToString("dd-MM-yy") + " - " + dateTo.ToString("dd-MM-YY") + ".bin";
 
                 File.WriteAllBytes(path,bytes);
+                ms.Dispose();
             }
 
 
