@@ -149,7 +149,7 @@
             // lstBxRosters
             // 
             this.lstBxRosters.FormattingEnabled = true;
-            this.lstBxRosters.Location = new System.Drawing.Point(543, 8);
+            this.lstBxRosters.Location = new System.Drawing.Point(407, 8);
             this.lstBxRosters.Name = "lstBxRosters";
             this.lstBxRosters.Size = new System.Drawing.Size(150, 95);
             this.lstBxRosters.TabIndex = 14;
@@ -159,7 +159,7 @@
             this.ckBxSaveJson.AutoSize = true;
             this.ckBxSaveJson.Checked = true;
             this.ckBxSaveJson.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckBxSaveJson.Location = new System.Drawing.Point(205, 12);
+            this.ckBxSaveJson.Location = new System.Drawing.Point(20, 86);
             this.ckBxSaveJson.Name = "ckBxSaveJson";
             this.ckBxSaveJson.Size = new System.Drawing.Size(130, 17);
             this.ckBxSaveJson.TabIndex = 13;
@@ -168,7 +168,7 @@
             // 
             // btnUpdateStaff
             // 
-            this.btnUpdateStaff.Location = new System.Drawing.Point(203, 112);
+            this.btnUpdateStaff.Location = new System.Drawing.Point(205, 111);
             this.btnUpdateStaff.Name = "btnUpdateStaff";
             this.btnUpdateStaff.Size = new System.Drawing.Size(150, 23);
             this.btnUpdateStaff.TabIndex = 12;
@@ -187,7 +187,7 @@
             // lblLastUpdated
             // 
             this.lblLastUpdated.AutoSize = true;
-            this.lblLastUpdated.Location = new System.Drawing.Point(202, 90);
+            this.lblLastUpdated.Location = new System.Drawing.Point(183, 90);
             this.lblLastUpdated.Name = "lblLastUpdated";
             this.lblLastUpdated.Size = new System.Drawing.Size(118, 13);
             this.lblLastUpdated.TabIndex = 9;
@@ -196,7 +196,7 @@
             // btnOpenExcel
             // 
             this.btnOpenExcel.Enabled = false;
-            this.btnOpenExcel.Location = new System.Drawing.Point(10, 112);
+            this.btnOpenExcel.Location = new System.Drawing.Point(407, 111);
             this.btnOpenExcel.Name = "btnOpenExcel";
             this.btnOpenExcel.Size = new System.Drawing.Size(150, 23);
             this.btnOpenExcel.TabIndex = 7;
@@ -206,14 +206,14 @@
             // 
             // dtPFrom
             // 
-            this.dtPFrom.Location = new System.Drawing.Point(79, 8);
+            this.dtPFrom.Location = new System.Drawing.Point(72, 6);
             this.dtPFrom.Name = "dtPFrom";
             this.dtPFrom.Size = new System.Drawing.Size(118, 20);
             this.dtPFrom.TabIndex = 1;
             // 
             // dtPTo
             // 
-            this.dtPTo.Location = new System.Drawing.Point(79, 36);
+            this.dtPTo.Location = new System.Drawing.Point(72, 34);
             this.dtPTo.Name = "dtPTo";
             this.dtPTo.Size = new System.Drawing.Size(118, 20);
             this.dtPTo.TabIndex = 2;
@@ -221,7 +221,7 @@
             // lblDateTo
             // 
             this.lblDateTo.AutoSize = true;
-            this.lblDateTo.Location = new System.Drawing.Point(24, 42);
+            this.lblDateTo.Location = new System.Drawing.Point(17, 40);
             this.lblDateTo.Name = "lblDateTo";
             this.lblDateTo.Size = new System.Drawing.Size(49, 13);
             this.lblDateTo.TabIndex = 6;
@@ -238,7 +238,7 @@
             // 
             // btnGetJSON
             // 
-            this.btnGetJSON.Location = new System.Drawing.Point(203, 37);
+            this.btnGetJSON.Location = new System.Drawing.Point(20, 111);
             this.btnGetJSON.Name = "btnGetJSON";
             this.btnGetJSON.Size = new System.Drawing.Size(150, 23);
             this.btnGetJSON.TabIndex = 4;

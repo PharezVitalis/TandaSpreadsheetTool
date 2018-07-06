@@ -38,6 +38,20 @@ namespace TandaSpreadsheetTool
 
     }
 
+    public struct SpreadSheetStyle
+    {
+        bool boldHeadings;
+        string nameHeadingCl;
+
+        
+
+
+        public SpreadSheetStyle Default()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class Day
     {
         public string date { get; set; }
@@ -92,7 +106,7 @@ namespace TandaSpreadsheetTool
        public string name;
         
     }
-
+    [Serializable]
     public class FormattedStaff
     {
         public List<FormattedSchedule> schedules { get; set; }

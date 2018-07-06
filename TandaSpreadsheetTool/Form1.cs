@@ -162,7 +162,7 @@ namespace TandaSpreadsheetTool
 
             try
             {
-                 newRoster = await builder.BuildRoster(dateFrom, dateTo);
+                 newRoster = await builder.BuildRoster(dateFrom, dateTo, ckBxSaveJson.Checked);
             }
             catch (ArgumentOutOfRangeException aoe)
             {
@@ -222,7 +222,7 @@ namespace TandaSpreadsheetTool
 
         private void btnOpenExcel_Click(object sender, EventArgs e)
         {
-            
+            //should be done on a seperate thread 
             sheetBuilder.CreateDocument(roster);
         }
 

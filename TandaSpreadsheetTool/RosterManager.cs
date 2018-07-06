@@ -5,6 +5,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace TandaSpreadsheetTool
 {
@@ -253,7 +254,7 @@ namespace TandaSpreadsheetTool
 
         }
 
-       public async Task<FormattedRoster> BuildRoster(DateTime dateFrom, DateTime dateTo)
+       public async Task<FormattedRoster> BuildRoster(DateTime dateFrom, DateTime dateTo, bool save = true)
         {
             var currentTries = 0;
             
@@ -340,15 +341,37 @@ namespace TandaSpreadsheetTool
 
             var rosterObjs = new Roster[rosters.Length];
 
-            for (int i = 0; i < rosterObjs.Length; i++)
+            try
             {
-              rosterObjs[i] = JsonConvert.DeserializeObject<Roster>(rosters[i].ToString());
+                for (int i = 0; i < rosterObjs.Length; i++)
+                {
+                    rosterObjs[i] = JsonConvert.DeserializeObject<Roster>(rosters[i].ToString());
+                }
             }
 
+            catch
+            {
+                return null;
+            }
             var outRoster = CreateRoster(rosterObjs);
             
             outRoster.finish = dateTo;
             outRoster.start = dateFrom;
+
+
+            if (save)
+            {
+                var bf = new BinaryFormatter();
+
+                var ms = new MemoryStream();
+                bf.Serialize(ms, outRoster);
+
+                var bytes = ms.ToArray();
+                var path = Path + "Roster " + dateFrom.ToString("dd-MM-yy") + " - " + dateTo.ToString("dd-MM-YY") + ".bin";
+
+                File.WriteAllBytes(path,bytes);
+            }
+
 
             return outRoster;
         }
