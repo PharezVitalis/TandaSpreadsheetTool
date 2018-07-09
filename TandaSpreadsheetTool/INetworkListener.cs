@@ -17,11 +17,10 @@ namespace TandaSpreadsheetTool
         BUSY,IDLE,ERROR
     }
 
-    public enum SpreadSheetStatus   
+    public enum SpreadSheetDiv
     {
-        DONE,FAILED,NOTINSTALLED
+        NONE,WEEKLY,BIWEEKLY,MONTHLY
     }
-
     
 
     public class Roster
@@ -41,15 +40,42 @@ namespace TandaSpreadsheetTool
 
     public struct SpreadSheetStyle
     {
-        bool boldHeadings;
-        string nameHeadingCl;
+        //cl = colour
+
+        public byte[] nameHeadingCl;
+        public byte[] nameFieldCl;
+        public byte[] rotaFieldCl;
+        public byte[] dayNameCl;
+        public byte[] dateCl;
+
+        public bool boldHeadings;
+        public bool teamTxtFilter;
+        public int minBrightness;
+        public int colWidth;
+        public bool useTeamCls;
+        
 
         
 
 
-        public SpreadSheetStyle Default()
+        public static SpreadSheetStyle Default()
         {
-            throw new NotImplementedException();
+            return new SpreadSheetStyle()
+            {
+                boldHeadings = true,
+                nameHeadingCl = new byte[] { 61, 133, 198 },
+                nameFieldCl = new byte[] { 207, 226, 243 },
+                teamTxtFilter = true,
+                minBrightness = 0,
+                useTeamCls = true,
+                rotaFieldCl = new byte[] { 255, 255, 255 },
+                dayNameCl = new byte[] { 56, 118, 29 },
+                dateCl = new byte[] { 147, 196, 125 },
+                colWidth = 22
+            };
+           
+
+          
         }
     }
 
@@ -120,6 +146,8 @@ namespace TandaSpreadsheetTool
             schedules = new List<FormattedSchedule>();
            
         }
+
+      
     }
 
     public class Team

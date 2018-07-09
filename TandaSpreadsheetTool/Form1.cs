@@ -245,7 +245,7 @@ namespace TandaSpreadsheetTool
         private void btnOpenExcel_Click(object sender, EventArgs e)
         {
             //should be done on a seperate thread 
-            sheetBuilder.CreateDocument(rosters[lstBxRosters.SelectedIndex]);
+            sheetBuilder.CreateWorkbook(rosters[lstBxRosters.SelectedIndex], SpreadSheetStyle.Default());
         }
 
 

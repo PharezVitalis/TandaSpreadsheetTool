@@ -368,7 +368,6 @@ namespace TandaSpreadsheetTool
 
 
 
-            // format rosters - adding all staff to the outroster will mean all staff in ESMS render in the spreadshee
 
             var rosterObjs = new Roster[rosters.Length];
 

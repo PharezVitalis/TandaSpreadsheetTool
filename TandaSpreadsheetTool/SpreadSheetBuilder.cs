@@ -1,233 +1,145 @@
 ﻿
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using System.IO;
 using System;
-using Microsoft.Office;
-using Microsoft.Office.Interop.Excel;
-using System.Drawing;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
-
 
 namespace TandaSpreadsheetTool
 {
     class SpreadSheetBuilder
     {
-       
+        
+        
 
+
+        public void CreateWorkbook(FormattedRoster roster, SpreadSheetStyle style, SpreadSheetDiv div = SpreadSheetDiv.NONE, string path  = null)
+        {
+            var workBook = new XSSFWorkbook();
+
+            var nameHeadCl = new XSSFColor(style.nameHeadingCl);
+            var nameFieldCL = new XSSFColor(style.nameFieldCl);
+            var rotaFieldCl = new XSSFColor(style.rotaFieldCl);
+            var dayNameCL = new XSSFColor(style.dayNameCl);
+            var dateCl = new XSSFColor(style.dateCl);
+
+            var dateString = roster.start.ToString("dd-MM") + "- " + roster.finish.ToString("dd-MM-yy");
+
+
+            var sheet = workBook.CreateSheet("Schedule " + dateString);
       
-        
-        private Application app;
-        private Workbook workbook;
-        private Worksheet worksheet;
+            var currentRow = sheet.CreateRow(0);
+            var dayRow = sheet.CreateRow(1);
+            var cellStyle2 = AutoStyle(workBook, false);
+          
 
-        public SpreadSheetBuilder()
-        {
-            var officeType = Type.GetTypeFromProgID("Excel.Applcation");
-            if (officeType == null)
+            var currentCell = currentRow.CreateCell(0);
+            currentCell.SetCellValue(dateString);
+
+            sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(0, 1, 0, 1));
+          
+
+            //Title font
+            var font = workBook.CreateFont();
+            font.IsBold = true;
+            font.FontHeightInPoints = 25;
+            font.FontName = "Arial";
+            currentCell.CellStyle.SetFont(font);
+
+
+           currentRow = sheet.CreateRow(2);
+           
+            currentCell = currentRow.CreateCell(1);
+            currentCell.SetCellValue("Name");
+
+            var cellStyle = AutoStyle(workBook,false);
+            
+
+            
+          
+            font = workBook.CreateFont();
+            font.IsBold = style.boldHeadings;
+            font.FontName = "Arial";
+            cellStyle.SetFont(font);
+            cellStyle.SetFillForegroundColor(nameHeadCl);
+            currentCell.CellStyle = cellStyle;
+
+            cellStyle2.SetFont(font);
+            
+            cellStyle2.SetFillForegroundColor(dayNameCL);
+           
+
+
+            cellStyle = (XSSFCellStyle)workBook.CreateCellStyle();
+            cellStyle.SetFont(font);
+            cellStyle.FillPattern = FillPattern.SolidForeground;
+            cellStyle.SetFillForegroundColor(dateCl);
+
+            var nOfDays = (roster.finish - roster.start).TotalDays;
+
+            sheet.SetColumnWidth(0, style.colWidth * 256);
+            sheet.SetColumnWidth(1, style.colWidth * 256);
+
+            for (int i = 0; i <= nOfDays; i++)
             {
-                Console.WriteLine("HAHAHAHA no.");
-                return;
-            }
+                sheet.SetColumnWidth(i + 2, style.colWidth * 256);
+               
+                var currentDate = roster.start.AddDays(i);
+                currentCell = dayRow.CreateCell(2 + i);
+                currentCell.SetCellValue(Enum.GetName(typeof(DayOfWeek),currentDate.DayOfWeek));
+                currentCell.CellStyle = cellStyle2;
 
+
+                currentCell = currentRow.CreateCell(2 + i);
+                currentCell.SetCellValue(currentDate.ToShortDateString());
+                currentCell.CellStyle = cellStyle;
+
+            }
+            font = null;
+
+            var staffCount = roster.staff.Count;
+
+           
+
+            if (path == null)
+            {
+                path = RosterManager.Path;
+            }
             
-            workbook = new Workbook();
-            worksheet = new Worksheet();
-            
+                var fs = File.Create(path+"Tanda Roster  " + roster.start.ToString("dd-MM-yy") + " - " + roster.finish.ToString("dd-MM-yy")+".xlsx");
+                workBook.Write(fs);
+                fs.Close();
+
+            workBook = null;
+            currentRow = null;
+            currentCell = null;
+            cellStyle = null;
         }
 
-       
-
-
-        public SpreadSheetStatus CreateDocument(FormattedRoster roster)
+        private XSSFCellStyle AutoStyle(XSSFWorkbook wbk, bool autoFont = true)
         {
-            var officeType = Type.GetTypeFromProgID("Excel.Applcation");
-            if (officeType == null)
+            var autoValue = (XSSFCellStyle)wbk.CreateCellStyle();
+            autoValue.FillPattern = FillPattern.SolidForeground;
+
+            autoValue.BorderBottom = BorderStyle.Thin;
+            autoValue.BorderTop = BorderStyle.Thin;
+            autoValue.BorderLeft = BorderStyle.Thin;
+            autoValue.BorderRight = BorderStyle.Thin;
+
+            if (autoFont)
             {
-                return SpreadSheetStatus.NOTINSTALLED;
+                var font = wbk.CreateFont();
+                font.FontName = "Calibru";
+                font.FontHeightInPoints = 11;
+
+                autoValue.SetFont(font);
             }
-
-            try
-            {
-                if (app == null)
-                {
-                    //  var excelProcess = Process.GetProcessesByName("excel");
+            
 
 
-                    try
-                    {
-                        app = (Application)Marshal.GetActiveObject("Excel.Application");
-                    }
-                    catch
-                    {
-                        app = new Application();
-                    }
-
-                }
-
-                //  app.ScreenUpdating = false;
-                app.Visible = true;
-
-                //remove this line, for testing only - slows down the process a great deal
-                app.ScreenUpdating = true;
-
-                workbook = app.Workbooks.Add(1);
-                worksheet = (Worksheet)workbook.Sheets[1];
-            }
-            catch
-            {
-                Console.WriteLine("Something went wrong with creating an Excel sheet");
-                return SpreadSheetStatus.FAILED;
-            }
-
-
-
-            worksheet.Cells[1, 1].Value = "Roster: " + roster.start.ToString("dd/MM/yyyy") + " - " + roster.finish.ToShortDateString();
-
-            var cellHeading = worksheet.Cells[3, 2];
-            cellHeading.Value = "Name";
-            cellHeading.Font.Bold = true;
-            cellHeading.Interior.Color = ColorTranslator.FromHtml("#3d85c6");
-
-            var titleRange = worksheet.Range[worksheet.Cells[1, 1], worksheet.Cells[2, 2]];
-
-            titleRange.Merge();
-            var titleFont = titleRange.Font;
-
-            titleFont.Bold = true;
-            titleFont.Size = 18;
-
-            var lastDate = new DateTime(1970, 1, 1);
-
-
-
-
-
-
-            int columnCount= Convert.ToInt32((roster.finish - roster.start).TotalDays) +2;
-
-            for (int i = 1; i < columnCount; i++)
-            {
-                var date = roster.start.AddDays(i);
-                worksheet.Cells[2, i + 3] = Enum.GetName(typeof(DayOfWeek), date.DayOfWeek);
-                worksheet.Cells[3, i + 3] = date.ToShortDateString();
-            }
-
-            var  pointPosition = 4;
-
-
-            for (int i = 0; i < roster.staff.Count; i++)
-            {
-                var currentStaff = roster.staff[i];
-                worksheet.Cells[pointPosition, 2] = currentStaff.name;
-
-                foreach (var schedule in currentStaff.schedules)
-                {
-                    int columnPos = (schedule.startDate - roster.start).Days + 3;
-                    var cell = worksheet.Cells[pointPosition, columnPos].
-                    cell.Value = schedule.team + ": " + schedule.startTime + " - " + schedule.endTime;
-                    cell.Interior.Color = ColorTranslator.FromHtml(schedule.teamColour);
-                }
-
-                for (int j = 3; j < columnCount; j++)
-                {
-                    var interior = worksheet.Cells[pointPosition, j].interior;
-
-                          if (Convert.ToInt32(interior.Color) ==16777215 )
-                          {
-                              interior.color = Color.FromArgb(206, 206, 206);
-                          }
-                }
-                pointPosition++;
-            }
-
-            pointPosition--;
-
-            worksheet.Range[worksheet.Cells[4, 2], worksheet.Cells[pointPosition, 2]].Interior.Color = ColorTranslator.FromHtml("#cfe2f3");
-
-            for (int i = 1; i <= columnCount; i++)
-            {
-                worksheet.Columns[i].ColumnWidth = 24;
-            }
-            for (int i = 3; i <= columnCount; i++)
-            {
-                worksheet.Cells[2, i].Interior.Color = ColorTranslator.FromHtml("#38761d");
-                worksheet.Cells[3, i].Interior.Color = ColorTranslator.FromHtml("#93c47d");
-            }
-
-            worksheet.Cells[2, 1].EntireRow.Font.Bold = true;
-            worksheet.Cells[3, 1].EntireRow.Font.Bold = true;
-
-              var tableRange = worksheet.Cells.Range[worksheet.Cells[2, 2], worksheet.Cells[ pointPosition , columnCount]];
-
-
-
-            foreach (var cell in tableRange)
-            {
-                var dRAlignL = cell.Borders[XlBordersIndex.xlEdgeLeft];
-                var dRAlignR = cell.Borders[XlBordersIndex.xlEdgeRight];
-                var dRAlignU = cell.Borders[XlBordersIndex.xlEdgeTop];
-                var dRAlignD = cell.Borders[XlBordersIndex.xlEdgeBottom];
-
-                dRAlignL.Color = Color.Black;
-                dRAlignR.Color = Color.Black;
-                dRAlignU.Color = Color.Black;
-                dRAlignD.Color = Color.Black;
-
-                dRAlignU = null;
-                dRAlignR = null;
-                dRAlignL = null;
-                dRAlignD = null;
-
-            }
-
-
-
-
-
-
-
-
-            var tableRangeStyle = tableRange.Style;
-
-            tableRangeStyle.HorizontalAlignment = XlHAlign.xlHAlignLeft;
-
-
-
-
-            titleRange = null;
-            titleFont = null;
-            tableRange = null;
-
-            return SpreadSheetStatus.DONE;
-
-            // WARNING MEMORY LEAKS, SET ALL EXCEL VARIABLES TO NULL
+            return autoValue;
         }
-
-        ~SpreadSheetBuilder()
-        {
-            //any class property from excel must be disposed here
-            if (app != null)
-            {
-                Marshal.ReleaseComObject(app);
-            }
-            
-            if (workbook != null)
-            {
-                Marshal.ReleaseComObject(workbook);
-            }
-            
-            if (worksheet != null)
-            {
-                Marshal.ReleaseComObject(worksheet);
-            }
-
-
-            
-        }
-
-        
+      
     }
-  
-
 }
+
+
