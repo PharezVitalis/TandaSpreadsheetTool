@@ -25,8 +25,9 @@ namespace TandaSpreadsheetTool
             networker = new Networker();
             sheetBuilder = new SpreadSheetBuilder();
             builder = new RosterManager(networker);
-            Directory.CreateDirectory(RosterManager.Path);
+            
             Directory.CreateDirectory(RosterManager.Path + "Rosters");
+            Directory.CreateDirectory(SpreadSheetBuilder.SpreadSheetPath);
             builder.LoadRosters();
 
             
@@ -245,6 +246,10 @@ namespace TandaSpreadsheetTool
         private void btnOpenExcel_Click(object sender, EventArgs e)
         {
             //should be done on a seperate thread 
+            if (!sheetBuilder.TeamsSet)
+            {
+                sheetBuilder.SetTeams(builder.Teams);
+            }
             sheetBuilder.CreateWorkbook(rosters[lstBxRosters.SelectedIndex], SpreadSheetStyle.Default());
         }
 

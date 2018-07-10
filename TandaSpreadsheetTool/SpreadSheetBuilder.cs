@@ -11,11 +11,22 @@ namespace TandaSpreadsheetTool
     {
 
         Team[] teams;
+        bool setTeams = false;
         Dictionary<string, XSSFCellStyle> teamColourDict;
 
-        public SpreadSheetBuilder(Team[] teams)
+
+        public void SetTeams(Team[] teams)
         {
             this.teams = teams;
+            setTeams = true;
+        }
+
+        public static string SpreadSheetPath
+        {
+            get
+            {
+                return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Tanda Rosters\\";
+            }
         }
 
         public void CreateWorkbook(FormattedRoster roster, SpreadSheetStyle style,  SpreadSheetDiv div = SpreadSheetDiv.NONE, string path  = null)
@@ -28,7 +39,7 @@ namespace TandaSpreadsheetTool
             var dayNameCL = new XSSFColor(style.dayNameCl);
             var dateCl = new XSSFColor(style.dateCl);
 
-            if (teamColourDict.Count < 1 && teams.Length > 0 && style.useTeamCls)
+            if (setTeams & teams.Length<1 && style.useTeamCls)
             {
                 try
                 {
@@ -137,6 +148,8 @@ namespace TandaSpreadsheetTool
             cellStyle = AutoStyle(workBook);
             cellStyle.SetFillForegroundColor(nameFieldCL);
 
+
+            var rotaFieldColour = new XSSFColor(style.rotaFieldCl);
             for (int i = 0; i < staffCount; i++)
             {
                 currentRow = sheet.CreateRow(i+3);
@@ -150,15 +163,23 @@ namespace TandaSpreadsheetTool
                 for (int j = 0; j < scheduleCount; j++)
                 {
                     var currentSchedule = currentStaff.schedules[j];
-                    currentCell =
+
+                    currentCell = currentRow.GetCell(2 +  ( currentSchedule.startDate- roster.start).Days);
+                    currentCell.SetCellValue(currentSchedule.team + ": " + currentSchedule.startTime + " - " + currentSchedule.endTime);
+                   if (!teamColourDict.TryGetValue(currentSchedule.team,out cellStyle2))
+                    {
+                        cellStyle2 = AutoStyle(workBook);
+                        cellStyle2.SetFillForegroundColor(rotaFieldCl);
+                    }
                    
+                    currentCell.CellStyle = cellStyle2;
                 }
             }
            
 
             if (path == null)
             {
-                path = RosterManager.Path;
+                path = SpreadSheetPath;
             }
             
                 var fs = File.Create(path+"Tanda Roster  " + roster.start.ToString("dd-MM-yy") + " - " + roster.finish.ToString("dd-MM-yy")+".xlsx");
@@ -220,6 +241,14 @@ namespace TandaSpreadsheetTool
             return autoValue;
         }
       
+
+        public bool TeamsSet
+        {
+            get
+            {
+                return setTeams;
+            }
+        }
     }
 }
 
