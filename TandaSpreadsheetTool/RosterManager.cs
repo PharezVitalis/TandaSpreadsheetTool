@@ -61,6 +61,14 @@ namespace TandaSpreadsheetTool
            
         }
 
+        public Team[] Teams
+        {
+            get
+            {
+                return teamObjs.ToArray();
+            }
+        }
+
 
         public string LastStaffUpdate
         {

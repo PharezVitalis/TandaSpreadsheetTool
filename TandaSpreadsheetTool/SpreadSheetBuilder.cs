@@ -3,24 +3,55 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System.IO;
 using System;
+using System.Collections.Generic;
 
 namespace TandaSpreadsheetTool
 {
     class SpreadSheetBuilder
     {
-        
-        
 
+        Team[] teams;
+        Dictionary<string, XSSFCellStyle> teamColourDict;
 
-        public void CreateWorkbook(FormattedRoster roster, SpreadSheetStyle style, SpreadSheetDiv div = SpreadSheetDiv.NONE, string path  = null)
+        public SpreadSheetBuilder(Team[] teams)
+        {
+            this.teams = teams;
+        }
+
+        public void CreateWorkbook(FormattedRoster roster, SpreadSheetStyle style,  SpreadSheetDiv div = SpreadSheetDiv.NONE, string path  = null)
         {
             var workBook = new XSSFWorkbook();
-
+            
             var nameHeadCl = new XSSFColor(style.nameHeadingCl);
             var nameFieldCL = new XSSFColor(style.nameFieldCl);
             var rotaFieldCl = new XSSFColor(style.rotaFieldCl);
             var dayNameCL = new XSSFColor(style.dayNameCl);
             var dateCl = new XSSFColor(style.dateCl);
+
+            if (teamColourDict.Count < 1 && teams.Length > 0 && style.useTeamCls)
+            {
+                try
+                {
+                    for (int i = 0; i < teams.Length; i++)
+                    {
+                        var currentTeam = teams[i];
+                        var nextStyle = AutoStyle(workBook);
+                        var colour = GetColourFromHex(currentTeam.colour);
+                        if (colour != null)
+                        {
+                            nextStyle.SetFillForegroundColor(colour);
+                        }
+                       
+                        teamColourDict.Add(currentTeam.name, nextStyle);
+                    }
+                }
+                catch
+                {
+                    style.useTeamCls = false;
+                }
+
+
+              }
 
             var dateString = roster.start.ToString("dd-MM") + "- " + roster.finish.ToString("dd-MM-yy");
 
@@ -29,11 +60,18 @@ namespace TandaSpreadsheetTool
       
             var currentRow = sheet.CreateRow(0);
             var dayRow = sheet.CreateRow(1);
+
+            var cellStyle = AutoStyle(workBook, false);
             var cellStyle2 = AutoStyle(workBook, false);
-          
+
+            var nOfDays = (roster.finish - roster.start).TotalDays;
+            var staffCount = roster.staff.Count;
+
 
             var currentCell = currentRow.CreateCell(0);
             currentCell.SetCellValue(dateString);
+
+            
 
             sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(0, 1, 0, 1));
           
@@ -51,7 +89,7 @@ namespace TandaSpreadsheetTool
             currentCell = currentRow.CreateCell(1);
             currentCell.SetCellValue("Name");
 
-            var cellStyle = AutoStyle(workBook,false);
+          
             
 
             
@@ -74,7 +112,7 @@ namespace TandaSpreadsheetTool
             cellStyle.FillPattern = FillPattern.SolidForeground;
             cellStyle.SetFillForegroundColor(dateCl);
 
-            var nOfDays = (roster.finish - roster.start).TotalDays;
+            
 
             sheet.SetColumnWidth(0, style.colWidth * 256);
             sheet.SetColumnWidth(1, style.colWidth * 256);
@@ -94,10 +132,28 @@ namespace TandaSpreadsheetTool
                 currentCell.CellStyle = cellStyle;
 
             }
-            font = null;
 
-            var staffCount = roster.staff.Count;
+            
+            cellStyle = AutoStyle(workBook);
+            cellStyle.SetFillForegroundColor(nameFieldCL);
 
+            for (int i = 0; i < staffCount; i++)
+            {
+                currentRow = sheet.CreateRow(i+3);
+                var currentStaff = roster.staff[i];
+                var scheduleCount = currentStaff.schedules.Count;
+                currentCell = currentRow.CreateCell(1);
+
+                currentCell.SetCellValue(currentStaff.name);
+                currentCell.CellStyle = cellStyle;
+
+                for (int j = 0; j < scheduleCount; j++)
+                {
+                    var currentSchedule = currentStaff.schedules[j];
+                    currentCell =
+                   
+                }
+            }
            
 
             if (path == null)
@@ -109,10 +165,35 @@ namespace TandaSpreadsheetTool
                 workBook.Write(fs);
                 fs.Close();
 
+            font = null;
             workBook = null;
             currentRow = null;
             currentCell = null;
             cellStyle = null;
+        }
+
+        private XSSFColor GetColourFromHex(string hexValue)
+        {
+            if (hexValue.Length!= 7)
+            {
+                return null;
+            }
+
+            var bytes = new byte[3];
+
+            
+            try
+            {
+                bytes[0] = Convert.ToByte(hexValue.Substring(1, 2),16);
+                bytes[1] = Convert.ToByte(hexValue.Substring(3, 2), 16);
+                bytes[2] = Convert.ToByte(hexValue.Substring(5, 2), 16);
+            }
+            catch
+            {
+                return null;
+            }
+
+            return new XSSFColor(bytes);
         }
 
         private XSSFCellStyle AutoStyle(XSSFWorkbook wbk, bool autoFont = true)
