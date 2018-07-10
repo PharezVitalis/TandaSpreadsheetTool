@@ -11,10 +11,10 @@ namespace TandaSpreadsheetTool
 {
     class RosterManager
     {
-        
+
         Networker networker;
-     
-       
+
+
 
         int maxTries;
         int retryDelay;
@@ -32,33 +32,33 @@ namespace TandaSpreadsheetTool
         bool hasTeams = false;
 
         DateTime staffLstLastUpdated;
-  
+
         public static string Path
         {
             get
             {
-                return Environment.CurrentDirectory + "\\" + "Data"+"\\";
+                return Environment.CurrentDirectory + "\\" + "Data" + "\\";
             }
         }
-       
 
-        public RosterManager(Networker networker, int maxTries = 5, int retryDelay = 500  )
+
+        public RosterManager(Networker networker, int maxTries = 5, int retryDelay = 500)
         {
             this.maxTries = maxTries;
 
             this.networker = networker;
-          
+
             this.retryDelay = retryDelay;
-            
-          
+
+
             staffObjs = new List<User>();
-            
+
             teamObjs = new List<Team>();
 
             builtRosters = new List<FormattedRoster>();
 
 
-           
+
         }
 
         public Team[] Teams
@@ -76,7 +76,7 @@ namespace TandaSpreadsheetTool
             {
                 if (File.Exists(Path + "staff.json"))
                 {
-                    return File.GetLastWriteTime(Path + "staff.json").ToLongDateString();  
+                    return File.GetLastWriteTime(Path + "staff.json").ToLongDateString();
                 }
                 else
                 {
@@ -90,30 +90,30 @@ namespace TandaSpreadsheetTool
             var staffJArr = new JArray();
             var readFromFile = false;
 
-            if (!forceUpdate & File.Exists(Path+"staff.json" )) 
+            if (!forceUpdate & File.Exists(Path + "staff.json"))
             {
-                var fileData = File.ReadAllText(Path+"staff.json");
+                var fileData = File.ReadAllText(Path + "staff.json");
                 try
                 {
                     staffJArr = JArray.Parse(fileData);
-                   staffLstLastUpdated = File.GetLastAccessTime(Path + "staff.json");
+                    staffLstLastUpdated = File.GetLastAccessTime(Path + "staff.json");
                     readFromFile = true;
                 }
-                catch 
+                catch
                 {
                     Console.WriteLine("ERROR GETTING STAFF FROM FILE");
                     File.Delete(Path + "staff.json");
                     staffJArr = await networker.GetStaff();
                 }
-                
-                
-                
+
+
+
             }
             else
             {
                 staffJArr = await networker.GetStaff();
             }
-             
+
             try
             {
 
@@ -129,7 +129,7 @@ namespace TandaSpreadsheetTool
                 }
             }
 
-            catch 
+            catch
             {
                 Console.WriteLine("error deserializing users");
                 hasStaff = false;
@@ -170,7 +170,7 @@ namespace TandaSpreadsheetTool
         }
 
 
-        private void RemoveFields( JToken token, string[] fields)
+        private void RemoveFields(JToken token, string[] fields)
         {
             JContainer container = token as JContainer;
             if (container == null) return;
@@ -183,7 +183,7 @@ namespace TandaSpreadsheetTool
                 {
                     removeList.Add(el);
                 }
-                RemoveFields( el, fields);
+                RemoveFields(el, fields);
             }
 
             foreach (JToken el in removeList)
@@ -221,7 +221,7 @@ namespace TandaSpreadsheetTool
             }
 
 
-         
+
 
             try
             {
@@ -235,7 +235,7 @@ namespace TandaSpreadsheetTool
                     }
                 }
             }
-            catch 
+            catch
             {
                 Console.WriteLine("Error deserializing teams");
                 hasTeams = false;
@@ -253,11 +253,11 @@ namespace TandaSpreadsheetTool
 
         public static DateTime SetToTime(DateTime day, int hours, int minutes)
         {
-            
-            
+
+
             day = day - day.TimeOfDay;
-           day= day.AddHours(hours);
-            day =day.AddMinutes(minutes);
+            day = day.AddHours(hours);
+            day = day.AddMinutes(minutes);
             return day;
 
         }
@@ -293,17 +293,17 @@ namespace TandaSpreadsheetTool
             }
         }
 
-       public async Task<FormattedRoster> BuildRoster(DateTime dateFrom, DateTime dateTo, bool save = true)
+        public async Task<FormattedRoster> BuildRoster(DateTime dateFrom, DateTime dateTo, bool save = true)
         {
             var currentTries = 0;
-            
-           
-            dateFrom = SetToTime(dateFrom,0,0);
+
+
+            dateFrom = SetToTime(dateFrom, 0, 0);
             dateTo = SetToTime(dateTo, 23, 59);
 
-            int weeks =(int) (dateTo - dateFrom ).TotalDays / 7;
+            int weeks = (int)(dateTo - dateFrom).TotalDays / 7;
 
-            var rosters = (dateFrom.DayOfWeek != DayOfWeek.Monday)? new JObject[weeks+1]: new JObject[weeks];
+            var rosters = (dateFrom.DayOfWeek != DayOfWeek.Monday) ? new JObject[weeks + 1] : new JObject[weeks];
 
             var currentDate = dateFrom;
 
@@ -315,7 +315,7 @@ namespace TandaSpreadsheetTool
                 currentDate = currentDate.AddDays(7);
 
             }
-            if (dateFrom.DayOfWeek!= DayOfWeek.Monday)
+            if (dateFrom.DayOfWeek != DayOfWeek.Monday)
             {
                 rosters[rosters.Length - 1] = await networker.GetRooster(dateTo);
             }
@@ -323,7 +323,7 @@ namespace TandaSpreadsheetTool
             if (!hasTeams)
             {
                 currentTries = 0;
-                while(true)
+                while (true)
                 {
                     await GetTeams();
 
@@ -345,7 +345,7 @@ namespace TandaSpreadsheetTool
                     }
                 }
             }
-        
+
 
             if (!hasStaff)
             {
@@ -354,7 +354,7 @@ namespace TandaSpreadsheetTool
                 {
                     await GetStaff();
                     currentTries++;
-                    if(!hasStaff)
+                    if (!hasStaff)
                     {
                         if (currentTries < maxTries)
                         {
@@ -391,8 +391,8 @@ namespace TandaSpreadsheetTool
             {
                 return null;
             }
-            var outRoster = CreateRoster(rosterObjs);
-            
+            var outRoster = CreateRoster(rosterObjs, dateTo);
+
             outRoster.finish = dateTo;
             outRoster.start = dateFrom;
 
@@ -405,9 +405,9 @@ namespace TandaSpreadsheetTool
                 bf.Serialize(ms, outRoster);
 
                 var bytes = ms.ToArray();
-                var path = Path + "Rosters\\ " +"Roster"+ dateFrom.ToString("dd-MM-yyyy") + " - " + dateTo.ToString("dd-MM-yyyy") + ".bin";
+                var path = Path + "Rosters\\ " + "Roster" + dateFrom.ToString("dd-MM-yyyy") + " - " + dateTo.ToString("dd-MM-yyyy") + ".bin";
 
-                File.WriteAllBytes(path,bytes);
+                File.WriteAllBytes(path, bytes);
                 ms.Dispose();
             }
 
@@ -424,7 +424,7 @@ namespace TandaSpreadsheetTool
 
             try
             {
-            days = Convert.ToInt32(date.Substring(0, 2));
+                days = Convert.ToInt32(date.Substring(0, 2));
                 months = Convert.ToInt32(date.Substring(3, 2));
                 if (date.Length > 8)
                 {
@@ -440,7 +440,7 @@ namespace TandaSpreadsheetTool
 
                 Console.WriteLine(e.Message);
                 return new DateTime(1970, 1, 1);
-                
+
             }
 
             return new DateTime(years, months, days);
@@ -459,7 +459,7 @@ namespace TandaSpreadsheetTool
 
         public static DateTime UnixToDate(long unixValue)
         {
-            var date = new DateTime(1970, 1, 1,0,0,0);
+            var date = new DateTime(1970, 1, 1, 0, 0, 0);
             date = date.AddSeconds(unixValue);
             date = date.ToLocalTime();
 
@@ -468,7 +468,7 @@ namespace TandaSpreadsheetTool
         }
 
         public static string FormatDate(string date)
-        {     
+        {
             return date.Substring(6, 4) + "/" + date.Substring(3, 2) + "/" + date.Substring(0, 2);
         }
 
@@ -495,7 +495,7 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        private FormattedRoster CreateRoster(Roster[] rosters)
+        private FormattedRoster CreateRoster(Roster[] rosters, DateTime dateTo)
         {
 
             var roster = new FormattedRoster();
@@ -504,76 +504,85 @@ namespace TandaSpreadsheetTool
             {
                 var currentRoster = rosters[i];
 
-                for (int j = 0; j < currentRoster.schedules.Count; j++)
+                var dayCount = currentRoster.schedules.Count;
+                for (int j = 0; j < dayCount; j++)
                 {
                     var currentDay = currentRoster.schedules[j];
+                    var scheduleCount = currentDay.schedules.Count;
 
-                    for (int k = 0; k < currentDay.schedules.Count; k++)
+                    for (int k = 0; k < scheduleCount; k++)
                     {
-                        for (int l = 0; l < currentDay.schedules.Count ; l++)
+                        var currentSchedule = currentDay.schedules[k];
+
+                        var staffIdObj = currentSchedule.user_id;
+
+                        var staffId = 0;
+
+                        if (staffIdObj == null)
                         {
-                            var currentSchedule = currentDay.schedules[i];
+                            continue;
+                        }
+                        else
+                        {
+                            staffId = Convert.ToInt32(staffIdObj);
+                        }
 
-                            var staffIdObj = currentSchedule.user_id;
+                        var staffMember = roster.staff.Find(x => x.id == staffId);
 
-                            int staffId = (staffIdObj != null) ? Convert.ToInt32(staffIdObj) : -1;
-                            
-                            if (staffId == -1)
+                        if (staffMember == null)
+                        {
+                            staffMember = new FormattedStaff();
+                            staffMember.id = staffId;
+                            staffMember.name = staffObjs.Find(x => x.id == staffId).name;
+                            if (staffMember.name == null)
                             {
                                 continue;
                             }
-                            
-                                var staffMember = roster.staff.Find(x => x.id ==staffId);
-
-                                if (staffMember == null)
-                                {
-                                    staffMember = new FormattedStaff();
-                                    staffMember.id = staffId;
-                                    staffMember.name = staffObjs.Find(x => x.id == staffId).name;
-                                    if(staffMember.name == null)
-                                    {
-                                        continue;
-                                    }
-                                    roster.staff.Add(staffMember);
-                                }
-                                
-
-                                var formattedSch = new FormattedSchedule();
-
-                                var start = currentSchedule.start;
-
-                                if (start != null)
-                                {
-                                    formattedSch.startDate = UnixToDate(Convert.ToInt32(start));
-                                }
-
-                               
-                                formattedSch.startTime = formattedSch.startDate.ToString("HH:mm");
-
-                                var teamId = currentSchedule.department_id;
-                               
-                                var team = (teamId !=null) ?teamObjs.Find(x => x.id == Convert.ToInt32(teamId)):null;
-
-                                if (currentSchedule.finish != null)
-                                {
-                                    formattedSch.endTime = UnixToDate(Convert.ToInt32(currentSchedule.finish)).ToString("HH:mm");
-                                }
-
-                                if (team != null)
-                                {
-                                    formattedSch.team = team.name;
-                                    formattedSch.teamColour = team.colour;
-                                    formattedSch.teamNameShort = team.export_name;
-                                }
-
-                                staffMember.schedules.Add(formattedSch);
-
-
-                            
-                            
-                            
+                            roster.staff.Add(staffMember);
                         }
+
+
+                        var formattedSch = new FormattedSchedule();
+
+                        var start = currentSchedule.start;
+
+                        if (start != null)
+                        {
+                            formattedSch.startDate = UnixToDate(Convert.ToInt32(start));
+                            if (formattedSch.startDate > dateTo)
+                            {
+                                break;
+                            }
+
+                        }
+                        formattedSch.startTime = formattedSch.startDate.ToString("HH:mm");
+
+
+
+                        var teamId = currentSchedule.department_id;
+
+                        var team = (teamId != null) ? teamObjs.Find(x => x.id == Convert.ToInt32(teamId)) : null;
+
+                        if (currentSchedule.finish != null)
+                        {
+                            formattedSch.endTime = UnixToDate(Convert.ToInt32(currentSchedule.finish)).ToString("HH:mm");
+                        }
+
+                        if (team != null)
+                        {
+                            formattedSch.team = team.name;
+                            formattedSch.teamColour = team.colour;
+                            formattedSch.teamNameShort = team.export_name;
+                        }
+
+                        staffMember.schedules.Add(formattedSch);
+
+
+
+
+
                     }
+
 
                 }
 
@@ -582,20 +591,20 @@ namespace TandaSpreadsheetTool
 
             }
 
-            
+
             return roster;
         }
 
 
         public FormattedRoster[] GetAllRosters()
         {
-            
-                return builtRosters.ToArray();
-            
-        }
-        
 
-      
+            return builtRosters.ToArray();
+
+        }
+
+
+
 
     }
 }

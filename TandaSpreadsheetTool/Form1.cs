@@ -191,10 +191,14 @@ namespace TandaSpreadsheetTool
         {
             btnGetJSON.Enabled = true;
             btnUpdateStaff.Enabled = true;
-            if (rosters.Length>0)
+            if (rosters != null)
             {
-                btnOpenExcel.Enabled = true;
+                if (rosters.Length > 0)
+                {
+                    btnOpenExcel.Enabled = true;
+                }
             }
+            
         }
 
         void UpdateRosterList()
@@ -222,12 +226,7 @@ namespace TandaSpreadsheetTool
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            if (builder==null)
-            {
-                 
-               
-                
-            }
+           
 
             btnGetJSON.Enabled = false;
             btnUpdateStaff.Enabled = false;
