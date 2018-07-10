@@ -20,6 +20,7 @@ namespace TandaSpreadsheetTool
         protected string userNameKey = "iv7jlwbcx#hcq&*";
 
         string username = "";
+        bool authenticated = false;
 
         JObject token;
 

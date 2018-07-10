@@ -68,7 +68,7 @@ namespace TandaSpreadsheetTool
                 return teamObjs.ToArray();
             }
         }
-
+      
 
         public string LastStaffUpdate
         {
@@ -262,7 +262,7 @@ namespace TandaSpreadsheetTool
 
         }
 
-        public void LoadRosters()
+        public void LoadRosters( bool getStaffData = true)
         {
             var rosterPath = Path + "Rosters";
             var fileNames = Directory.GetFiles(rosterPath);
@@ -275,17 +275,31 @@ namespace TandaSpreadsheetTool
                 {
                     try
                     {
-                        using (var stream = File.Open(rosterPath + file, FileMode.Open))
+                       
+                        using (var stream = File.Open(file, FileMode.Open))
                         {
                             var bf = new BinaryFormatter();
 
                             var item = (FormattedRoster)bf.Deserialize(stream);
                             builtRosters.Add(item);
                         }
+                        if (getStaffData)
+                        {
+                            // safe not to await as file read times should be quick
+                            if (File.Exists(Path + "staff.json"))
+                            {
+                                GetStaff();
+                            }
+                            if (File.Exists(Path + "teams.json"))
+                            {
+                                GetTeams();
+                            }
+                        }
                     }
-                    catch
+                    catch(Exception e)
                     {
-                        Console.WriteLine("Failed to read file");
+                        Console.WriteLine("Failed to read file " +e.Message);
+
                         continue;
                     }
 
@@ -391,7 +405,7 @@ namespace TandaSpreadsheetTool
             {
                 return null;
             }
-            var outRoster = CreateRoster(rosterObjs, dateTo);
+            var outRoster = CreateRoster(rosterObjs, dateFrom,dateTo);
 
             outRoster.finish = dateTo;
             outRoster.start = dateFrom;
@@ -495,7 +509,7 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        private FormattedRoster CreateRoster(Roster[] rosters, DateTime dateTo)
+        private FormattedRoster CreateRoster(Roster[] rosters,DateTime dateFrom, DateTime dateTo)
         {
 
             var roster = new FormattedRoster();
@@ -553,7 +567,10 @@ namespace TandaSpreadsheetTool
                             {
                                 break;
                             }
-
+                            else if (formattedSch.startDate < dateFrom)
+                            {
+                                continue;
+                            }
                         }
                         formattedSch.startTime = formattedSch.startDate.ToString("HH:mm");
 

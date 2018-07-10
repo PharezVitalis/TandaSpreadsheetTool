@@ -28,7 +28,7 @@ namespace TandaSpreadsheetTool
             
             Directory.CreateDirectory(RosterManager.Path + "Rosters");
             Directory.CreateDirectory(SpreadSheetBuilder.SpreadSheetPath);
-            builder.LoadRosters();
+           
 
             
 
@@ -69,12 +69,14 @@ namespace TandaSpreadsheetTool
         }
 
         void LoggedIn()
-
         {
             pnlLogIn.Visible = false;
             txtBxPwd.Text = "";
             pnlMain.Visible = true;
             AcceptButton = btnGetJSON;
+            builder.LoadRosters();
+            
+            Invoke(new MethodInvoker(UpdateRosterList));
         }
 
         void SetUserNameToOld()
@@ -204,6 +206,10 @@ namespace TandaSpreadsheetTool
         void UpdateRosterList()
         {
             rosters = builder.GetAllRosters();
+            if (rosters == null)
+            {
+                return;
+            }
             lstBxRosters.Items.Clear();
 
             for (int i = 0; i < rosters.Length; i++)
@@ -213,7 +219,17 @@ namespace TandaSpreadsheetTool
                 var itemStr = roster.start.ToShortDateString() + " - " + roster.finish.ToShortDateString();
                 lstBxRosters.Items.Add(itemStr);
             }
+            if (rosters.Length > 0)
+            {
+                btnOpenExcel.Enabled = true;
+            }
+            else
+            {
+                return;
+            }
+            
             lstBxRosters.SelectedIndex = lstBxRosters.Items.Count - 1;
+
         }
 
         private void btnLogIn_Click(object sender, EventArgs e)
@@ -247,11 +263,22 @@ namespace TandaSpreadsheetTool
             //should be done on a seperate thread 
             if (!sheetBuilder.TeamsSet)
             {
+                if (builder.Teams.Length < 1)
+                {
+
+                }
                 sheetBuilder.SetTeams(builder.Teams);
             }
             sheetBuilder.CreateWorkbook(rosters[lstBxRosters.SelectedIndex], SpreadSheetStyle.Default());
         }
 
+        async private void CreateExcel()
+        {
+            if (!sheetBuilder.TeamsSet)
+            {
+                var teams = builder.Teams;
+            }
+        }
 
         async private void RefreshStaffList()
         {

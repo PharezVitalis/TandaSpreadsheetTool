@@ -192,8 +192,11 @@ namespace TandaSpreadsheetTool
             {
                 path = SpreadSheetPath;
             }
+            // add try- catch here
+                var fs = File.Create(path + "Tanda Roster  " + roster.start.ToString("dd-MM-yy") + " - " + roster.finish.ToString("dd-MM-yy") + ".xlsx");
             
-                var fs = File.Create(path+"Tanda Roster  " + roster.start.ToString("dd-MM-yy") + " - " + roster.finish.ToString("dd-MM-yy")+".xlsx");
+            
+                
                 workBook.Write(fs);
                 fs.Close();
 
