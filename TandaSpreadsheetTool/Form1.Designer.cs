@@ -42,12 +42,13 @@
             this.btnUpdateStaff = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
             this.lblLastUpdated = new System.Windows.Forms.Label();
-            this.btnOpenExcel = new System.Windows.Forms.Button();
+            this.btnMakeExcel = new System.Windows.Forms.Button();
             this.dtPFrom = new System.Windows.Forms.DateTimePicker();
             this.dtPTo = new System.Windows.Forms.DateTimePicker();
             this.lblDateTo = new System.Windows.Forms.Label();
             this.lblInDate = new System.Windows.Forms.Label();
             this.btnGetJSON = new System.Windows.Forms.Button();
+            this.btnRemove = new System.Windows.Forms.Button();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -129,12 +130,13 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.btnRemove);
             this.pnlMain.Controls.Add(this.lstBxRosters);
             this.pnlMain.Controls.Add(this.ckBxSaveJson);
             this.pnlMain.Controls.Add(this.btnUpdateStaff);
             this.pnlMain.Controls.Add(this.lblStatus);
             this.pnlMain.Controls.Add(this.lblLastUpdated);
-            this.pnlMain.Controls.Add(this.btnOpenExcel);
+            this.pnlMain.Controls.Add(this.btnMakeExcel);
             this.pnlMain.Controls.Add(this.dtPFrom);
             this.pnlMain.Controls.Add(this.dtPTo);
             this.pnlMain.Controls.Add(this.lblDateTo);
@@ -149,9 +151,9 @@
             // lstBxRosters
             // 
             this.lstBxRosters.FormattingEnabled = true;
-            this.lstBxRosters.Location = new System.Drawing.Point(407, 8);
+            this.lstBxRosters.Location = new System.Drawing.Point(376, 26);
             this.lstBxRosters.Name = "lstBxRosters";
-            this.lstBxRosters.Size = new System.Drawing.Size(150, 95);
+            this.lstBxRosters.Size = new System.Drawing.Size(164, 108);
             this.lstBxRosters.TabIndex = 14;
             // 
             // ckBxSaveJson
@@ -193,16 +195,16 @@
             this.lblLastUpdated.TabIndex = 9;
             this.lblLastUpdated.Text = "Staff List Last Updated:";
             // 
-            // btnOpenExcel
+            // btnMakeExcel
             // 
-            this.btnOpenExcel.Enabled = false;
-            this.btnOpenExcel.Location = new System.Drawing.Point(407, 111);
-            this.btnOpenExcel.Name = "btnOpenExcel";
-            this.btnOpenExcel.Size = new System.Drawing.Size(150, 23);
-            this.btnOpenExcel.TabIndex = 7;
-            this.btnOpenExcel.Text = "Open In Excel";
-            this.btnOpenExcel.UseVisualStyleBackColor = true;
-            this.btnOpenExcel.Click += new System.EventHandler(this.btnOpenExcel_Click);
+            this.btnMakeExcel.Enabled = false;
+            this.btnMakeExcel.Location = new System.Drawing.Point(546, 26);
+            this.btnMakeExcel.Name = "btnMakeExcel";
+            this.btnMakeExcel.Size = new System.Drawing.Size(150, 23);
+            this.btnMakeExcel.TabIndex = 7;
+            this.btnMakeExcel.Text = "Create Spreadsheet";
+            this.btnMakeExcel.UseVisualStyleBackColor = true;
+            this.btnMakeExcel.Click += new System.EventHandler(this.btnOpenExcel_Click);
             // 
             // dtPFrom
             // 
@@ -246,6 +248,17 @@
             this.btnGetJSON.UseVisualStyleBackColor = true;
             this.btnGetJSON.Click += new System.EventHandler(this.btnTest_Click);
             // 
+            // btnRemove
+            // 
+            this.btnRemove.Enabled = false;
+            this.btnRemove.Location = new System.Drawing.Point(546, 66);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(150, 23);
+            this.btnRemove.TabIndex = 15;
+            this.btnRemove.Text = "Delete Selected";
+            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -281,12 +294,13 @@
         private System.Windows.Forms.Label lblDateTo;
         private System.Windows.Forms.DateTimePicker dtPFrom;
         private System.Windows.Forms.DateTimePicker dtPTo;
-        private System.Windows.Forms.Button btnOpenExcel;
+        private System.Windows.Forms.Button btnMakeExcel;
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.Label lblLastUpdated;
         private System.Windows.Forms.Button btnUpdateStaff;
         private System.Windows.Forms.CheckBox ckBxSaveJson;
         private System.Windows.Forms.ListBox lstBxRosters;
+        private System.Windows.Forms.Button btnRemove;
     }
 }
 

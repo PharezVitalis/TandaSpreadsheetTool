@@ -285,7 +285,7 @@ namespace TandaSpreadsheetTool
                         }
                         if (getStaffData)
                         {
-                            // safe not to await as file read times should be quick
+                            // safe not to await as file read times should be quick - it won't get from network
                             if (File.Exists(Path + "staff.json"))
                             {
                                 GetStaff();
@@ -419,7 +419,7 @@ namespace TandaSpreadsheetTool
                 bf.Serialize(ms, outRoster);
 
                 var bytes = ms.ToArray();
-                var path = Path + "Rosters\\ " + "Roster" + dateFrom.ToString("dd-MM-yyyy") + " - " + dateTo.ToString("dd-MM-yyyy") + ".bin";
+                var path = GenRosterPath(outRoster);
 
                 File.WriteAllBytes(path, bytes);
                 ms.Dispose();
@@ -428,6 +428,26 @@ namespace TandaSpreadsheetTool
             builtRosters.Add(outRoster);
 
             return outRoster;
+        }
+
+        public static string GenRosterPath(FormattedRoster roster)
+        {
+            return Path + "Rosters\\" + "Roster " + roster.start.ToString("dd-MM-yyyy") + " to " + roster.finish.ToString("dd-MM-yyyy") + ".bin";
+        }
+
+        public void Remove(int index)
+        {
+            if(index>-1 && index < builtRosters.Count)
+            {
+                var path = GenRosterPath(builtRosters[index]);
+
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+
+                builtRosters.RemoveAt(index);
+            }
         }
 
         public static DateTime BuildDate(string date)
@@ -508,6 +528,8 @@ namespace TandaSpreadsheetTool
                 }
             }
         }
+
+        
 
         private FormattedRoster CreateRoster(Roster[] rosters,DateTime dateFrom, DateTime dateTo)
         {

@@ -197,7 +197,7 @@ namespace TandaSpreadsheetTool
             {
                 if (rosters.Length > 0)
                 {
-                    btnOpenExcel.Enabled = true;
+                    btnMakeExcel.Enabled = true;
                 }
             }
             
@@ -216,15 +216,18 @@ namespace TandaSpreadsheetTool
             {
                 var roster = rosters[i];
 
-                var itemStr = roster.start.ToShortDateString() + " - " + roster.finish.ToShortDateString();
+                var itemStr = roster.start.ToShortDateString() + " to " + roster.finish.ToShortDateString();
                 lstBxRosters.Items.Add(itemStr);
             }
             if (rosters.Length > 0)
             {
-                btnOpenExcel.Enabled = true;
+                btnMakeExcel.Enabled = true;
+                btnRemove.Enabled = true;
             }
             else
             {
+                btnMakeExcel.Enabled = false;
+                btnRemove.Enabled = false;
                 return;
             }
             
@@ -272,7 +275,7 @@ namespace TandaSpreadsheetTool
             sheetBuilder.CreateWorkbook(rosters[lstBxRosters.SelectedIndex], SpreadSheetStyle.Default());
         }
 
-        async private void CreateExcel()
+         private void CreateExcel()
         {
             if (!sheetBuilder.TeamsSet)
             {
@@ -307,6 +310,18 @@ namespace TandaSpreadsheetTool
             else
             {
                 MessageBox.Show("Task Aborted: Background processes are still running");
+            }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            var dResult = MessageBox.Show("Delete Selected Roster?"
+                       , "Delete Roster", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+
+            if(dResult == DialogResult.Yes && lstBxRosters.Items.Count>0)
+            {
+                builder.Remove(lstBxRosters.SelectedIndex);
+                UpdateRosterList();
             }
         }
     }
