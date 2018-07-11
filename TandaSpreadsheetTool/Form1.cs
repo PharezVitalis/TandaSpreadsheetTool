@@ -14,12 +14,14 @@ namespace TandaSpreadsheetTool
         Thread bgThread;
         FormattedRoster[] rosters;
         StylerForm stylerForm;
+        SpreadSheetStyle style;
       
 
         public MainForm()
         {
             InitializeComponent();
-
+            //maybe add functionality to autosave styles
+            style = SpreadSheetStyle.Default();
             
             networker = new Networker();
             sheetBuilder = new SpreadSheetBuilder();
@@ -28,7 +30,7 @@ namespace TandaSpreadsheetTool
             Directory.CreateDirectory(RosterManager.Path + "Rosters");
             Directory.CreateDirectory(SpreadSheetBuilder.SpreadSheetPath);
 
-            stylerForm = new StylerForm();
+            stylerForm = new StylerForm(style);
             stylerForm.Hide();
 
           
@@ -236,6 +238,20 @@ namespace TandaSpreadsheetTool
 
         }
 
+        void BuildExcelSheet()
+        {
+            if (!sheetBuilder.TeamsSet)
+            {
+                if (builder.Teams.Length < 1)
+                {
+
+                }
+                sheetBuilder.SetTeams(builder.Teams);
+            }
+            sheetBuilder.CreateWorkbook(rosters[lstBxRosters.SelectedIndex], style);
+
+        }
+
         private void btnLogIn_Click(object sender, EventArgs e)
         {
          
@@ -264,16 +280,16 @@ namespace TandaSpreadsheetTool
 
         private void btnOpenExcel_Click(object sender, EventArgs e)
         {
-            //should be done on a seperate thread 
-            if (!sheetBuilder.TeamsSet)
+            if (!bgThread.IsAlive)
             {
-                if (builder.Teams.Length < 1)
-                {
-
-                }
-                sheetBuilder.SetTeams(builder.Teams);
+                bgThread = new Thread(new ThreadStart(BuildExcelSheet));
+                bgThread.Start();
             }
-            sheetBuilder.CreateWorkbook(rosters[lstBxRosters.SelectedIndex], SpreadSheetStyle.Default());
+            else
+            {
+                MessageBox.Show("Task Aborted: Background processes are still running");
+            }
+
         }
 
          private void CreateExcel()
@@ -294,12 +310,7 @@ namespace TandaSpreadsheetTool
 
         private void btnUpdateStaff_Click(object sender, EventArgs e)
         {
-            if (builder == null)
-            {
-                 
-
-            }
-
+            
             btnGetJSON.Enabled = false;
             btnUpdateStaff.Enabled = false;
 
@@ -328,7 +339,19 @@ namespace TandaSpreadsheetTool
 
         private void btnFormat_Click(object sender, EventArgs e)
         {
-            stylerForm.Show();
+            var dResult = stylerForm.ShowDialog();
+
+            if (dResult == DialogResult.OK)
+            {
+                style = stylerForm.Style;
+            }
+            return;
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            stylerForm.Close();
+            stylerForm.Dispose();
         }
     }
 }

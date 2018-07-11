@@ -282,6 +282,7 @@
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "Tanda Roster Spreadsheet Tool";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.pnlLogIn.ResumeLayout(false);
             this.pnlLogIn.PerformLayout();
             this.pnlMain.ResumeLayout(false);

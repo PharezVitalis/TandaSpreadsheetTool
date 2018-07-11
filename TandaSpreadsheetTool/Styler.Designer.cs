@@ -40,10 +40,10 @@
             this.lstBxFont = new System.Windows.Forms.ListBox();
             this.lblFont = new System.Windows.Forms.Label();
             this.btnNameHeadCl = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.btnNameFieldCL = new System.Windows.Forms.Button();
+            this.btnRotaFieldCl = new System.Windows.Forms.Button();
+            this.btnDayNameCl = new System.Windows.Forms.Button();
+            this.btnDateCl = new System.Windows.Forms.Button();
             this.btnRotaEmptyCl = new System.Windows.Forms.Button();
             this.pnlRotaEmptyCl = new System.Windows.Forms.Panel();
             this.lblNameHeadCl = new System.Windows.Forms.Label();
@@ -54,7 +54,13 @@
             this.lblDateCl = new System.Windows.Forms.Label();
             this.tkBarBrightness = new System.Windows.Forms.TrackBar();
             this.lblBrightness = new System.Windows.Forms.Label();
+            this.btnAccept = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
+            this.cD = new System.Windows.Forms.ColorDialog();
+            this.lblColWidth = new System.Windows.Forms.Label();
+            this.nUDColWidth = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarBrightness)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nUDColWidth)).BeginInit();
             this.SuspendLayout();
             // 
             // ckBxBoldHead
@@ -93,45 +99,53 @@
             // 
             // pnlNameHeadCL
             // 
-            this.pnlNameHeadCL.Location = new System.Drawing.Point(227, 321);
+            this.pnlNameHeadCL.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlNameHeadCL.Location = new System.Drawing.Point(152, 271);
             this.pnlNameHeadCL.Name = "pnlNameHeadCL";
             this.pnlNameHeadCL.Size = new System.Drawing.Size(82, 25);
             this.pnlNameHeadCL.TabIndex = 3;
             // 
             // pnlNameField
             // 
-            this.pnlNameField.Location = new System.Drawing.Point(227, 352);
+            this.pnlNameField.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlNameField.Location = new System.Drawing.Point(152, 302);
             this.pnlNameField.Name = "pnlNameField";
             this.pnlNameField.Size = new System.Drawing.Size(82, 25);
             this.pnlNameField.TabIndex = 4;
             // 
             // pnlRotaField
             // 
-            this.pnlRotaField.Location = new System.Drawing.Point(227, 379);
+            this.pnlRotaField.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlRotaField.Location = new System.Drawing.Point(152, 329);
             this.pnlRotaField.Name = "pnlRotaField";
             this.pnlRotaField.Size = new System.Drawing.Size(82, 25);
             this.pnlRotaField.TabIndex = 4;
             // 
             // pnlDayName
             // 
-            this.pnlDayName.Location = new System.Drawing.Point(225, 440);
+            this.pnlDayName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlDayName.Location = new System.Drawing.Point(150, 390);
             this.pnlDayName.Name = "pnlDayName";
             this.pnlDayName.Size = new System.Drawing.Size(82, 25);
             this.pnlDayName.TabIndex = 4;
             // 
             // pnlDate
             // 
-            this.pnlDate.Location = new System.Drawing.Point(225, 471);
+            this.pnlDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlDate.Location = new System.Drawing.Point(150, 421);
             this.pnlDate.Name = "pnlDate";
             this.pnlDate.Size = new System.Drawing.Size(82, 25);
             this.pnlDate.TabIndex = 4;
             // 
             // pnlMinBright
             // 
+            this.pnlMinBright.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlMinBright.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.pnlMinBright.Location = new System.Drawing.Point(33, 118);
             this.pnlMinBright.Name = "pnlMinBright";
-            this.pnlMinBright.Size = new System.Drawing.Size(140, 25);
+            this.pnlMinBright.Size = new System.Drawing.Size(199, 25);
             this.pnlMinBright.TabIndex = 5;
+            this.pnlMinBright.UseWaitCursor = true;
             // 
             // lstBxFont
             // 
@@ -152,7 +166,7 @@
             // 
             // btnNameHeadCl
             // 
-            this.btnNameHeadCl.Location = new System.Drawing.Point(315, 325);
+            this.btnNameHeadCl.Location = new System.Drawing.Point(240, 275);
             this.btnNameHeadCl.Name = "btnNameHeadCl";
             this.btnNameHeadCl.Size = new System.Drawing.Size(75, 23);
             this.btnNameHeadCl.TabIndex = 8;
@@ -160,54 +174,60 @@
             this.btnNameHeadCl.UseVisualStyleBackColor = true;
             this.btnNameHeadCl.Click += new System.EventHandler(this.btnNameHeadCl_Click);
             // 
-            // button1
+            // btnNameFieldCL
             // 
-            this.button1.Location = new System.Drawing.Point(315, 354);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "Change";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnNameFieldCL.Location = new System.Drawing.Point(240, 304);
+            this.btnNameFieldCL.Name = "btnNameFieldCL";
+            this.btnNameFieldCL.Size = new System.Drawing.Size(75, 23);
+            this.btnNameFieldCL.TabIndex = 9;
+            this.btnNameFieldCL.Text = "Change";
+            this.btnNameFieldCL.UseVisualStyleBackColor = true;
+            this.btnNameFieldCL.Click += new System.EventHandler(this.btnNameFieldCL_Click);
             // 
-            // button2
+            // btnRotaFieldCl
             // 
-            this.button2.Location = new System.Drawing.Point(315, 383);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 10;
-            this.button2.Text = "Change";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnRotaFieldCl.Location = new System.Drawing.Point(240, 333);
+            this.btnRotaFieldCl.Name = "btnRotaFieldCl";
+            this.btnRotaFieldCl.Size = new System.Drawing.Size(75, 23);
+            this.btnRotaFieldCl.TabIndex = 10;
+            this.btnRotaFieldCl.Text = "Change";
+            this.btnRotaFieldCl.UseVisualStyleBackColor = true;
+            this.btnRotaFieldCl.Click += new System.EventHandler(this.btnRotaFieldCl_Click);
             // 
-            // button3
+            // btnDayNameCl
             // 
-            this.button3.Location = new System.Drawing.Point(313, 442);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 11;
-            this.button3.Text = "Change";
-            this.button3.UseVisualStyleBackColor = true;
+            this.btnDayNameCl.Location = new System.Drawing.Point(238, 392);
+            this.btnDayNameCl.Name = "btnDayNameCl";
+            this.btnDayNameCl.Size = new System.Drawing.Size(75, 23);
+            this.btnDayNameCl.TabIndex = 11;
+            this.btnDayNameCl.Text = "Change";
+            this.btnDayNameCl.UseVisualStyleBackColor = true;
+            this.btnDayNameCl.Click += new System.EventHandler(this.btnDayNameCl_Click);
             // 
-            // button4
+            // btnDateCl
             // 
-            this.button4.Location = new System.Drawing.Point(313, 471);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 12;
-            this.button4.Text = "Change";
-            this.button4.UseVisualStyleBackColor = true;
+            this.btnDateCl.Location = new System.Drawing.Point(238, 421);
+            this.btnDateCl.Name = "btnDateCl";
+            this.btnDateCl.Size = new System.Drawing.Size(75, 23);
+            this.btnDateCl.TabIndex = 12;
+            this.btnDateCl.Text = "Change";
+            this.btnDateCl.UseVisualStyleBackColor = true;
+            this.btnDateCl.Click += new System.EventHandler(this.btnDateCl_Click);
             // 
             // btnRotaEmptyCl
             // 
-            this.btnRotaEmptyCl.Location = new System.Drawing.Point(313, 413);
+            this.btnRotaEmptyCl.Location = new System.Drawing.Point(238, 363);
             this.btnRotaEmptyCl.Name = "btnRotaEmptyCl";
             this.btnRotaEmptyCl.Size = new System.Drawing.Size(75, 23);
             this.btnRotaEmptyCl.TabIndex = 15;
             this.btnRotaEmptyCl.Text = "Change";
             this.btnRotaEmptyCl.UseVisualStyleBackColor = true;
+            this.btnRotaEmptyCl.Click += new System.EventHandler(this.btnRotaEmptyCl_Click);
             // 
             // pnlRotaEmptyCl
             // 
-            this.pnlRotaEmptyCl.Location = new System.Drawing.Point(225, 409);
+            this.pnlRotaEmptyCl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlRotaEmptyCl.Location = new System.Drawing.Point(150, 359);
             this.pnlRotaEmptyCl.Name = "pnlRotaEmptyCl";
             this.pnlRotaEmptyCl.Size = new System.Drawing.Size(82, 25);
             this.pnlRotaEmptyCl.TabIndex = 14;
@@ -215,7 +235,7 @@
             // lblNameHeadCl
             // 
             this.lblNameHeadCl.AutoSize = true;
-            this.lblNameHeadCl.Location = new System.Drawing.Point(110, 330);
+            this.lblNameHeadCl.Location = new System.Drawing.Point(35, 280);
             this.lblNameHeadCl.Name = "lblNameHeadCl";
             this.lblNameHeadCl.Size = new System.Drawing.Size(111, 13);
             this.lblNameHeadCl.TabIndex = 16;
@@ -224,7 +244,7 @@
             // lblNameFieldCl
             // 
             this.lblNameFieldCl.AutoSize = true;
-            this.lblNameFieldCl.Location = new System.Drawing.Point(110, 359);
+            this.lblNameFieldCl.Location = new System.Drawing.Point(35, 309);
             this.lblNameFieldCl.Name = "lblNameFieldCl";
             this.lblNameFieldCl.Size = new System.Drawing.Size(93, 13);
             this.lblNameFieldCl.TabIndex = 17;
@@ -233,7 +253,7 @@
             // lblRotaFieldCl
             // 
             this.lblRotaFieldCl.AutoSize = true;
-            this.lblRotaFieldCl.Location = new System.Drawing.Point(110, 388);
+            this.lblRotaFieldCl.Location = new System.Drawing.Point(35, 338);
             this.lblRotaFieldCl.Name = "lblRotaFieldCl";
             this.lblRotaFieldCl.Size = new System.Drawing.Size(88, 13);
             this.lblRotaFieldCl.TabIndex = 18;
@@ -242,7 +262,7 @@
             // lblERotaCl
             // 
             this.lblERotaCl.AutoSize = true;
-            this.lblERotaCl.Location = new System.Drawing.Point(110, 418);
+            this.lblERotaCl.Location = new System.Drawing.Point(35, 368);
             this.lblERotaCl.Name = "lblERotaCl";
             this.lblERotaCl.Size = new System.Drawing.Size(95, 13);
             this.lblERotaCl.TabIndex = 19;
@@ -251,7 +271,7 @@
             // lblDayCl
             // 
             this.lblDayCl.AutoSize = true;
-            this.lblDayCl.Location = new System.Drawing.Point(110, 447);
+            this.lblDayCl.Location = new System.Drawing.Point(35, 397);
             this.lblDayCl.Name = "lblDayCl";
             this.lblDayCl.Size = new System.Drawing.Size(90, 13);
             this.lblDayCl.TabIndex = 20;
@@ -260,7 +280,7 @@
             // lblDateCl
             // 
             this.lblDateCl.AutoSize = true;
-            this.lblDateCl.Location = new System.Drawing.Point(110, 476);
+            this.lblDateCl.Location = new System.Drawing.Point(35, 426);
             this.lblDateCl.Name = "lblDateCl";
             this.lblDateCl.Size = new System.Drawing.Size(63, 13);
             this.lblDateCl.TabIndex = 21;
@@ -268,12 +288,14 @@
             // 
             // tkBarBrightness
             // 
-            this.tkBarBrightness.Location = new System.Drawing.Point(33, 150);
+            this.tkBarBrightness.LargeChange = 10;
+            this.tkBarBrightness.Location = new System.Drawing.Point(38, 149);
             this.tkBarBrightness.Maximum = 100;
             this.tkBarBrightness.Name = "tkBarBrightness";
-            this.tkBarBrightness.Size = new System.Drawing.Size(140, 45);
+            this.tkBarBrightness.Size = new System.Drawing.Size(196, 45);
             this.tkBarBrightness.SmallChange = 5;
             this.tkBarBrightness.TabIndex = 22;
+            this.tkBarBrightness.Scroll += new System.EventHandler(this.tkBarBrightness_Scroll);
             // 
             // lblBrightness
             // 
@@ -284,11 +306,64 @@
             this.lblBrightness.TabIndex = 23;
             this.lblBrightness.Text = "Min Colour Brightness";
             // 
-            // Styler
+            // btnAccept
             // 
+            this.btnAccept.Location = new System.Drawing.Point(369, 481);
+            this.btnAccept.Name = "btnAccept";
+            this.btnAccept.Size = new System.Drawing.Size(75, 23);
+            this.btnAccept.TabIndex = 24;
+            this.btnAccept.Text = "OK";
+            this.btnAccept.UseVisualStyleBackColor = true;
+            this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(23, 481);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.TabIndex = 25;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // lblColWidth
+            // 
+            this.lblColWidth.AutoSize = true;
+            this.lblColWidth.Location = new System.Drawing.Point(44, 211);
+            this.lblColWidth.Name = "lblColWidth";
+            this.lblColWidth.Size = new System.Drawing.Size(73, 13);
+            this.lblColWidth.TabIndex = 26;
+            this.lblColWidth.Text = "Column Width";
+            // 
+            // nUDColWidth
+            // 
+            this.nUDColWidth.Location = new System.Drawing.Point(135, 209);
+            this.nUDColWidth.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.nUDColWidth.Name = "nUDColWidth";
+            this.nUDColWidth.Size = new System.Drawing.Size(56, 20);
+            this.nUDColWidth.TabIndex = 27;
+            this.nUDColWidth.Value = new decimal(new int[] {
+            22,
+            0,
+            0,
+            0});
+            // 
+            // StylerForm
+            // 
+            this.AcceptButton = this.btnAccept;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(466, 516);
+            this.Controls.Add(this.nUDColWidth);
+            this.Controls.Add(this.lblColWidth);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnAccept);
             this.Controls.Add(this.lblBrightness);
             this.Controls.Add(this.tkBarBrightness);
             this.Controls.Add(this.lblDateCl);
@@ -299,10 +374,10 @@
             this.Controls.Add(this.lblNameHeadCl);
             this.Controls.Add(this.btnRotaEmptyCl);
             this.Controls.Add(this.pnlRotaEmptyCl);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnDateCl);
+            this.Controls.Add(this.btnDayNameCl);
+            this.Controls.Add(this.btnRotaFieldCl);
+            this.Controls.Add(this.btnNameFieldCL);
             this.Controls.Add(this.btnNameHeadCl);
             this.Controls.Add(this.lblFont);
             this.Controls.Add(this.lstBxFont);
@@ -315,9 +390,10 @@
             this.Controls.Add(this.ckBxTeamColours);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.ckBxBoldHead);
-            this.Name = "Styler";
+            this.Name = "StylerForm";
             this.Text = "Styler";
             ((System.ComponentModel.ISupportInitialize)(this.tkBarBrightness)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nUDColWidth)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -337,10 +413,10 @@
         private System.Windows.Forms.ListBox lstBxFont;
         private System.Windows.Forms.Label lblFont;
         private System.Windows.Forms.Button btnNameHeadCl;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button btnNameFieldCL;
+        private System.Windows.Forms.Button btnRotaFieldCl;
+        private System.Windows.Forms.Button btnDayNameCl;
+        private System.Windows.Forms.Button btnDateCl;
         private System.Windows.Forms.Button btnRotaEmptyCl;
         private System.Windows.Forms.Panel pnlRotaEmptyCl;
         private System.Windows.Forms.Label lblNameHeadCl;
@@ -351,5 +427,10 @@
         private System.Windows.Forms.Label lblDateCl;
         private System.Windows.Forms.TrackBar tkBarBrightness;
         private System.Windows.Forms.Label lblBrightness;
+        private System.Windows.Forms.Button btnAccept;
+        private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.ColorDialog cD;
+        private System.Windows.Forms.Label lblColWidth;
+        private System.Windows.Forms.NumericUpDown nUDColWidth;
     }
 }
