@@ -65,8 +65,7 @@ namespace TandaSpreadsheetTool
         }
 
 
-        public void CreateWorkbook(FormattedRoster roster, SpreadSheetStyle style,  SpreadSheetDiv div = SpreadSheetDiv.NONE, string path  = null,
-            bool filterTeamNames = true)
+        public void CreateWorkbook(FormattedRoster roster, SpreadSheetStyle style,  string path  = null)
         {
             var workBook = new XSSFWorkbook();
             
@@ -206,19 +205,13 @@ namespace TandaSpreadsheetTool
                 }
             }
            
-            if (filterTeamNames)
-            {
-                foreach (var team in teamColourDict)
-                {
-
-                }
-            }
-
+           
             if (path == null)
             {
                 path = SpreadSheetPath;
             }
             // add try- catch here
+            
                 var fs = File.Create(path + "Tanda Roster  " + roster.start.ToString("dd-MM-yy") + " - " + roster.finish.ToString("dd-MM-yy") + ".xlsx");
             
             
@@ -239,8 +232,15 @@ namespace TandaSpreadsheetTool
             
         }
 
+        public void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet, DateTime from, DateTime to)
+        {
 
-        
+        }
+
+        public void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet)
+        {
+
+        }
 
         private IRow GetRow(int rowIndex, ISheet sheet)
         {

@@ -37,19 +37,19 @@
             this.lblUName = new System.Windows.Forms.Label();
             this.lblToContinue = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.btnFormat = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
             this.lstBxRosters = new System.Windows.Forms.ListBox();
             this.ckBxSaveJson = new System.Windows.Forms.CheckBox();
             this.btnUpdateStaff = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
-            this.lblLastUpdated = new System.Windows.Forms.Label();
             this.btnMakeExcel = new System.Windows.Forms.Button();
             this.dtPFrom = new System.Windows.Forms.DateTimePicker();
             this.dtPTo = new System.Windows.Forms.DateTimePicker();
             this.lblDateTo = new System.Windows.Forms.Label();
             this.lblInDate = new System.Windows.Forms.Label();
             this.btnGetJSON = new System.Windows.Forms.Button();
-            this.btnFormat = new System.Windows.Forms.Button();
+            this.lblLastUpdated = new System.Windows.Forms.Label();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -150,6 +150,16 @@
             this.pnlMain.TabIndex = 1;
             this.pnlMain.Visible = false;
             // 
+            // btnFormat
+            // 
+            this.btnFormat.Location = new System.Drawing.Point(546, 80);
+            this.btnFormat.Name = "btnFormat";
+            this.btnFormat.Size = new System.Drawing.Size(150, 23);
+            this.btnFormat.TabIndex = 16;
+            this.btnFormat.Text = "Spreadsheet Formatting";
+            this.btnFormat.UseVisualStyleBackColor = true;
+            this.btnFormat.Click += new System.EventHandler(this.btnFormat_Click);
+            // 
             // btnRemove
             // 
             this.btnRemove.Enabled = false;
@@ -198,15 +208,6 @@
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(0, 13);
             this.lblStatus.TabIndex = 11;
-            // 
-            // lblLastUpdated
-            // 
-            this.lblLastUpdated.AutoSize = true;
-            this.lblLastUpdated.Location = new System.Drawing.Point(183, 90);
-            this.lblLastUpdated.Name = "lblLastUpdated";
-            this.lblLastUpdated.Size = new System.Drawing.Size(118, 13);
-            this.lblLastUpdated.TabIndex = 9;
-            this.lblLastUpdated.Text = "Staff List Last Updated:";
             // 
             // btnMakeExcel
             // 
@@ -261,15 +262,14 @@
             this.btnGetJSON.UseVisualStyleBackColor = true;
             this.btnGetJSON.Click += new System.EventHandler(this.btnTest_Click);
             // 
-            // btnFormat
+            // lblLastUpdated
             // 
-            this.btnFormat.Location = new System.Drawing.Point(546, 69);
-            this.btnFormat.Name = "btnFormat";
-            this.btnFormat.Size = new System.Drawing.Size(150, 23);
-            this.btnFormat.TabIndex = 16;
-            this.btnFormat.Text = "Spreadsheet Formatting";
-            this.btnFormat.UseVisualStyleBackColor = true;
-            this.btnFormat.Click += new System.EventHandler(this.btnFormat_Click);
+            this.lblLastUpdated.AutoSize = true;
+            this.lblLastUpdated.Location = new System.Drawing.Point(202, 87);
+            this.lblLastUpdated.Name = "lblLastUpdated";
+            this.lblLastUpdated.Size = new System.Drawing.Size(118, 13);
+            this.lblLastUpdated.TabIndex = 9;
+            this.lblLastUpdated.Text = "Staff List Last Updated:";
             // 
             // MainForm
             // 
@@ -309,12 +309,12 @@
         private System.Windows.Forms.DateTimePicker dtPTo;
         private System.Windows.Forms.Button btnMakeExcel;
         private System.Windows.Forms.Label lblStatus;
-        private System.Windows.Forms.Label lblLastUpdated;
         private System.Windows.Forms.Button btnUpdateStaff;
         private System.Windows.Forms.CheckBox ckBxSaveJson;
         private System.Windows.Forms.ListBox lstBxRosters;
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnFormat;
+        private System.Windows.Forms.Label lblLastUpdated;
     }
 }
 

@@ -55,7 +55,7 @@ namespace TandaSpreadsheetTool
         public int colWidth;
         public bool useTeamCls;
         public string font;
-        
+        public SpreadSheetDiv divBy;
 
         
 
@@ -74,7 +74,8 @@ namespace TandaSpreadsheetTool
                 dayNameCl = new byte[] { 56, 118, 29 },
                 dateCl = new byte[] { 147, 196, 125 },
                 colWidth = 22,
-                font = "Calibri"
+                font = "Calibri",
+                divBy = SpreadSheetDiv.NONE
             };
            
 
