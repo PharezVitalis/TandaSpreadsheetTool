@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Collections.Generic;
@@ -7,17 +6,17 @@ using System.Threading;
 
 namespace TandaSpreadsheetTool
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         Networker networker;
         RosterManager builder;
         SpreadSheetBuilder sheetBuilder;
         Thread bgThread;
         FormattedRoster[] rosters;
-        
+        StylerForm stylerForm;
       
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
 
@@ -28,9 +27,9 @@ namespace TandaSpreadsheetTool
             
             Directory.CreateDirectory(RosterManager.Path + "Rosters");
             Directory.CreateDirectory(SpreadSheetBuilder.SpreadSheetPath);
-           
 
-            
+            stylerForm = new StylerForm();
+            stylerForm.Hide();
 
           
             networker.LoadUsername();
@@ -189,6 +188,7 @@ namespace TandaSpreadsheetTool
             
         }
 
+       
         void EnableJsonBtn()
         {
             btnGetJSON.Enabled = true;
@@ -223,6 +223,7 @@ namespace TandaSpreadsheetTool
             {
                 btnMakeExcel.Enabled = true;
                 btnRemove.Enabled = true;
+               
             }
             else
             {
@@ -323,6 +324,11 @@ namespace TandaSpreadsheetTool
                 builder.Remove(lstBxRosters.SelectedIndex);
                 UpdateRosterList();
             }
+        }
+
+        private void btnFormat_Click(object sender, EventArgs e)
+        {
+            stylerForm.Show();
         }
     }
 }

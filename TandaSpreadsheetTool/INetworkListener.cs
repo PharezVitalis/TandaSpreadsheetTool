@@ -45,18 +45,19 @@ namespace TandaSpreadsheetTool
         public byte[] nameHeadingCl;
         public byte[] nameFieldCl;
         public byte[] rotaFieldCl;
+        public byte[] rotaEmptyCl;
         public byte[] dayNameCl;
         public byte[] dateCl;
 
         public bool boldHeadings;
         public bool teamTxtFilter;
-        public int minBrightness;
+        public float minBrightness;
         public int colWidth;
         public bool useTeamCls;
+        public string font;
         
 
         
-
 
         public static SpreadSheetStyle Default()
         {
@@ -69,14 +70,17 @@ namespace TandaSpreadsheetTool
                 minBrightness = 0,
                 useTeamCls = true,
                 rotaFieldCl = new byte[] { 255, 255, 255 },
+                rotaEmptyCl = new byte[] { 163, 168, 175 },
                 dayNameCl = new byte[] { 56, 118, 29 },
                 dateCl = new byte[] { 147, 196, 125 },
-                colWidth = 22
+                colWidth = 22,
+                font = "Calibri"
             };
            
 
           
         }
+       
     }
 
     public class Day

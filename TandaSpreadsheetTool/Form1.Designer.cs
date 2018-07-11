@@ -1,6 +1,6 @@
 ﻿namespace TandaSpreadsheetTool
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -37,6 +37,7 @@
             this.lblUName = new System.Windows.Forms.Label();
             this.lblToContinue = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.btnRemove = new System.Windows.Forms.Button();
             this.lstBxRosters = new System.Windows.Forms.ListBox();
             this.ckBxSaveJson = new System.Windows.Forms.CheckBox();
             this.btnUpdateStaff = new System.Windows.Forms.Button();
@@ -48,7 +49,7 @@
             this.lblDateTo = new System.Windows.Forms.Label();
             this.lblInDate = new System.Windows.Forms.Label();
             this.btnGetJSON = new System.Windows.Forms.Button();
-            this.btnRemove = new System.Windows.Forms.Button();
+            this.btnFormat = new System.Windows.Forms.Button();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -130,6 +131,7 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.btnFormat);
             this.pnlMain.Controls.Add(this.btnRemove);
             this.pnlMain.Controls.Add(this.lstBxRosters);
             this.pnlMain.Controls.Add(this.ckBxSaveJson);
@@ -147,6 +149,17 @@
             this.pnlMain.Size = new System.Drawing.Size(733, 142);
             this.pnlMain.TabIndex = 1;
             this.pnlMain.Visible = false;
+            // 
+            // btnRemove
+            // 
+            this.btnRemove.Enabled = false;
+            this.btnRemove.Location = new System.Drawing.Point(546, 111);
+            this.btnRemove.Name = "btnRemove";
+            this.btnRemove.Size = new System.Drawing.Size(150, 23);
+            this.btnRemove.TabIndex = 15;
+            this.btnRemove.Text = "Delete Selected";
+            this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
             // lstBxRosters
             // 
@@ -248,18 +261,17 @@
             this.btnGetJSON.UseVisualStyleBackColor = true;
             this.btnGetJSON.Click += new System.EventHandler(this.btnTest_Click);
             // 
-            // btnRemove
+            // btnFormat
             // 
-            this.btnRemove.Enabled = false;
-            this.btnRemove.Location = new System.Drawing.Point(546, 66);
-            this.btnRemove.Name = "btnRemove";
-            this.btnRemove.Size = new System.Drawing.Size(150, 23);
-            this.btnRemove.TabIndex = 15;
-            this.btnRemove.Text = "Delete Selected";
-            this.btnRemove.UseVisualStyleBackColor = true;
-            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            this.btnFormat.Location = new System.Drawing.Point(546, 69);
+            this.btnFormat.Name = "btnFormat";
+            this.btnFormat.Size = new System.Drawing.Size(150, 23);
+            this.btnFormat.TabIndex = 16;
+            this.btnFormat.Text = "Spreadsheet Formatting";
+            this.btnFormat.UseVisualStyleBackColor = true;
+            this.btnFormat.Click += new System.EventHandler(this.btnFormat_Click);
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -268,7 +280,7 @@
             this.Controls.Add(this.pnlLogIn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Tanda Roster Spreadsheet Tool";
             this.pnlLogIn.ResumeLayout(false);
             this.pnlLogIn.PerformLayout();
@@ -301,6 +313,7 @@
         private System.Windows.Forms.CheckBox ckBxSaveJson;
         private System.Windows.Forms.ListBox lstBxRosters;
         private System.Windows.Forms.Button btnRemove;
+        private System.Windows.Forms.Button btnFormat;
     }
 }
 

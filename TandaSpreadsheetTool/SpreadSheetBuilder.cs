@@ -37,7 +37,33 @@ namespace TandaSpreadsheetTool
             }
         }
 
-      
+
+        public static byte[] ChangeColorBrightness(byte[] rgb, float correctionFactor)
+        {
+            float red = rgb[0];
+            float green = rgb[1];
+            float blue = rgb[2];
+
+            if (correctionFactor < 0)
+            {
+                correctionFactor = 1 + correctionFactor;
+                red *= correctionFactor;
+                green *= correctionFactor;
+                blue *= correctionFactor;
+            }
+            else
+            {
+                red = (255 - red) * correctionFactor + red;
+                green = (255 - green) * correctionFactor + green;
+                blue = (255 - blue) * correctionFactor + blue;
+            }
+            rgb[0] = Convert.ToByte(red);
+            rgb[1] = Convert.ToByte(blue);
+            rgb[2] = Convert.ToByte(green);
+
+            return rgb;
+        }
+
 
         public void CreateWorkbook(FormattedRoster roster, SpreadSheetStyle style,  SpreadSheetDiv div = SpreadSheetDiv.NONE, string path  = null,
             bool filterTeamNames = true)
@@ -53,14 +79,14 @@ namespace TandaSpreadsheetTool
             var titleFont = workBook.CreateFont();
             titleFont.IsBold = true;
             titleFont.FontHeightInPoints = 22;
-            titleFont.FontName = "Arial";
+            titleFont.FontName = style.font;
 
             var headingFont = workBook.CreateFont();
             headingFont.IsBold = style.boldHeadings;
-            headingFont.FontName = "Calibri";
+            headingFont.FontName = style.font;
 
             var fieldFont = workBook.CreateFont();
-
+            fieldFont.FontName = style.font;
             
             if (style.useTeamCls & !dictSetUp)
             {
@@ -212,7 +238,25 @@ namespace TandaSpreadsheetTool
 
             
         }
-       
+
+
+        
+
+        private IRow GetRow(int rowIndex, ISheet sheet)
+        {
+            var row = sheet.GetRow(rowIndex);
+
+            return row != null ? row : sheet.CreateRow(rowIndex);
+        }
+
+        private ICell GetCell(IRow row, int columnIndex)
+        {
+            var cell = row.GetCell(columnIndex);
+
+            return cell != null? cell:row.CreateCell(columnIndex);
+            
+        }
+
         private void CreateStyleDict(ref SpreadSheetStyle style, XSSFWorkbook wBk)
         {
 
@@ -223,8 +267,16 @@ namespace TandaSpreadsheetTool
                     var currentTeam = teams[i];
                     var nextStyle = AutoStyle(wBk);
                     var colour = GetColourFromHex(currentTeam.colour);
+                   
                     if (colour != null)
                     {
+                        if (style.minBrightness > 0 )
+                        {
+                            if (colour.Tint < style.minBrightness)
+                            {
+                                colour.Tint = style.minBrightness;
+                            }
+                        }
                         nextStyle.SetFillForegroundColor(colour);
                     }
 
