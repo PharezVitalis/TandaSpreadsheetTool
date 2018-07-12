@@ -238,17 +238,17 @@ namespace TandaSpreadsheetTool
 
         }
 
-        void BuildExcelSheet()
+        void BuildExcelSheet(int selectedIndex)
         {
             if (!sheetBuilder.TeamsSet)
             {
                 if (builder.Teams.Length < 1)
                 {
-
+                    return;
                 }
                 sheetBuilder.SetTeams(builder.Teams);
             }
-            sheetBuilder.CreateWorkbook(rosters[lstBxRosters.SelectedIndex], style);
+            sheetBuilder.CreateWorkbook(rosters[selectedIndex], style);
 
         }
 
@@ -282,7 +282,8 @@ namespace TandaSpreadsheetTool
         {
             if (!bgThread.IsAlive)
             {
-                bgThread = new Thread(new ThreadStart(BuildExcelSheet));
+                var selectedindex = lstBxRosters.SelectedIndex;
+                bgThread = new Thread(()=> BuildExcelSheet(selectedindex));
                 bgThread.Start();
             }
             else

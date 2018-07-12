@@ -58,6 +58,10 @@ namespace TandaSpreadsheetTool
 
             var brightness = Convert.ToByte(Math.Round((double)(tkBarBrightness.Value / 100) * 255));
 
+            var fontSelection = lstBxFont.FindString("Calibri");
+
+            lstBxFont.SelectedIndex = fontSelection != -1 ? fontSelection : lstBxFont.FindString("Arial");
+            cBxDiv.SelectedIndex = (int)currentStyle.divBy;
             pnlMinBright.BackColor = GetColorFromByte(new byte[] {brightness,brightness,brightness });
             
         }
@@ -136,6 +140,8 @@ namespace TandaSpreadsheetTool
             currentStyle.colWidth = (int)nUDColWidth.Value;
             currentStyle.useTeamCls = ckBxTeamColours.Checked;
             currentStyle.font = lstBxFont.GetItemText(lstBxFont.SelectedItem);
+
+            currentStyle.divBy = (SpreadSheetDiv)cBxDiv.SelectedIndex;
         }
 
         private void btnDayNameCl_Click(object sender, EventArgs e)
@@ -172,6 +178,12 @@ namespace TandaSpreadsheetTool
             var brightValue= ((double)tkBarBrightness.Value / 100) * 255;
             var brightByte = Convert.ToByte(brightValue);
             pnlMinBright.BackColor = GetColorFromByte(new byte[] { brightByte, brightByte, brightByte });
+        }
+
+        private void btnDefault_Click(object sender, EventArgs e)
+        {
+            currentStyle = SpreadSheetStyle.Default();
+            SetFormToStyle();
         }
     }
 }

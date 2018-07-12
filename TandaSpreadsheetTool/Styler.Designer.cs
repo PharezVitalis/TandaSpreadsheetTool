@@ -59,6 +59,8 @@
             this.cD = new System.Windows.Forms.ColorDialog();
             this.lblColWidth = new System.Windows.Forms.Label();
             this.nUDColWidth = new System.Windows.Forms.NumericUpDown();
+            this.cBxDiv = new System.Windows.Forms.ComboBox();
+            this.btnDefault = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nUDColWidth)).BeginInit();
             this.SuspendLayout();
@@ -100,7 +102,7 @@
             // pnlNameHeadCL
             // 
             this.pnlNameHeadCL.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlNameHeadCL.Location = new System.Drawing.Point(152, 271);
+            this.pnlNameHeadCL.Location = new System.Drawing.Point(130, 301);
             this.pnlNameHeadCL.Name = "pnlNameHeadCL";
             this.pnlNameHeadCL.Size = new System.Drawing.Size(82, 25);
             this.pnlNameHeadCL.TabIndex = 3;
@@ -108,7 +110,7 @@
             // pnlNameField
             // 
             this.pnlNameField.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlNameField.Location = new System.Drawing.Point(152, 302);
+            this.pnlNameField.Location = new System.Drawing.Point(130, 332);
             this.pnlNameField.Name = "pnlNameField";
             this.pnlNameField.Size = new System.Drawing.Size(82, 25);
             this.pnlNameField.TabIndex = 4;
@@ -116,7 +118,7 @@
             // pnlRotaField
             // 
             this.pnlRotaField.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlRotaField.Location = new System.Drawing.Point(152, 329);
+            this.pnlRotaField.Location = new System.Drawing.Point(130, 359);
             this.pnlRotaField.Name = "pnlRotaField";
             this.pnlRotaField.Size = new System.Drawing.Size(82, 25);
             this.pnlRotaField.TabIndex = 4;
@@ -124,7 +126,7 @@
             // pnlDayName
             // 
             this.pnlDayName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlDayName.Location = new System.Drawing.Point(150, 390);
+            this.pnlDayName.Location = new System.Drawing.Point(128, 420);
             this.pnlDayName.Name = "pnlDayName";
             this.pnlDayName.Size = new System.Drawing.Size(82, 25);
             this.pnlDayName.TabIndex = 4;
@@ -132,7 +134,7 @@
             // pnlDate
             // 
             this.pnlDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlDate.Location = new System.Drawing.Point(150, 421);
+            this.pnlDate.Location = new System.Drawing.Point(128, 451);
             this.pnlDate.Name = "pnlDate";
             this.pnlDate.Size = new System.Drawing.Size(82, 25);
             this.pnlDate.TabIndex = 4;
@@ -166,7 +168,7 @@
             // 
             // btnNameHeadCl
             // 
-            this.btnNameHeadCl.Location = new System.Drawing.Point(240, 275);
+            this.btnNameHeadCl.Location = new System.Drawing.Point(218, 305);
             this.btnNameHeadCl.Name = "btnNameHeadCl";
             this.btnNameHeadCl.Size = new System.Drawing.Size(75, 23);
             this.btnNameHeadCl.TabIndex = 8;
@@ -176,7 +178,7 @@
             // 
             // btnNameFieldCL
             // 
-            this.btnNameFieldCL.Location = new System.Drawing.Point(240, 304);
+            this.btnNameFieldCL.Location = new System.Drawing.Point(218, 334);
             this.btnNameFieldCL.Name = "btnNameFieldCL";
             this.btnNameFieldCL.Size = new System.Drawing.Size(75, 23);
             this.btnNameFieldCL.TabIndex = 9;
@@ -186,7 +188,7 @@
             // 
             // btnRotaFieldCl
             // 
-            this.btnRotaFieldCl.Location = new System.Drawing.Point(240, 333);
+            this.btnRotaFieldCl.Location = new System.Drawing.Point(218, 363);
             this.btnRotaFieldCl.Name = "btnRotaFieldCl";
             this.btnRotaFieldCl.Size = new System.Drawing.Size(75, 23);
             this.btnRotaFieldCl.TabIndex = 10;
@@ -196,7 +198,7 @@
             // 
             // btnDayNameCl
             // 
-            this.btnDayNameCl.Location = new System.Drawing.Point(238, 392);
+            this.btnDayNameCl.Location = new System.Drawing.Point(216, 422);
             this.btnDayNameCl.Name = "btnDayNameCl";
             this.btnDayNameCl.Size = new System.Drawing.Size(75, 23);
             this.btnDayNameCl.TabIndex = 11;
@@ -206,7 +208,7 @@
             // 
             // btnDateCl
             // 
-            this.btnDateCl.Location = new System.Drawing.Point(238, 421);
+            this.btnDateCl.Location = new System.Drawing.Point(216, 451);
             this.btnDateCl.Name = "btnDateCl";
             this.btnDateCl.Size = new System.Drawing.Size(75, 23);
             this.btnDateCl.TabIndex = 12;
@@ -216,7 +218,7 @@
             // 
             // btnRotaEmptyCl
             // 
-            this.btnRotaEmptyCl.Location = new System.Drawing.Point(238, 363);
+            this.btnRotaEmptyCl.Location = new System.Drawing.Point(216, 393);
             this.btnRotaEmptyCl.Name = "btnRotaEmptyCl";
             this.btnRotaEmptyCl.Size = new System.Drawing.Size(75, 23);
             this.btnRotaEmptyCl.TabIndex = 15;
@@ -227,7 +229,7 @@
             // pnlRotaEmptyCl
             // 
             this.pnlRotaEmptyCl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlRotaEmptyCl.Location = new System.Drawing.Point(150, 359);
+            this.pnlRotaEmptyCl.Location = new System.Drawing.Point(128, 389);
             this.pnlRotaEmptyCl.Name = "pnlRotaEmptyCl";
             this.pnlRotaEmptyCl.Size = new System.Drawing.Size(82, 25);
             this.pnlRotaEmptyCl.TabIndex = 14;
@@ -235,7 +237,7 @@
             // lblNameHeadCl
             // 
             this.lblNameHeadCl.AutoSize = true;
-            this.lblNameHeadCl.Location = new System.Drawing.Point(35, 280);
+            this.lblNameHeadCl.Location = new System.Drawing.Point(13, 310);
             this.lblNameHeadCl.Name = "lblNameHeadCl";
             this.lblNameHeadCl.Size = new System.Drawing.Size(111, 13);
             this.lblNameHeadCl.TabIndex = 16;
@@ -244,7 +246,7 @@
             // lblNameFieldCl
             // 
             this.lblNameFieldCl.AutoSize = true;
-            this.lblNameFieldCl.Location = new System.Drawing.Point(35, 309);
+            this.lblNameFieldCl.Location = new System.Drawing.Point(13, 339);
             this.lblNameFieldCl.Name = "lblNameFieldCl";
             this.lblNameFieldCl.Size = new System.Drawing.Size(93, 13);
             this.lblNameFieldCl.TabIndex = 17;
@@ -253,7 +255,7 @@
             // lblRotaFieldCl
             // 
             this.lblRotaFieldCl.AutoSize = true;
-            this.lblRotaFieldCl.Location = new System.Drawing.Point(35, 338);
+            this.lblRotaFieldCl.Location = new System.Drawing.Point(13, 368);
             this.lblRotaFieldCl.Name = "lblRotaFieldCl";
             this.lblRotaFieldCl.Size = new System.Drawing.Size(88, 13);
             this.lblRotaFieldCl.TabIndex = 18;
@@ -262,7 +264,7 @@
             // lblERotaCl
             // 
             this.lblERotaCl.AutoSize = true;
-            this.lblERotaCl.Location = new System.Drawing.Point(35, 368);
+            this.lblERotaCl.Location = new System.Drawing.Point(13, 398);
             this.lblERotaCl.Name = "lblERotaCl";
             this.lblERotaCl.Size = new System.Drawing.Size(95, 13);
             this.lblERotaCl.TabIndex = 19;
@@ -271,7 +273,7 @@
             // lblDayCl
             // 
             this.lblDayCl.AutoSize = true;
-            this.lblDayCl.Location = new System.Drawing.Point(35, 397);
+            this.lblDayCl.Location = new System.Drawing.Point(13, 427);
             this.lblDayCl.Name = "lblDayCl";
             this.lblDayCl.Size = new System.Drawing.Size(90, 13);
             this.lblDayCl.TabIndex = 20;
@@ -280,7 +282,7 @@
             // lblDateCl
             // 
             this.lblDateCl.AutoSize = true;
-            this.lblDateCl.Location = new System.Drawing.Point(35, 426);
+            this.lblDateCl.Location = new System.Drawing.Point(13, 456);
             this.lblDateCl.Name = "lblDateCl";
             this.lblDateCl.Size = new System.Drawing.Size(63, 13);
             this.lblDateCl.TabIndex = 21;
@@ -330,7 +332,7 @@
             // lblColWidth
             // 
             this.lblColWidth.AutoSize = true;
-            this.lblColWidth.Location = new System.Drawing.Point(44, 211);
+            this.lblColWidth.Location = new System.Drawing.Point(87, 202);
             this.lblColWidth.Name = "lblColWidth";
             this.lblColWidth.Size = new System.Drawing.Size(73, 13);
             this.lblColWidth.TabIndex = 26;
@@ -338,7 +340,7 @@
             // 
             // nUDColWidth
             // 
-            this.nUDColWidth.Location = new System.Drawing.Point(135, 209);
+            this.nUDColWidth.Location = new System.Drawing.Point(178, 200);
             this.nUDColWidth.Minimum = new decimal(new int[] {
             10,
             0,
@@ -353,6 +355,30 @@
             0,
             0});
             // 
+            // cBxDiv
+            // 
+            this.cBxDiv.FormattingEnabled = true;
+            this.cBxDiv.Items.AddRange(new object[] {
+            "None",
+            "Weekly",
+            "Biweekly",
+            "Monthly"});
+            this.cBxDiv.Location = new System.Drawing.Point(90, 247);
+            this.cBxDiv.MaxLength = 8;
+            this.cBxDiv.Name = "cBxDiv";
+            this.cBxDiv.Size = new System.Drawing.Size(142, 21);
+            this.cBxDiv.TabIndex = 28;
+            // 
+            // btnDefault
+            // 
+            this.btnDefault.Location = new System.Drawing.Point(369, 446);
+            this.btnDefault.Name = "btnDefault";
+            this.btnDefault.Size = new System.Drawing.Size(75, 23);
+            this.btnDefault.TabIndex = 29;
+            this.btnDefault.Text = "Default";
+            this.btnDefault.UseVisualStyleBackColor = true;
+            this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
+            // 
             // StylerForm
             // 
             this.AcceptButton = this.btnAccept;
@@ -360,6 +386,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(466, 516);
+            this.Controls.Add(this.btnDefault);
+            this.Controls.Add(this.cBxDiv);
             this.Controls.Add(this.nUDColWidth);
             this.Controls.Add(this.lblColWidth);
             this.Controls.Add(this.btnCancel);
@@ -432,5 +460,7 @@
         private System.Windows.Forms.ColorDialog cD;
         private System.Windows.Forms.Label lblColWidth;
         private System.Windows.Forms.NumericUpDown nUDColWidth;
+        private System.Windows.Forms.ComboBox cBxDiv;
+        private System.Windows.Forms.Button btnDefault;
     }
 }
