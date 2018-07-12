@@ -23,6 +23,7 @@ namespace TandaSpreadsheetTool
     }
     
 
+
     public class Roster
     {
         public int id;
@@ -55,6 +56,8 @@ namespace TandaSpreadsheetTool
         public int colWidth;
         public bool useTeamCls;
         public string font;
+        bool useTeamLegends;
+        bool useShiftLegends;
         public SpreadSheetDiv divBy;
 
         
@@ -75,7 +78,9 @@ namespace TandaSpreadsheetTool
                 dateCl = new byte[] { 147, 196, 125 },
                 colWidth = 22,
                 font = "Calibri",
-                divBy = SpreadSheetDiv.NONE
+                divBy = SpreadSheetDiv.NONE,
+                useShiftLegends = false,
+                useTeamLegends = false            
             };
            
 

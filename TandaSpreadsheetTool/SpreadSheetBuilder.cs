@@ -3,6 +3,7 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System.IO;
 using System;
+using System.Drawing;
 using System.Collections.Generic;
 
 namespace TandaSpreadsheetTool
@@ -38,43 +39,11 @@ namespace TandaSpreadsheetTool
         }
 
 
-        public static byte[] ChangeColorBrightness(byte[] rgb, float correctionFactor)
-        {
-            float red = rgb[0];
-            float green = rgb[1];
-            float blue = rgb[2];
-
-            if (correctionFactor < 0)
-            {
-                correctionFactor = 1 + correctionFactor;
-                red *= correctionFactor;
-                green *= correctionFactor;
-                blue *= correctionFactor;
-            }
-            else
-            {
-                red = (255 - red) * correctionFactor + red;
-                green = (255 - green) * correctionFactor + green;
-                blue = (255 - blue) * correctionFactor + blue;
-            }
-            rgb[0] = Convert.ToByte(red);
-            rgb[1] = Convert.ToByte(blue);
-            rgb[2] = Convert.ToByte(green);
-
-            return rgb;
-        }
-
-
-        public void CreateWorkbook(FormattedRoster roster, SpreadSheetStyle style,  string path  = null)
+        public void CreateWorkbook(FormattedRoster roster, SpreadSheetStyle style,  string path  = null, string fileName = null)
         {
             var workBook = new XSSFWorkbook();
             
-            var nameHeadCl = new XSSFColor(style.nameHeadingCl);
-            var nameFieldCL = new XSSFColor(style.nameFieldCl);
-            var rotaFieldCl = new XSSFColor(style.rotaFieldCl);
-            var dayNameCL = new XSSFColor(style.dayNameCl);
-            var dateCl = new XSSFColor(style.dateCl);
-
+          
             var titleFont = workBook.CreateFont();
             titleFont.IsBold = true;
             titleFont.FontHeightInPoints = 22;
@@ -89,130 +58,42 @@ namespace TandaSpreadsheetTool
             
             if (style.useTeamCls & !dictSetUp)
             {
-                CreateStyleDict(ref style, workBook);
+                CreateStyleDict(ref style, workBook, fieldFont);
             }
-            
+            var sheet = (ISheet)null;
 
-            var dateString = roster.start.ToString("dd-MM-yy") + " to " + roster.finish.ToString("dd-MM-yy");
-
-
-            var sheet = workBook.CreateSheet("Schedule " + dateString);
-      
-            //current row = top row, only title uses this row
-            var currentRow = sheet.CreateRow(0);
-
-            //row where the day names across the top appear
-            var dayRow = sheet.CreateRow(1);
-
-            //style for title
-            var cellStyle = AutoStyle(workBook,titleFont);
-            
-            //style for name headings
-            var cellStyle2 = AutoStyle(workBook,headingFont);
-
-            var nOfDays = (roster.finish - roster.start).TotalDays;
-            var staffCount = roster.staff.Count;
-
-            //title cell
-            var currentCell = currentRow.CreateCell(0);
-            currentCell.SetCellValue(dateString);
-
-            
-            //top left corner where title is, merges 2x2
-            sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(0, 1, 0, 1));
-            cellStyle.SetFillForegroundColor(new XSSFColor(System.Drawing.Color.White));
-            currentCell.CellStyle = cellStyle;
-
-            // current row is now date row
-           currentRow = sheet.CreateRow(2);
-           
-            currentCell = currentRow.CreateCell(1);
-            currentCell.SetCellValue("Name");
-
-
-
-
-            //style for name heading
-            cellStyle = AutoStyle(workBook, headingFont);           
-            cellStyle.SetFillForegroundColor(nameHeadCl);
-            currentCell.CellStyle = cellStyle;
-            
-            //style for day name headers
-            cellStyle2.SetFillForegroundColor(dayNameCL);          
-
-            //style for date headers
-            cellStyle = AutoStyle(workBook,headingFont);            
-            cellStyle.SetFillForegroundColor(dateCl);
-
-            
-       
-            sheet.SetColumnWidth(0, style.colWidth * 256);
-            sheet.SetColumnWidth(1, style.colWidth * 256);
-
-
-            //populates the day and date rows
-            for (int i = 0; i <= nOfDays; i++)
+            switch (style.divBy)
             {
-                sheet.SetColumnWidth(i + 2, style.colWidth * 256);
-               
-                var currentDate = roster.start.AddDays(i);
-                currentCell = dayRow.CreateCell(2 + i);
-                currentCell.SetCellValue(Enum.GetName(typeof(DayOfWeek),currentDate.DayOfWeek));
-                currentCell.CellStyle = cellStyle2;
-
-
-                currentCell = currentRow.CreateCell(2 + i);
-                currentCell.SetCellValue(currentDate.ToShortDateString());
-                currentCell.CellStyle = cellStyle;
-
-            }
-
-            //style for the name fields
-            cellStyle = AutoStyle(workBook);
-            cellStyle.SetFillForegroundColor(nameFieldCL);
-
-            //rota field colour,in case there are people with no teams
-            var rotaFieldColour = new XSSFColor(style.rotaFieldCl);
-
-            //populates the rotafields
-            for (int i = 0; i < staffCount; i++)
-            {
-                currentRow = sheet.CreateRow(i+3);
-                var currentStaff = roster.staff[i];
-                var scheduleCount = currentStaff.schedules.Count;
-                currentCell = currentRow.CreateCell(1);
-
-                currentCell.SetCellValue(currentStaff.name);
-                currentCell.CellStyle = cellStyle;
-
-                for (int j = 0; j < scheduleCount; j++)
-                {
-                    var currentSchedule = currentStaff.schedules[j];
-
-                    currentCell = currentRow.CreateCell(2 +  ( currentSchedule.startDate- roster.start).Days);
-                    currentCell.SetCellValue(currentSchedule.team + ": " + currentSchedule.startTime + " - " + currentSchedule.endTime);
-
-                   if (!teamColourDict.TryGetValue(currentSchedule.team,out cellStyle2))
-                    {
-                        currentCell.CellStyle = cellStyle;
-                    }
-                    else
-                    {
-                        currentCell.CellStyle = cellStyle2;
-                    }
-                   
+                case SpreadSheetDiv.NONE:
+                    var dateString = roster.start.ToString("dd-MM-yy") + " to " + roster.finish.ToString("dd-MM-yy");
+                    sheet = workBook.CreateSheet("Schedule " + dateString);
                     
-                }
+                    break;
+                case SpreadSheetDiv.WEEKLY:
+                    break;
+                case SpreadSheetDiv.BIWEEKLY:
+                    break;
+                case SpreadSheetDiv.MONTHLY:
+                    break;
+                default:
+                    break;
             }
-           
-           
+
+
+
+
             if (path == null)
             {
                 path = SpreadSheetPath;
             }
             // add try- catch here
+
+            if (fileName == null)
+            {
+                fileName = "Tanda Roster  " + roster.start.ToString("dd-MM-yy") + " to " + roster.finish.ToString("dd-MM-yy") + ".xlsx";
+            }
             
-                var fs = File.Create(path + "Tanda Roster  " + roster.start.ToString("dd-MM-yy") + " - " + roster.finish.ToString("dd-MM-yy") + ".xlsx");
+                var fs = File.Create(path + fileName);
             
             
                 
@@ -221,25 +102,181 @@ namespace TandaSpreadsheetTool
 
 
            
-            workBook = null;
-            currentRow = null;
-            currentCell = null;
-            cellStyle = null;
-            titleFont = null;
-            headingFont = null;
-            fieldFont = null;
+           
 
             
         }
 
-        public void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet, DateTime from, DateTime to)
+        private void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet, DateTime from, DateTime to, IFont titleFont, 
+            IFont headingsFont, IFont fieldFont, XSSFWorkbook workbook)
         {
 
+
+            CreatHeadings(style, sheet, from, to, titleFont, headingsFont, workbook);
+
+            var currentStyle = AutoStyle(workbook, fieldFont);
+            currentStyle.SetFillForegroundColor(new XSSFColor(style.nameFieldCl));
+
+            var rotaFieldCl = new XSSFColor(style.rotaFieldCl);
+
+            var teamStyle = (XSSFCellStyle)null;
+
+            var fieldStyle = AutoStyle(workbook, fieldFont);
+            fieldStyle.SetFillForegroundColor(new XSSFColor(style.rotaFieldCl));
+
+            var staffCount = roster.staff.Count;
+            var currentRow = (IRow)null;
+            var currentCell = (ICell)null;
+
+            for (int i = 0; i < staffCount; i++)
+            {
+                currentRow = sheet.CreateRow(i + 3);
+                var currentStaff = roster.staff[i];
+                var scheduleCount = currentStaff.schedules.Count;
+
+                currentCell = currentRow.CreateCell(1);
+                currentCell.SetCellValue(currentStaff.name);
+                currentCell.CellStyle = currentStyle;
+
+                
+
+                for (int j = 0; j < scheduleCount; j++)
+                {
+                    var currentSchedule = currentStaff.schedules[j];
+                    if ( currentSchedule.startDate > to)
+                    {
+                        break;
+                    }
+                    else if (currentSchedule.startDate< from)
+                    {
+                        continue;
+                    }
+
+                    currentCell = currentRow.CreateCell(2 + (currentSchedule.startDate - roster.start).Days);
+                    currentCell.SetCellValue(currentSchedule.team + ": " + currentSchedule.startTime + " - " + currentSchedule.endTime);
+
+                    if (style.useTeamCls)
+                    {
+                        if (teamColourDict.TryGetValue(currentSchedule.team, out teamStyle))
+                        {
+                            currentCell.CellStyle = teamStyle;
+                        }
+                        else
+                        {
+                            currentCell.CellStyle = fieldStyle;
+                        }
+                    }
+                }//end inner for
+            }//end outer for
+
+
+        }        
+
+        private void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet, XSSFWorkbook workbook, IFont titleFont, 
+            IFont headingsFont, IFont fieldFont, string dateString = null)
+        {
+            CreatHeadings(style, sheet, roster.start, roster.finish, titleFont, headingsFont, workbook);
+
+            var currentStyle = AutoStyle(workbook, fieldFont);
+            currentStyle.SetFillForegroundColor(new XSSFColor(style.nameFieldCl));
+
+            var rotaFieldCl = new XSSFColor(style.rotaFieldCl);
+
+            var teamStyle = (XSSFCellStyle)null;
+
+            var fieldStyle = AutoStyle(workbook, fieldFont);
+            fieldStyle.SetFillForegroundColor(new XSSFColor(style.rotaFieldCl));
+
+            var staffCount = roster.staff.Count;
+            var currentRow = (IRow)null;
+            var currentCell = (ICell)null;
+
+            for (int i = 0; i < staffCount; i++)
+            {
+                currentRow = sheet.CreateRow(i + 3);
+                var currentStaff = roster.staff[i];
+                var scheduleCount = currentStaff.schedules.Count;
+
+                currentCell = currentRow.CreateCell(1);
+                currentCell.SetCellValue(currentStaff.name);
+                currentCell.CellStyle = currentStyle;
+
+                for (int j = 0; j < scheduleCount; j++)
+                {
+                    var currentSchedule = currentStaff.schedules[j];
+                    currentCell = currentRow.CreateCell(2 + (currentSchedule.startDate - roster.start).Days);
+                    currentCell.SetCellValue(currentSchedule.team + ": " + currentSchedule.startTime + " - " + currentSchedule.endTime);
+
+                    if (style.useTeamCls)
+                    {
+                        if (teamColourDict.TryGetValue(currentSchedule.team, out teamStyle))
+                        {
+                            currentCell.CellStyle = teamStyle;
+                        }
+                        else
+                        {
+                            currentCell.CellStyle = fieldStyle;
+                        }
+                    }
+                }//end inner for
+            }//end outer for
         }
 
-        public void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet)
+        private void CreatHeadings(SpreadSheetStyle style, ISheet sheet, DateTime from, DateTime to, IFont titleFont, IFont headingFont, XSSFWorkbook workbook)
         {
+            //topmost row, only title uses it
+            var currentRow = sheet.CreateRow(0);
 
+            //row where the day names across the top appear
+            var dayRow = sheet.CreateRow(1);
+            //title style
+            var currentStyle = AutoStyle(workbook, titleFont);
+
+            var dateString = from.ToShortDateString() + " to " + to.ToShortDateString();
+
+            //title cell
+            var currentCell = currentRow.CreateCell(0);
+            currentCell.SetCellValue(dateString);
+
+            //merges at the top in 2x2 for the title
+            sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(0, 1, 0, 1));
+            currentStyle.SetFillForegroundColor(new XSSFColor(Color.White));
+            currentCell.CellStyle = currentStyle;
+
+            //current row is now the date row
+            currentRow = sheet.CreateRow(2);
+
+            //current cell is name heading
+            currentCell = currentRow.CreateCell(1);
+            currentCell.SetCellValue("Name");
+
+            currentStyle = AutoStyle(workbook, headingFont);
+            currentStyle.SetFillForegroundColor(new XSSFColor(style.nameHeadingCl));
+            currentCell.CellStyle = currentStyle;
+
+            //date heading style
+            var currentStyle2 = AutoStyle(workbook, headingFont);
+            currentStyle2.SetFillForegroundColor(new XSSFColor(style.dateCl));
+
+            var colWidth = style.colWidth * 256;
+            sheet.SetColumnWidth(0, colWidth);
+            sheet.SetColumnWidth(1, colWidth);
+
+            var nOfDays = (int)(from - to).TotalDays;
+
+            for (int i = 0; i <= nOfDays; i++)
+            {// currentStyle = date field style, currentStyle2 = day field style
+                sheet.SetColumnWidth(i + 2, colWidth);
+
+                var currentDate = from.AddDays(i);
+                currentCell = dayRow.CreateCell(i + 2);
+                currentCell.SetCellValue(Enum.GetName(typeof(DayOfWeek), currentDate.DayOfWeek));
+                currentCell.CellStyle = currentStyle2;
+
+                currentCell = currentRow.CreateCell(2 + i);
+                currentCell.SetCellValue(currentDate.ToShortDateString());
+                currentCell.CellStyle = currentStyle;
+            }
         }
 
         private IRow GetRow(int rowIndex, ISheet sheet)
@@ -257,23 +294,25 @@ namespace TandaSpreadsheetTool
             
         }
 
-        private void CreateStyleDict(ref SpreadSheetStyle style, XSSFWorkbook wBk)
+        private void CreateStyleDict(ref SpreadSheetStyle style, XSSFWorkbook wBk, IFont fieldFont)
         {
 
             try
             {
+                bool brigthnessValid = style.minBrightness > 0 & style.minBrightness < 1;
                 for (int i = 0; i < teams.Length; i++)
                 {
                     var currentTeam = teams[i];
-                    var nextStyle = AutoStyle(wBk);
+                    var nextStyle = AutoStyle(wBk, fieldFont);
                     var colour = GetColourFromHex(currentTeam.colour);
                    
                     if (colour != null)
                     {
-                        if (style.minBrightness > 0 )
+                        if (brigthnessValid)
                         {
                             if (colour.Tint < style.minBrightness)
                             {
+                                
                                 colour.Tint = style.minBrightness;
                             }
                         }
@@ -316,22 +355,6 @@ namespace TandaSpreadsheetTool
             return new XSSFColor(bytes);
         }
 
-        private XSSFCellStyle AutoStyle(XSSFWorkbook wbk)
-        {
-            var autoValue = (XSSFCellStyle)wbk.CreateCellStyle();
-            autoValue.FillPattern = FillPattern.SolidForeground;
-
-            autoValue.BorderBottom = BorderStyle.Thin;
-            autoValue.BorderTop = BorderStyle.Thin;
-            autoValue.BorderLeft = BorderStyle.Thin;
-            autoValue.BorderRight = BorderStyle.Thin;
-
-            
-            
-
-
-            return autoValue;
-        }
 
         private XSSFCellStyle AutoStyle(XSSFWorkbook wbk, IFont font)
         {

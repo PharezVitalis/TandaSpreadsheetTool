@@ -302,9 +302,9 @@
             this.lblBrightness.AutoSize = true;
             this.lblBrightness.Location = new System.Drawing.Point(41, 91);
             this.lblBrightness.Name = "lblBrightness";
-            this.lblBrightness.Size = new System.Drawing.Size(109, 13);
+            this.lblBrightness.Size = new System.Drawing.Size(139, 13);
             this.lblBrightness.TabIndex = 23;
-            this.lblBrightness.Text = "Min Colour Brightness";
+            this.lblBrightness.Text = "Min Team Colour Brightness";
             // 
             // btnAccept
             // 
