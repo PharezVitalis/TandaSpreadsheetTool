@@ -70,7 +70,7 @@ namespace TandaSpreadsheetTool
                 nameHeadingCl = new byte[] { 61, 133, 198 },
                 nameFieldCl = new byte[] { 207, 226, 243 },
                 teamTxtFilter = true,
-                minBrightness = 0,
+                minBrightness = 0.3f,
                 useTeamCls = true,
                 rotaFieldCl = new byte[] { 255, 255, 255 },
                 rotaEmptyCl = new byte[] { 163, 168, 175 },

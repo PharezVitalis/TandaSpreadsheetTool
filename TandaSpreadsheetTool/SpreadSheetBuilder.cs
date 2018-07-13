@@ -44,24 +44,11 @@ namespace TandaSpreadsheetTool
         {
             var workBook = new XSSFWorkbook();
             
-            
           
-            var titleFont = workBook.CreateFont();
-            titleFont.IsBold = true;
-            titleFont.FontHeightInPoints = 22;
-            titleFont.FontName = style.font;
-
-            var headingFont = workBook.CreateFont();
-            headingFont.IsBold = style.boldHeadings;
-            headingFont.FontName = style.font;
-
-            var fieldFont = workBook.CreateFont();
-            fieldFont.FontName = style.font;
             
-            if (style.useTeamCls)
-            {
-                BuildStyleDicts(ref style, workBook, fieldFont);
-            }
+            
+            BuildStyleDicts(ref style, workBook);
+            
             var sheet = (ISheet)null;
 
             var nOfDaysToAdd = -1;
@@ -115,7 +102,7 @@ namespace TandaSpreadsheetTool
             {
                 case 0:
                     sheet = workBook.CreateSheet("Schedule " + roster.start.ToString("dd-MM-yy") + " to " + roster.finish.ToString("dd-MM-yy"));
-                    CreateRosterTable(roster, style, sheet, workBook, titleFont, headingFont, fieldFont);
+                    CreateRosterTable(roster, style, sheet, workBook);
                     break;
 
                 case -1:
@@ -133,7 +120,7 @@ namespace TandaSpreadsheetTool
                             toDate = toDate.AddDays(1);
                         }
                         sheet = workBook.CreateSheet("Schedule " + fromDate.ToString("dd-MM-yy") + " to " + toDate.ToString("dd-MM-yy"));
-                        CreateRosterTable(roster, style, sheet, fromDate, toDate, titleFont, headingFont, fieldFont, workBook);
+                        CreateRosterTable(roster, style, sheet, workBook, fromDate, toDate.AddDays(-1));
                     }
                     break;
 
@@ -148,7 +135,7 @@ namespace TandaSpreadsheetTool
                         }
 
                         sheet = workBook.CreateSheet("Schedule " + currentDate.ToString("dd-MM-yy") + nextDate.ToString("dd-MM-yy"));
-                        CreateRosterTable(roster, style, sheet, currentDate, nextDate, titleFont, headingFont, fieldFont, workBook);
+                        CreateRosterTable(roster, style, sheet, workBook, currentDate, nextDate);
                         currentDate = nextDate;
                     }
                     while (currentDate < roster.finish);
@@ -180,22 +167,21 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        private void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet, DateTime from, DateTime to, IFont titleFont, 
-            IFont headingsFont, IFont fieldFont, XSSFWorkbook workbook)
+        private void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet, XSSFWorkbook workbook, DateTime from, DateTime to 
+            )
         {
 
 
-            CreateHeadings(style, sheet, from, to, titleFont, headingsFont, workbook);
+            CreateHeadings(style, sheet, from, to, workbook);
 
-            var currentStyle = AutoStyle(workbook, fieldFont);
+            styleDict.TryGetValue(nameof(style.nameFieldCl), out var currentStyle);
             currentStyle.SetFillForegroundColor(new XSSFColor(style.nameFieldCl));
 
             var rotaFieldCl = new XSSFColor(style.rotaFieldCl);
 
             var teamStyle = (XSSFCellStyle)null;
 
-            var fieldStyle = AutoStyle(workbook, fieldFont);
-            fieldStyle.SetFillForegroundColor(new XSSFColor(style.rotaFieldCl));
+            styleDict.TryGetValue(nameof(style.rotaFieldCl), out var fieldStyle);
 
             var staffCount = roster.staff.Count;
             var currentRow = (IRow)null;
@@ -249,21 +235,20 @@ namespace TandaSpreadsheetTool
             emptyStyle.SetFillBackgroundColor(new XSSFColor(style.rotaEmptyCl));
             //DrawLinesFillEmpties(emptyStyle, sheet, 2, j + 2, 3, i + 3);
         }        
-
-        private void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet, XSSFWorkbook workbook, IFont titleFont, 
-            IFont headingsFont, IFont fieldFont)
+        
+        private void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet, XSSFWorkbook workbook)
         {
-            CreateHeadings(style, sheet, roster.start, roster.finish, titleFont, headingsFont, workbook);
+            CreateHeadings(style, sheet, roster.start, roster.finish, workbook);
 
-            var currentStyle = AutoStyle(workbook, fieldFont);
-            currentStyle.SetFillForegroundColor(new XSSFColor(style.nameFieldCl));
+      
+
+            styleDict.TryGetValue(nameof(style.nameFieldCl), out var currentStyle);
 
             var rotaFieldCl = new XSSFColor(style.rotaFieldCl);
 
             var teamStyle = (XSSFCellStyle)null;
 
-            var fieldStyle = AutoStyle(workbook, fieldFont);
-            fieldStyle.SetFillForegroundColor(new XSSFColor(style.rotaFieldCl));
+            styleDict.TryGetValue(nameof(style.rotaFieldCl), out var fieldStyle);
 
             var staffCount = roster.staff.Count;
             var currentRow = (IRow)null;
@@ -299,17 +284,21 @@ namespace TandaSpreadsheetTool
                             currentCell.CellStyle = fieldStyle;
                         }
                     }
+                    else
+                    {
+                        currentCell.CellStyle = fieldStyle;
+                    }
                 }//end inner for
             }//end outer for
 
-            var emptyStyle = AutoStyle(workbook, null);
-            emptyStyle.SetFillBackgroundColor(new XSSFColor(style.rotaEmptyCl));
-           // DrawLinesFillEmpties(emptyStyle, sheet, 2, colCount + 2, 3, rowCount + 3);
+           
+           // DrawLinesFillEmpties(sheet, 2, colCount + 2, 3, rowCount + 3);
 
         }
 
-        private void DrawLinesFillEmpties(ICellStyle emptyStyle, ISheet sheet, int fromCol,int toCol, int fromRow, int toRow)
+        private void DrawLinesFillEmpties( XSSFCellStyle emptyStyle, ISheet sheet, int fromCol,int toCol, int fromRow, int toRow)
         {
+            
             for (int i = fromRow; i <= toRow; i++)
             {
                 var currentRow = GetRow(i, sheet);
@@ -327,7 +316,7 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        private void CreateHeadings(SpreadSheetStyle style, ISheet sheet, DateTime from, DateTime to, IFont titleFont, IFont headingFont, XSSFWorkbook workbook)
+        private void CreateHeadings(SpreadSheetStyle style, ISheet sheet, DateTime from, DateTime to, XSSFWorkbook workbook)
         {
             //topmost row, only title uses it
             var currentRow = sheet.CreateRow(0);
@@ -335,7 +324,9 @@ namespace TandaSpreadsheetTool
             //row where the day names across the top appear
             var dayRow = sheet.CreateRow(1);
             //title style
-            var currentStyle = AutoStyle(workbook, titleFont);
+            var currentStyle = (XSSFCellStyle)null;
+
+            styleDict.TryGetValue("title", out currentStyle);
 
             var dateString = from.ToShortDateString() + " to " + to.ToShortDateString();
 
@@ -345,7 +336,6 @@ namespace TandaSpreadsheetTool
 
             //merges at the top in 2x2 for the title
             sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(0, 1, 0, 1));
-            currentStyle.SetFillForegroundColor(new XSSFColor(Color.White));
             currentCell.CellStyle = currentStyle;
 
             //current row is now the date row
@@ -355,17 +345,17 @@ namespace TandaSpreadsheetTool
             currentCell = currentRow.CreateCell(1);
             currentCell.SetCellValue("Name");
 
-            currentStyle = AutoStyle(workbook, headingFont);
-            currentStyle.SetFillForegroundColor(new XSSFColor(style.nameHeadingCl));
+            styleDict.TryGetValue(nameof(style.nameHeadingCl), out currentStyle);
+          
             currentCell.CellStyle = currentStyle;
 
             //day name style
-            currentStyle = AutoStyle(workbook, headingFont);
-            currentStyle.SetFillForegroundColor(new XSSFColor(style.dayNameCl));
+            styleDict.TryGetValue(nameof(style.dayNameCl), out currentStyle);
+
 
             //date heading style
-            var currentStyle2 = AutoStyle(workbook, headingFont);
-            currentStyle2.SetFillForegroundColor(new XSSFColor(style.dateCl));
+            styleDict.TryGetValue(nameof(style.dateCl), out var currentStyle2);
+         
 
             var colWidth = style.colWidth * 256;
             sheet.SetColumnWidth(0, colWidth);
@@ -397,17 +387,74 @@ namespace TandaSpreadsheetTool
 
       
 
-        private void BuildStyleDicts(ref SpreadSheetStyle style, XSSFWorkbook wBk, IFont fieldFont)
+        private void BuildStyleDicts(ref SpreadSheetStyle style, XSSFWorkbook wBk)
         {
             teamColourDict.Clear();
             styleDict.Clear();
+
+            var fieldFont = wBk.CreateFont();
+            fieldFont.FontName = style.font; ;
+
+            var nextStyle = (XSSFCellStyle)null;
+
+            // add font size options?
+            var headingFont = wBk.CreateFont();
+            headingFont.IsBold = style.boldHeadings;
+            headingFont.FontName = style.font;
+
+            var titleFont = wBk.CreateFont();
+            titleFont.IsBold = true;
+            titleFont.FontName = style.font;
+
+            //title style
+            nextStyle = AutoStyle(wBk, titleFont);
+            nextStyle.SetFillForegroundColor(new XSSFColor(Color.White));
+            styleDict.Add("title", nextStyle);
+
+            // date field style
+            nextStyle = AutoStyle(wBk, headingFont);
+            nextStyle.SetFillForegroundColor(new XSSFColor(style.dateCl));
+            styleDict.Add(nameof(style.dateCl), nextStyle);
+
+            //day field style
+            nextStyle = AutoStyle(wBk, headingFont);
+            nextStyle.SetFillForegroundColor(new XSSFColor(style.dayNameCl));
+            styleDict.Add(nameof(style.dayNameCl), nextStyle);
+
+            //rota field style
+            nextStyle = AutoStyle(wBk, fieldFont);
+            nextStyle.SetFillForegroundColor(new XSSFColor(style.rotaFieldCl));
+            styleDict.Add(nameof(style.rotaFieldCl), nextStyle);
+
+            //empty rota field style
+            nextStyle = AutoStyle(wBk);
+            nextStyle.SetFillForegroundColor(new XSSFColor(style.rotaEmptyCl));
+            styleDict.Add(nameof(style.rotaEmptyCl), nextStyle);
+
+            //name field style
+            nextStyle = AutoStyle(wBk, fieldFont);
+            nextStyle.SetFillForegroundColor(new XSSFColor(style.nameFieldCl));
+            styleDict.Add(nameof(style.nameFieldCl), nextStyle);
+
+            //name heading style
+            nextStyle = AutoStyle(wBk, headingFont);
+            nextStyle.SetFillForegroundColor(new XSSFColor(style.nameHeadingCl));
+            styleDict.Add(nameof(style.nameHeadingCl), nextStyle);
+
+            if (!style.useTeamCls)
+            {
+                return;
+            }
+
+            Console.WriteLine("Skipped over the return");
+
             try
             {
                 bool brigthnessValid = style.minBrightness > 0 & style.minBrightness < 1;
                 for (int i = 0; i < teams.Length; i++)
                 {
                     var currentTeam = teams[i];
-                    var nextStyle = AutoStyle(wBk, fieldFont);
+                    nextStyle = AutoStyle(wBk, fieldFont);
                     var colour = GetColourFromHex(currentTeam.colour);
                    
                     if (colour != null)
@@ -430,18 +477,7 @@ namespace TandaSpreadsheetTool
             {
                 style.useTeamCls = false;
             }
-            // add font size options?
-            var headingFont = wBk.CreateFont();
-            headingFont.IsBold = style.boldHeadings;
-            headingFont.FontName = style.font;
-
-            var titleFont = wBk.CreateFont();
-            titleFont.IsBold = true;
-            titleFont.FontName = style.font;
-
           
-
-
         }
 
         private XSSFColor GetColourFromHex(string hexValue)
@@ -469,7 +505,7 @@ namespace TandaSpreadsheetTool
         }
 
 
-        private XSSFCellStyle AutoStyle(XSSFWorkbook wbk, IFont font)
+        private XSSFCellStyle AutoStyle(XSSFWorkbook wbk, IFont font=null)
         {
             var autoValue = (XSSFCellStyle)wbk.CreateCellStyle();
             autoValue.FillPattern = FillPattern.SolidForeground;
