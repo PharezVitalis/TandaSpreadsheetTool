@@ -56,6 +56,7 @@ namespace TandaSpreadsheetTool
         public int colWidth;
         public bool useTeamCls;
         public string font;
+        public int fontSize;
         bool useTeamLegends;
         bool useShiftLegends;
         public SpreadSheetDiv divBy;
@@ -70,7 +71,7 @@ namespace TandaSpreadsheetTool
                 nameHeadingCl = new byte[] { 61, 133, 198 },
                 nameFieldCl = new byte[] { 207, 226, 243 },
                 teamTxtFilter = true,
-                minBrightness = 0.3f,
+                minBrightness = 0.7f,
                 useTeamCls = true,
                 rotaFieldCl = new byte[] { 255, 255, 255 },
                 rotaEmptyCl = new byte[] { 163, 168, 175 },
@@ -78,6 +79,7 @@ namespace TandaSpreadsheetTool
                 dateCl = new byte[] { 147, 196, 125 },
                 colWidth = 22,
                 font = "Calibri",
+                fontSize = 11,
                 divBy = SpreadSheetDiv.NONE,
                 useShiftLegends = false,
                 useTeamLegends = false            

@@ -147,7 +147,6 @@
             this.pnlMinBright.Name = "pnlMinBright";
             this.pnlMinBright.Size = new System.Drawing.Size(199, 25);
             this.pnlMinBright.TabIndex = 5;
-            this.pnlMinBright.UseWaitCursor = true;
             // 
             // lstBxFont
             // 

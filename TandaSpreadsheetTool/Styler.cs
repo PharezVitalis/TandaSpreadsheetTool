@@ -56,14 +56,16 @@ namespace TandaSpreadsheetTool
             pnlRotaEmptyCl.BackColor = GetColorFromByte(currentStyle.rotaEmptyCl);
             pnlRotaField.BackColor = GetColorFromByte(currentStyle.rotaFieldCl);
 
-            var brightness = Convert.ToByte(Math.Round((double)(tkBarBrightness.Value / 100) * 255));
+           
 
             var fontSelection = lstBxFont.FindString("Calibri");
 
             lstBxFont.SelectedIndex = fontSelection != -1 ? fontSelection : lstBxFont.FindString("Arial");
             cBxDiv.SelectedIndex = (int)currentStyle.divBy;
-            pnlMinBright.BackColor = GetColorFromByte(new byte[] {brightness,brightness,brightness });
+            
             tkBarBrightness.Value = Convert.ToInt32(currentStyle.minBrightness * 100);
+            var brightness = Convert.ToByte(Math.Round((double)(currentStyle.minBrightness / 100) * 255));
+            pnlMinBright.BackColor = GetColorFromByte(new byte[] { brightness, brightness, brightness });
         }
 
 
