@@ -43,13 +43,13 @@
             this.ckBxSaveJson = new System.Windows.Forms.CheckBox();
             this.btnUpdateStaff = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
+            this.lblLastUpdated = new System.Windows.Forms.Label();
             this.btnMakeExcel = new System.Windows.Forms.Button();
             this.dtPFrom = new System.Windows.Forms.DateTimePicker();
             this.dtPTo = new System.Windows.Forms.DateTimePicker();
             this.lblDateTo = new System.Windows.Forms.Label();
             this.lblInDate = new System.Windows.Forms.Label();
             this.btnGetJSON = new System.Windows.Forms.Button();
-            this.lblLastUpdated = new System.Windows.Forms.Label();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -144,7 +144,7 @@
             this.pnlMain.Controls.Add(this.lblDateTo);
             this.pnlMain.Controls.Add(this.lblInDate);
             this.pnlMain.Controls.Add(this.btnGetJSON);
-            this.pnlMain.Location = new System.Drawing.Point(12, 160);
+            this.pnlMain.Location = new System.Drawing.Point(15, 9);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(733, 142);
             this.pnlMain.TabIndex = 1;
@@ -209,6 +209,15 @@
             this.lblStatus.Size = new System.Drawing.Size(0, 13);
             this.lblStatus.TabIndex = 11;
             // 
+            // lblLastUpdated
+            // 
+            this.lblLastUpdated.AutoSize = true;
+            this.lblLastUpdated.Location = new System.Drawing.Point(202, 87);
+            this.lblLastUpdated.Name = "lblLastUpdated";
+            this.lblLastUpdated.Size = new System.Drawing.Size(118, 13);
+            this.lblLastUpdated.TabIndex = 9;
+            this.lblLastUpdated.Text = "Staff List Last Updated:";
+            // 
             // btnMakeExcel
             // 
             this.btnMakeExcel.Enabled = false;
@@ -262,20 +271,11 @@
             this.btnGetJSON.UseVisualStyleBackColor = true;
             this.btnGetJSON.Click += new System.EventHandler(this.btnTest_Click);
             // 
-            // lblLastUpdated
-            // 
-            this.lblLastUpdated.AutoSize = true;
-            this.lblLastUpdated.Location = new System.Drawing.Point(202, 87);
-            this.lblLastUpdated.Name = "lblLastUpdated";
-            this.lblLastUpdated.Size = new System.Drawing.Size(118, 13);
-            this.lblLastUpdated.TabIndex = 9;
-            this.lblLastUpdated.Text = "Staff List Last Updated:";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(757, 306);
+            this.ClientSize = new System.Drawing.Size(757, 168);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlLogIn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
