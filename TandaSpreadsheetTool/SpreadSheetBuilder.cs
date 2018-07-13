@@ -110,17 +110,18 @@ namespace TandaSpreadsheetTool
 
                 case 30:
                    
-                    DateTime toDate = roster.start;
-                    
+                    var toDate = roster.start;
+                   
                     while (toDate <= roster.finish)
                     {
                         var fromDate = toDate;
                         while (roster.start.Month == toDate.Month)
                         {
                             toDate = toDate.AddDays(1);
+                           
                         }
                         sheet = workBook.CreateSheet("Schedule " + fromDate.ToString("dd-MM-yy") + " to " + toDate.ToString("dd-MM-yy"));
-                        CreateRosterTable(roster, style, sheet, workBook, fromDate, toDate.AddDays(-1));
+                        CreateRosterTable(roster, style, sheet, workBook, fromDate, toDate.AddDays(-1),(fromDate-roster.start).Days-1);
                     }
                     break;
 
@@ -134,9 +135,9 @@ namespace TandaSpreadsheetTool
                             nextDate = roster.finish;
                         }
 
-                        sheet = workBook.CreateSheet("Schedule " + currentDate.ToString("dd-MM-yy") + nextDate.ToString("dd-MM-yy"));
-                        CreateRosterTable(roster, style, sheet, workBook, currentDate, nextDate);
-                        currentDate = nextDate;
+                        sheet = workBook.CreateSheet("Schedule " + currentDate.ToString("dd-MM-yy") +" to "+ nextDate.ToString("dd-MM-yy"));
+                        CreateRosterTable(roster, style, sheet, workBook, currentDate, nextDate,(currentDate-roster.start).Days);
+                        currentDate = nextDate.AddDays(1);
                     }
                     while (currentDate < roster.finish);
 
@@ -150,29 +151,37 @@ namespace TandaSpreadsheetTool
                 path = SpreadSheetPath;
             }
             // add try- catch here
-
+            
             if (fileName == null)
             {
-                fileName = "Tanda Roster  " + roster.start.ToString("dd-MM-yy") + " to " + roster.finish.ToString("dd-MM-yy") + ".xlsx";
+                fileName = roster.start.ToString("dd-MM-yy") + " to " + roster.finish.ToString("dd-MM-yy") + ".xlsx";
             }
             try
             {
-                var fs = File.Create(path + fileName);
+                var fullPath = path + fileName;
+
+
+
+                var fs = File.Create(fullPath);
                 workBook.Write(fs);
                 fs.Close();
             }
             catch
             {
-
+               
             }
         }
 
-        private void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet, XSSFWorkbook workbook, DateTime from, DateTime to 
-            )
+        private void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet, XSSFWorkbook workbook, 
+            DateTime from, DateTime to, int colOffset = 0 )
         {
+          from=  RosterManager.SetToTime(from, 0, 0);
+           to = RosterManager.SetToTime(to, 23, 59);
 
+            CreateHeadings(style, sheet, from, to);
 
-            CreateHeadings(style, sheet, from, to, workbook);
+           
+            
 
             styleDict.TryGetValue(nameof(style.nameFieldCl), out var currentStyle);
             currentStyle.SetFillForegroundColor(new XSSFColor(style.nameFieldCl));
@@ -205,6 +214,8 @@ namespace TandaSpreadsheetTool
                 for (int j = 0; j < scheduleCount; j++)
                 {
                     var currentSchedule = currentStaff.schedules[j];
+
+                    
                     if ( currentSchedule.startDate > to)
                     {
                         break;
@@ -214,7 +225,7 @@ namespace TandaSpreadsheetTool
                         continue;
                     }
 
-                    currentCell = currentRow.CreateCell(2 + (currentSchedule.startDate - roster.start).Days);
+                    currentCell = currentRow.CreateCell(2-colOffset + (currentSchedule.startDate - roster.start).Days);
                     currentCell.SetCellValue(currentSchedule.team + ": " + currentSchedule.startTime + " - " + currentSchedule.endTime);
 
                     if (style.useTeamCls)
@@ -238,13 +249,13 @@ namespace TandaSpreadsheetTool
         
         private void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet, XSSFWorkbook workbook)
         {
-            CreateHeadings(style, sheet, roster.start, roster.finish, workbook);
+            CreateHeadings(style, sheet, roster.start, roster.finish);
 
       
 
             styleDict.TryGetValue(nameof(style.nameFieldCl), out var currentStyle);
 
-            var rotaFieldCl = new XSSFColor(style.rotaFieldCl);
+            
 
             var teamStyle = (XSSFCellStyle)null;
 
@@ -270,6 +281,12 @@ namespace TandaSpreadsheetTool
                 for (int j = 0; j < scheduleCount; j++)
                 {
                     var currentSchedule = currentStaff.schedules[j];
+
+                    if (currentSchedule.startDate < roster.start)
+                    {
+                        continue;
+                    }
+
                     currentCell = currentRow.CreateCell(2 + (currentSchedule.startDate - roster.start).Days);
                     currentCell.SetCellValue(currentSchedule.team + ": " + currentSchedule.startTime + " - " + currentSchedule.endTime);
 
@@ -316,7 +333,7 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        private void CreateHeadings(SpreadSheetStyle style, ISheet sheet, DateTime from, DateTime to, XSSFWorkbook workbook)
+        private void CreateHeadings(SpreadSheetStyle style, ISheet sheet, DateTime from, DateTime to)
         {
             //topmost row, only title uses it
             var currentRow = sheet.CreateRow(0);
@@ -385,8 +402,6 @@ namespace TandaSpreadsheetTool
             return row != null ? row : sheet.CreateRow(rowIndex);
         }
 
-      
-
         private void BuildStyleDicts(ref SpreadSheetStyle style, XSSFWorkbook wBk)
         {
             teamColourDict.Clear();
@@ -404,6 +419,7 @@ namespace TandaSpreadsheetTool
 
             var titleFont = wBk.CreateFont();
             titleFont.IsBold = true;
+            titleFont.FontHeight = 19;
             titleFont.FontName = style.font;
 
             //title style
@@ -446,10 +462,9 @@ namespace TandaSpreadsheetTool
                 return;
             }
 
-            Console.WriteLine("Skipped over the return");
+            
 
-            try
-            {
+           
                 bool brigthnessValid = style.minBrightness > 0 & style.minBrightness < 1;
                 for (int i = 0; i < teams.Length; i++)
                 {
@@ -461,23 +476,37 @@ namespace TandaSpreadsheetTool
                     {
                         if (brigthnessValid)
                         {
-                            if (colour.Tint < style.minBrightness)
+                        var currentBrightness = ColourBrightness(colour);
+                            if ( currentBrightness< style.minBrightness)
                             {
-                                
+                                //brightness not being adjusted
                                 colour.Tint = style.minBrightness;
                             }
                         }
                         nextStyle.SetFillForegroundColor(colour);
                     }
-
+                    if (!teamColourDict.ContainsKey(currentTeam.name))
+                {
                     teamColourDict.Add(currentTeam.name, nextStyle);
                 }
-            }
-            catch
-            {
-                style.useTeamCls = false;
-            }
-          
+                    
+                }
+            
+            
+        }
+
+        float ColourBrightness(XSSFColor colour)
+        {
+            var rgb = colour.GetRgb();
+            var rRatio = (double)rgb[0] / 255;
+            var gRatio = (double)rgb[1] / 255;
+            var bRatio = (double)rgb[2] / 255;
+
+            rRatio = Math.Pow(rRatio * .241f, 2);
+            gRatio = Math.Pow(gRatio * .691f, 2);
+            rRatio = Math.Pow(rRatio * .068f, 2);
+
+            return (float)Math.Sqrt(rRatio + gRatio + bRatio);
         }
 
         private XSSFColor GetColourFromHex(string hexValue)

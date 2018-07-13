@@ -63,7 +63,7 @@ namespace TandaSpreadsheetTool
             lstBxFont.SelectedIndex = fontSelection != -1 ? fontSelection : lstBxFont.FindString("Arial");
             cBxDiv.SelectedIndex = (int)currentStyle.divBy;
             pnlMinBright.BackColor = GetColorFromByte(new byte[] {brightness,brightness,brightness });
-            
+            tkBarBrightness.Value = Convert.ToInt32(currentStyle.minBrightness * 100);
         }
 
 
@@ -182,8 +182,13 @@ namespace TandaSpreadsheetTool
 
         private void btnDefault_Click(object sender, EventArgs e)
         {
-            currentStyle = SpreadSheetStyle.Default();
-            SetFormToStyle();
+            var dResult = MessageBox.Show("Reset Values to Default?", "Reset style", MessageBoxButtons.YesNo);
+            if (dResult == DialogResult.Yes)
+            {
+                currentStyle = SpreadSheetStyle.Default();
+                SetFormToStyle();
+            }
+            
         }
     }
 }
