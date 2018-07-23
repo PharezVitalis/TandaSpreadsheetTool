@@ -13,14 +13,14 @@ namespace TandaSpreadsheetTool
     class Networker
     {
 
-        NetworkStatus status = NetworkStatus.IDLE;
+        
 
         string mostRecentError = "";
 
         protected string userNameKey = "iv7jlwbcx#hcq&*";
 
         string username = "";
-        bool authenticated = false;
+        
 
         JObject token;
 
@@ -28,14 +28,14 @@ namespace TandaSpreadsheetTool
         JArray teams;
         JArray staff;
 
-        List<INetworkListener> listeners;
+        INotifiable form;
 
        
 
         HttpClient client;
         HttpResponseMessage httpresponse;
 
-        public Networker()
+        public Networker(INotifiable form)
         {
            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
            
@@ -43,7 +43,7 @@ namespace TandaSpreadsheetTool
             httpresponse = new HttpResponseMessage();
             httpresponse.EnsureSuccessStatusCode();
 
-            listeners = new List<INetworkListener>();
+            this.form = form;
 
             client = new HttpClient();
             client.Timeout = new TimeSpan(0, 0, 30);
@@ -52,11 +52,13 @@ namespace TandaSpreadsheetTool
 
         public bool LoadToken(string password)
         {
+            form.EnableNotifiers();
+
             if (File.Exists(RosterManager.Path + "data.wpn") & password != "")
             {
                 if (password != "")
                 {
-
+                    form.UpdateProgress("Loading login details");
                     try
                     {
 
@@ -72,8 +74,9 @@ namespace TandaSpreadsheetTool
                             str = Decrypt(str, password);
                             password = "";
 
-                            if (str == "FAILED")
+                            if (str == "Failed")
                             {
+                                form.UpdateProgress("Failed to login, access denied");
                                 return false;
                             }
 
@@ -84,7 +87,7 @@ namespace TandaSpreadsheetTool
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine("Failed to Load Token");
+                        form.UpdateProgress("Failed to get token");// problem where use can't remove local data
                         mostRecentError = e.Message;
                         return false;
                     }
@@ -96,20 +99,10 @@ namespace TandaSpreadsheetTool
             {
                 return false;
             }
-
+            form.DisableNotifiers();
 
             return true;
         }
-
-        public void Subscribe(INetworkListener listener)
-        {
-            listeners.Add(listener);
-        }
-
-        public void Unsubscribe (INetworkListener listener)
-        {
-            listeners.Remove(listener);
-        }        
 
         public void ClearFileData()
         {
@@ -182,7 +175,7 @@ namespace TandaSpreadsheetTool
 
              
 
-            if (username == "FAILED" || username == "")
+            if (username == "Failed" || username == "")
             {
                 // add warning system here
             }
@@ -243,7 +236,7 @@ namespace TandaSpreadsheetTool
                 Console.WriteLine(ex.Message);
                 mostRecentError = ex.Message;
               
-                return "FAILED";
+                return "Failed";
             }
             
         }
@@ -291,7 +284,7 @@ namespace TandaSpreadsheetTool
             {
                 mostRecentError = ex.Message;
                 Console.WriteLine(ex.Message);
-                return "FAILED";
+                return "Failed";
             }
            
         }
@@ -301,14 +294,15 @@ namespace TandaSpreadsheetTool
 #region NetworkRequests
 
         public async Task<bool> GetToken(string username, string password)
-        {
+        {           
 
-            if (token != null | status != NetworkStatus.IDLE)
+            if (token != null )
             {
                 return false;
             }
+            form.EnableNotifiers();
+            form.UpdateProgress("Getting Token");
 
-            UpdateStatus = NetworkStatus.BUSY;
 
             client.DefaultRequestHeaders.Clear();
 
@@ -348,11 +342,11 @@ namespace TandaSpreadsheetTool
             }
             catch (Exception ex)
             {
-                mostRecentError = ex.Message;
-                UpdateStatus = NetworkStatus.ERROR;
+                
+                
                 return false;
             }
-            UpdateStatus = NetworkStatus.IDLE;
+           
 
 
             return true;
@@ -363,7 +357,7 @@ namespace TandaSpreadsheetTool
         {
             
 
-            UpdateStatus= NetworkStatus.BUSY;
+           
             client.DefaultRequestHeaders.Clear();
 
             client.DefaultRequestHeaders.Add("Authorization", "bearer " + token.GetValue("access_token"));
@@ -382,17 +376,17 @@ namespace TandaSpreadsheetTool
             {
                
                 mostRecentError = ex.Message;
-                UpdateStatus = NetworkStatus.ERROR;
+               
             }
 
-            UpdateStatus = NetworkStatus.IDLE;
+          
 
             return roster;
         }
 
         public async Task<JArray> GetDepartments()
         {
-            UpdateStatus = NetworkStatus.BUSY;
+           
             client.DefaultRequestHeaders.Clear();
             client.DefaultRequestHeaders.Add("Authorization", "bearer " + token.GetValue("access_token"));
             try
@@ -407,18 +401,18 @@ namespace TandaSpreadsheetTool
               
                
                 mostRecentError = ex.Message;
-                UpdateStatus = NetworkStatus.ERROR;
+                
             }
 
             
-            UpdateStatus = NetworkStatus.IDLE;
+            
 
             return teams;
         }
     
         public async Task<JArray> GetStaff()
         {
-            UpdateStatus = NetworkStatus.BUSY;
+           
             client.DefaultRequestHeaders.Clear();
 
 
@@ -437,11 +431,11 @@ namespace TandaSpreadsheetTool
             {
             
                 mostRecentError = ex.Message;
-                UpdateStatus = NetworkStatus.ERROR;
+               
             }
 
             
-            UpdateStatus = NetworkStatus.IDLE;
+           
 
             return staff;
         }
@@ -476,26 +470,9 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        private NetworkStatus UpdateStatus
-        {
-            set
-            {
-                status = value;
-                
-                for (int i = 0; i<listeners.Count;i++)
-                {
-                    listeners[i].NetStatusChanged(status);
-                }
-            }
-        }       
+   
 
-        public NetworkStatus Status
-        {
-            get
-            {
-                return status;
-            }
-        }
+       
 
         public string LastNetErrMsg
         {

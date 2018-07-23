@@ -6,7 +6,7 @@ using System.Threading;
 
 namespace TandaSpreadsheetTool
 {
-    public partial class MainForm : Form
+    public partial class MainForm : Form, INotifiable
     {
         Networker networker;
         RosterManager builder;
@@ -15,17 +15,20 @@ namespace TandaSpreadsheetTool
         FormattedRoster[] rosters;
         StylerForm stylerForm;
         SpreadSheetStyle style;
-      
+
+        int notifierCount = 0;
+        
+        string spreadSheetPath = null;
 
         public MainForm()
         {
             InitializeComponent();
             //maybe add functionality to autosave styles
             style = SpreadSheetStyle.Default();
-            
-            networker = new Networker();
-            sheetBuilder = new SpreadSheetBuilder();
-            builder = new RosterManager(networker);
+          
+            networker = new Networker(this);
+            sheetBuilder = new SpreadSheetBuilder(this);
+            builder = new RosterManager(networker,this);
             
             Directory.CreateDirectory(RosterManager.Path + "Rosters");
             Directory.CreateDirectory(SpreadSheetBuilder.SpreadSheetPath);
@@ -33,7 +36,7 @@ namespace TandaSpreadsheetTool
             stylerForm = new StylerForm(style);
             stylerForm.Hide();
 
-          
+
             networker.LoadUsername();
 
 
@@ -248,8 +251,16 @@ namespace TandaSpreadsheetTool
                 }
                 sheetBuilder.SetTeams(builder.Teams);
             }
-            sheetBuilder.CreateWorkbook(rosters[selectedIndex], style);
+         
 
+            if (sheetBuilder.CreateWorkbook(rosters[selectedIndex], style, spreadSheetPath))
+            {
+                // sucessful
+            }
+            else
+            {
+                // failed
+            }
         }
 
         private void btnLogIn_Click(object sender, EventArgs e)
@@ -282,6 +293,18 @@ namespace TandaSpreadsheetTool
         {
             if (!bgThread.IsAlive)
             {
+                var dResult = excelSaveDialog.ShowDialog();
+
+                if (dResult == DialogResult.OK || dResult == DialogResult.Yes)
+                {
+                    spreadSheetPath = excelSaveDialog.FileName;
+
+                }
+                else
+                {
+                    return;
+                }
+
                 var selectedindex = lstBxRosters.SelectedIndex;
                 bgThread = new Thread(()=> BuildExcelSheet(selectedindex));
                 bgThread.Start();
@@ -293,21 +316,12 @@ namespace TandaSpreadsheetTool
 
         }
 
-         private void CreateExcel()
-        {
-            if (!sheetBuilder.TeamsSet)
-            {
-                var teams = builder.Teams;
-            }
-        }
-
         async private void RefreshStaffList()
         {
             await builder.GetStaff(true);
             await builder.GetTeams(true);
             Invoke(new MethodInvoker(EnableJsonBtn));
         }
-
 
         private void btnUpdateStaff_Click(object sender, EventArgs e)
         {
@@ -353,6 +367,104 @@ namespace TandaSpreadsheetTool
         {
             stylerForm.Close();
             stylerForm.Dispose();
+        }
+
+        public void EnableNotifiers()
+        {
+            notifierCount++;
+            if (notifierCount > 0)
+            {
+                if (SynchronizationContext.Current != null)
+                {
+                    ShowLogProgress();
+                }
+                else
+                {
+                    Invoke(new MethodInvoker(ShowLogProgress));
+                }
+               
+            }
+            
+        }
+
+        private void ShowLogProgress()
+        {
+            pgBarMain.Visible = true;
+            pgBarMain.Enabled = true;
+
+            lstBxNotifier.Enabled = true;
+        }
+
+        private void HideProgress()
+        {
+            pgBarMain.Enabled = false;
+            pgBarMain.Visible = false;
+            lstBxNotifier.Enabled = false;
+        }
+
+        public void DisableNotifiers()
+        {
+            notifierCount--;
+            if (notifierCount < 1)
+            {
+
+                if (SynchronizationContext.Current != null)
+                {
+                    HideProgress();
+                }
+                else
+                {
+                    Invoke(new MethodInvoker(HideProgress));
+                }
+               
+                notifierCount = 0;
+            }            
+        }
+
+        public void UpdateProgress(string progressUpdate, int progress = -1)
+        {
+           
+            if (SynchronizationContext.Current!=null)
+            {
+                UpdateProgressUI(progressUpdate, progress);
+            }
+            else
+            {
+                Invoke(new MethodInvoker(() => UpdateProgressUI(progressUpdate, progress)));
+            }
+            
+        }
+
+        private void UpdateProgressUI(string progressInfo, int progress = -1)
+        {
+            if (progress > -1 & progress < 101)
+            {
+                pgBarMain.Value = progress;
+            }
+
+            if (lstBxNotifier.Items.Count > 4)
+            {
+                lstBxNotifier.Items.RemoveAt(lstBxNotifier.Items.Count - 1);
+            }
+            lstBxNotifier.Items.Add(progressInfo);
+        }
+
+        public void RaiseMessage(string title, string message, MessageBoxIcon icon = MessageBoxIcon.Information)
+        {
+            MessageBox.Show(title, message, MessageBoxButtons.OK, icon);
+        }
+
+        public int ProcessCount
+        {
+            get
+            {
+                return notifierCount;
+            }
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

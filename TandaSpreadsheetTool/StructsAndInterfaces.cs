@@ -5,24 +5,26 @@ using System.Collections.Generic;
 
 namespace TandaSpreadsheetTool
 {
-    interface INetworkListener
-    {
-        
+   
 
-        void NetStatusChanged(NetworkStatus status);
-    }
-
-    public enum NetworkStatus
-    {
-        BUSY,IDLE,ERROR
-    }
+    
 
     public enum SpreadSheetDiv
     {
         NONE,WEEKLY,BIWEEKLY,MONTHLY
     }
     
+    public interface INotifiable
+    {
+        void EnableNotifiers();
+        void DisableNotifiers();
+        void UpdateProgress(string progressUpdate, int progress = -1);
+        int ProcessCount { get; }
+        void RaiseMessage(string title, string message,System.Windows.Forms.MessageBoxIcon icon = System.Windows.Forms.MessageBoxIcon.Information);
 
+    }
+
+    
 
     public class Roster
     {

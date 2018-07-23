@@ -50,6 +50,10 @@
             this.lblDateTo = new System.Windows.Forms.Label();
             this.lblInDate = new System.Windows.Forms.Label();
             this.btnGetJSON = new System.Windows.Forms.Button();
+            this.excelSaveDialog = new System.Windows.Forms.SaveFileDialog();
+            this.pgBarMain = new System.Windows.Forms.ProgressBar();
+            this.btnExit = new System.Windows.Forms.Button();
+            this.lstBxNotifier = new System.Windows.Forms.ListBox();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -144,7 +148,7 @@
             this.pnlMain.Controls.Add(this.lblDateTo);
             this.pnlMain.Controls.Add(this.lblInDate);
             this.pnlMain.Controls.Add(this.btnGetJSON);
-            this.pnlMain.Location = new System.Drawing.Point(15, 9);
+            this.pnlMain.Location = new System.Drawing.Point(12, 160);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(733, 142);
             this.pnlMain.TabIndex = 1;
@@ -271,13 +275,53 @@
             this.btnGetJSON.UseVisualStyleBackColor = true;
             this.btnGetJSON.Click += new System.EventHandler(this.btnTest_Click);
             // 
+            // excelSaveDialog
+            // 
+            this.excelSaveDialog.Filter = "Excel| *.xlsx";
+            // 
+            // pgBarMain
+            // 
+            this.pgBarMain.Enabled = false;
+            this.pgBarMain.Location = new System.Drawing.Point(346, 354);
+            this.pgBarMain.Name = "pgBarMain";
+            this.pgBarMain.Size = new System.Drawing.Size(232, 22);
+            this.pgBarMain.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+            this.pgBarMain.TabIndex = 3;
+            this.pgBarMain.Visible = false;
+            // 
+            // btnExit
+            // 
+            this.btnExit.Location = new System.Drawing.Point(595, 353);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(150, 23);
+            this.btnExit.TabIndex = 17;
+            this.btnExit.Text = "Quit";
+            this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+            // 
+            // lstBxNotifier
+            // 
+            this.lstBxNotifier.BackColor = System.Drawing.SystemColors.Control;
+            this.lstBxNotifier.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lstBxNotifier.Enabled = false;
+            this.lstBxNotifier.FormattingEnabled = true;
+            this.lstBxNotifier.Location = new System.Drawing.Point(12, 330);
+            this.lstBxNotifier.Name = "lstBxNotifier";
+            this.lstBxNotifier.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.lstBxNotifier.Size = new System.Drawing.Size(328, 65);
+            this.lstBxNotifier.TabIndex = 18;
+            this.lstBxNotifier.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(757, 168);
-            this.Controls.Add(this.pnlMain);
+            this.ClientSize = new System.Drawing.Size(757, 407);
+            this.Controls.Add(this.lstBxNotifier);
+            this.Controls.Add(this.btnExit);
+            this.Controls.Add(this.pgBarMain);
             this.Controls.Add(this.pnlLogIn);
+            this.Controls.Add(this.pnlMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "MainForm";
@@ -315,6 +359,10 @@
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnFormat;
         private System.Windows.Forms.Label lblLastUpdated;
+        private System.Windows.Forms.SaveFileDialog excelSaveDialog;
+        private System.Windows.Forms.Button btnExit;
+        private System.Windows.Forms.ListBox lstBxNotifier;
+        private System.Windows.Forms.ProgressBar pgBarMain;
     }
 }
 

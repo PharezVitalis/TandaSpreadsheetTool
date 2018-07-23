@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Windows.Forms;
 
 namespace TandaSpreadsheetTool
 {
@@ -30,6 +31,7 @@ namespace TandaSpreadsheetTool
 
         bool hasStaff = false;
         bool hasTeams = false;
+        INotifiable form;
 
         DateTime staffLstLastUpdated;
 
@@ -42,14 +44,14 @@ namespace TandaSpreadsheetTool
         }
 
 
-        public RosterManager(Networker networker, int maxTries = 5, int retryDelay = 500)
+        public RosterManager(Networker networker, INotifiable form, int maxTries = 5, int retryDelay = 500)
         {
             this.maxTries = maxTries;
 
             this.networker = networker;
 
             this.retryDelay = retryDelay;
-
+            this.form = form;
 
             staffObjs = new List<User>();
 
@@ -90,8 +92,12 @@ namespace TandaSpreadsheetTool
             var staffJArr = new JArray();
             var readFromFile = false;
 
+            form.EnableNotifiers();
+
             if (!forceUpdate & File.Exists(Path + "staff.json"))
             {
+                form.UpdateProgress("Reading Staff Data file");
+
                 var fileData = File.ReadAllText(Path + "staff.json");
                 try
                 {
@@ -99,10 +105,22 @@ namespace TandaSpreadsheetTool
                     staffLstLastUpdated = File.GetLastAccessTime(Path + "staff.json");
                     readFromFile = true;
                 }
-                catch
+                catch (Exception e)
                 {
-                    Console.WriteLine("ERROR GETTING STAFF FROM FILE");
-                    File.Delete(Path + "staff.json");
+                    form.UpdateProgress(" to Get Staff Data: " +e.Message);
+                    
+                    if (! (e.InnerException is IOException))
+                    {
+                        form.UpdateProgress("Removing corrupted file");
+                        File.Delete(Path + "staff.json");
+
+                    }
+                    else
+                    {
+                        form.UpdateProgress("Staff File data is inacessible");
+                    }
+
+                    form.UpdateProgress("Getting Staff Data From Network");
                     staffJArr = await networker.GetStaff();
                 }
 
@@ -111,13 +129,12 @@ namespace TandaSpreadsheetTool
             }
             else
             {
+                 form.UpdateProgress("Getting Staff Data From Network");
                 staffJArr = await networker.GetStaff();
             }
-
+            form.UpdateProgress("Building staff data");
             try
             {
-
-
                 for (int i = 0; i < staffJArr.Count; i++)
                 {
                     var staff = JsonConvert.DeserializeObject<User>(staffJArr[i].ToString());
@@ -129,15 +146,18 @@ namespace TandaSpreadsheetTool
                 }
             }
 
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine("error deserializing users");
+                form.UpdateProgress("Failed: Failed to get staff from Tanda API: "+e.Message);
+                
+                form.RaiseMessage("Error Building Roster", "Failed to Build Roster, the file from Tanda is Invalid. ");
                 hasStaff = false;
                 return false;
             }
 
             if (!readFromFile)
             {
+                form.UpdateProgress("Saving staff data");
                 string[] removedFields = { "date_of_birth", "passcode" , "user_levels", "preferred_hours", "active", "email",
                     "photo", "phone","normalised_phone","time_zone", "created_at", "employment_start_date", "employee_id",
                 "department_ids","award_template_id", "award_tag_ids", "report_department_id",  "managed_department_ids",
@@ -151,10 +171,19 @@ namespace TandaSpreadsheetTool
                     RemoveFields(currentToken, removedFields);
 
                 }
-                File.WriteAllText(Path + "staff.json", staffJArr.ToString());
+                try
+                {
+                    File.WriteAllText(Path + "staff.json", staffJArr.ToString());
+                }
+                catch(Exception e)
+                {
+                    form.UpdateProgress("Failed to save file: " + e.Message);
+                }
+                
             }
 
-
+            form.UpdateProgress("Finished Getting Staff");
+            form.DisableNotifiers();
 
             hasStaff = true;
             return true;
@@ -168,7 +197,6 @@ namespace TandaSpreadsheetTool
                 return staffLstLastUpdated.ToShortDateString();
             }
         }
-
 
         private void RemoveFields(JToken token, string[] fields)
         {
@@ -197,18 +225,26 @@ namespace TandaSpreadsheetTool
             var teamsArr = new JArray();
             bool readFromFile = false;
 
+            form.EnableNotifiers();
+           
+
             if (!forceUpdate & File.Exists(Path + "teams.json"))
             {
+                form.UpdateProgress("Getting Team Data from File");
+
                 var fileData = File.ReadAllText(Path + "teams.json");
                 try
                 {
                     teamsArr = JArray.Parse(fileData);
                     readFromFile = true;
                 }
-                catch
+                catch (Exception e)
                 {
-                    Console.WriteLine("ERROR GETTING TEAMS FROM FILE");
-                    File.Delete(Path + "teams.json");
+                    form.UpdateProgress("Failed to get team data from file " +e.Message);
+
+                 
+                   
+                    form.UpdateProgress("Getting team data from network");
                     teamsArr = await networker.GetStaff();
                 }
 
@@ -217,11 +253,12 @@ namespace TandaSpreadsheetTool
             }
             else
             {
+                form.UpdateProgress("Getting team data from network");
                 teamsArr = await networker.GetDepartments();
             }
 
 
-
+            form.UpdateProgress("Building team data");
 
             try
             {
@@ -235,18 +272,30 @@ namespace TandaSpreadsheetTool
                     }
                 }
             }
-            catch
+            catch(Exception e)
             {
-                Console.WriteLine("Error deserializing teams");
+                form.UpdateProgress("Failed, data formats changed or incorrect: "+e.Message);
+
                 hasTeams = false;
                 return false;
             }
 
             if (!readFromFile)
             {
-                File.WriteAllText(Path + "teams.json", teamsArr.ToString());
+                form.UpdateProgress("Writing team data to file");
+                try
+                {
+                    File.WriteAllText(Path + "teams.json", teamsArr.ToString());
+                }
+                catch (Exception e)
+                {
+                    form.UpdateProgress("Failed to save file: " + e.Message);
+                    
+                }
+                
             }
-
+            form.UpdateProgress("Finished formatting team data");
+            form.DisableNotifiers();
             hasTeams = true;
             return true;
         }
@@ -262,10 +311,28 @@ namespace TandaSpreadsheetTool
 
         }
 
-        public void LoadRosters( bool getStaffData = true)
+        public void LoadRosters( bool getStaffFileData = true)
         {
             var rosterPath = Path + "Rosters";
+
+            form.EnableNotifiers();
+            form.UpdateProgress("Getting roster data files.");
+
             var fileNames = Directory.GetFiles(rosterPath);
+
+            if (getStaffFileData)
+            {
+                // safe not to await as file read times should be quick - it won't get from network
+                if (File.Exists(Path + "staff.json"))
+                {
+                    GetStaff();
+                }
+                if (File.Exists(Path + "teams.json"))
+                {
+                    GetTeams();
+                }
+            }
+
 
             for (int i = 0; i < fileNames.Length; i++)
             {
@@ -283,27 +350,18 @@ namespace TandaSpreadsheetTool
                             var item = (FormattedRoster)bf.Deserialize(stream);
                             builtRosters.Add(item);
                         }
-                        if (getStaffData)
-                        {
-                            // safe not to await as file read times should be quick - it won't get from network
-                            if (File.Exists(Path + "staff.json"))
-                            {
-                                GetStaff();
-                            }
-                            if (File.Exists(Path + "teams.json"))
-                            {
-                                GetTeams();
-                            }
-                        }
+                       
                     }
-                    catch(Exception e)
+                    catch
                     {
-                        Console.WriteLine("Failed to read file " +e.Message);
+                        form.UpdateProgress("Failed to Read file: " + file);
 
                         continue;
                     }
 
                 }
+
+
             }
         }
 
@@ -316,10 +374,15 @@ namespace TandaSpreadsheetTool
             dateTo = SetToTime(dateTo, 23, 59);
 
             int weeks = (int)(dateTo - dateFrom).TotalDays / 7;
-
+            //wrong use a linked list implementation then trim off excess days.
             var rosters = (dateFrom.DayOfWeek != DayOfWeek.Monday) ? new JObject[weeks + 1] : new JObject[weeks];
 
             var currentDate = dateFrom;
+
+            form.EnableNotifiers();
+            form.UpdateProgress("Getting roster data.");
+
+
 
             for (int i = 0; i < weeks; i++)
             {
@@ -337,8 +400,10 @@ namespace TandaSpreadsheetTool
             if (!hasTeams)
             {
                 currentTries = 0;
+               
                 while (true)
                 {
+                    form.UpdateProgress("Getting team data: Attempt " + (currentTries+1) + " of " + maxTries);
                     await GetTeams();
 
                     currentTries++;
@@ -350,6 +415,8 @@ namespace TandaSpreadsheetTool
                         }
                         else
                         {
+                            form.UpdateProgress("Failed to get team data");
+                            form.RaiseMessage("Failed to get teams", "Failed to get team data", MessageBoxIcon.Error);
                             return null;
                         }
                     }
@@ -360,12 +427,16 @@ namespace TandaSpreadsheetTool
                 }
             }
 
+            form.UpdateProgress("Got team data");
 
             if (!hasStaff)
             {
                 currentTries = 0;
+
+               
                 while (true)
                 {
+                    form.UpdateProgress("Getting staff data: Attempt " + (currentTries + 1) + " of " + maxTries);
                     await GetStaff();
                     currentTries++;
                     if (!hasStaff)
@@ -376,6 +447,8 @@ namespace TandaSpreadsheetTool
                         }
                         else
                         {
+                            form.UpdateProgress("Failed to get staff data");
+                            form.RaiseMessage("Failed to get staff", "Failed to get staff data", MessageBoxIcon.Warning);
                             return null;
                         }
                     }
@@ -387,7 +460,7 @@ namespace TandaSpreadsheetTool
             }
 
 
-
+            form.UpdateProgress("Building roster");
 
 
 
@@ -401,8 +474,10 @@ namespace TandaSpreadsheetTool
                 }
             }
 
-            catch
+            catch (Exception e)
             {
+                form.UpdateProgress("Failed: failed to format roster data: " + e.Message);
+                form.RaiseMessage("Failed to format Roster", "Failed to format roster data: " + e.Message, MessageBoxIcon.Warning);
                 return null;
             }
             var outRoster = CreateRoster(rosterObjs, dateFrom,dateTo);
@@ -413,6 +488,8 @@ namespace TandaSpreadsheetTool
 
             if (save)
             {
+                form.UpdateProgress("Saving to file");
+
                 var bf = new BinaryFormatter();
 
                 var ms = new MemoryStream();
@@ -420,12 +497,21 @@ namespace TandaSpreadsheetTool
 
                 var bytes = ms.ToArray();
                 var path = GenRosterPath(outRoster);
-
-                File.WriteAllBytes(path, bytes);
+                try
+                {
+                    File.WriteAllBytes(path, bytes);
+                }
+                catch (Exception e)
+                {
+                    form.UpdateProgress("Failed to save file: " + e.Message);
+                }
+                
                 ms.Dispose();
             }
-
+           
             builtRosters.Add(outRoster);
+            form.UpdateProgress("Finished Building Roster");
+            form.DisableNotifiers();
 
             return outRoster;
         }

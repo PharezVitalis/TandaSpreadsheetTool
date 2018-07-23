@@ -17,9 +17,11 @@ namespace TandaSpreadsheetTool
 
         Dictionary<string, XSSFCellStyle> teamColourDict;
         Dictionary<string, XSSFCellStyle> styleDict;
+        INotifiable form;
 
-        public SpreadSheetBuilder()
+        public SpreadSheetBuilder(INotifiable form)
         {
+            this.form = form;
             teamColourDict = new Dictionary<string, XSSFCellStyle>();
             styleDict = new Dictionary<string, XSSFCellStyle>();
         }
@@ -40,13 +42,14 @@ namespace TandaSpreadsheetTool
         }
 
 
-        public void CreateWorkbook(FormattedRoster roster, SpreadSheetStyle style,  string path  = null, string fileName = null)
+        public bool CreateWorkbook(FormattedRoster roster, SpreadSheetStyle style,  string path  = null)
         {
             var workBook = (IWorkbook)new XSSFWorkbook();
-            
-          
-            
-            
+
+            form.EnableNotifiers();
+            form.UpdateProgress("Building Spreadsheet...");
+
+            form.UpdateProgress("Building styles");
             BuildStyleDicts(ref style, workBook);
             
             var sheet = (ISheet)null;
@@ -97,7 +100,7 @@ namespace TandaSpreadsheetTool
             }
 
             DateTime currentDate;
-
+            form.UpdateProgress("Building cell data");
             switch (nOfDaysToAdd)
             {
                 case 0:
@@ -106,7 +109,7 @@ namespace TandaSpreadsheetTool
                     break;
 
                 case -1:
-                    return;
+                    return false;
 
                 case 30:
                    
@@ -145,34 +148,33 @@ namespace TandaSpreadsheetTool
                     
             }
 
-
+            form.UpdateProgress("Saving File");
             if (path == null)
             {
-                path = SpreadSheetPath;
+                path = SpreadSheetPath + "Roster " + roster.start.ToString("dd-MM-yy") + " to " + roster.finish.ToString("dd-MM-yy") + ".xlsx"; 
             }
-            // add try- catch here
-            
-            if (fileName == null)
-            {
-                fileName = "Roster " + roster.start.ToString("dd-MM-yy") + " to " + roster.finish.ToString("dd-MM-yy") + ".xlsx";
-            }
+           
             try
             {
-                var fullPath = Path.Combine(path, fileName);
 
               
 
-                using (var fs = new FileStream(fullPath, FileMode.Create, FileAccess.Write))
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                 {
                     workBook.Write(fs);
                 }
 
             }
-            catch
+            catch(Exception e)
             {
-
+                form.UpdateProgress("Failed to save file: " + e.Message);
+                form.RaiseMessage("Failed To save Excel File", "Excel File failed to save: " + e.Message);
+                    return false;
             }
             workBook.Close();
+            form.UpdateProgress("Finished creating excel sheet at: " + path);
+            form.DisableNotifiers();
+            return true;
         }
 
         private void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet, IWorkbook workbook, 
