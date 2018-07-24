@@ -368,32 +368,44 @@ namespace TandaSpreadsheetTool
         public async Task<FormattedRoster> BuildRoster(DateTime dateFrom, DateTime dateTo, bool save = true)
         {
             var currentTries = 0;
-
+            form.EnableNotifiers();
+            form.UpdateProgress("Getting roster data.");
 
             dateFrom = SetToTime(dateFrom, 0, 0);
             dateTo = SetToTime(dateTo, 23, 59);
 
-            int weeks = (int)(dateTo - dateFrom).TotalDays / 7;
-            //wrong use a linked list implementation then trim off excess days.
-            var rosters = (dateFrom.DayOfWeek != DayOfWeek.Monday) ? new JObject[weeks + 1] : new JObject[weeks];
+           
+            
+        
 
-            var currentDate = dateFrom;
+            var startDate = dateFrom;
+            startDate = SetToTime(startDate, 0, 00);
 
-            form.EnableNotifiers();
-            form.UpdateProgress("Getting roster data.");
+            var endDate = dateTo;
+            endDate = SetToTime(endDate, 23, 59);
+
+            while (endDate.DayOfWeek!= DayOfWeek.Monday)
+            {
+                endDate = endDate.AddDays(1);
+            }
+
+            while(startDate.DayOfWeek != DayOfWeek.Monday)
+            {
+                startDate = startDate.AddDays(-1);
+            }
+
+            int weeks = (int)(endDate - startDate).TotalDays / 7;
+
+            var rosters =  new JObject[weeks];
 
 
 
             for (int i = 0; i < weeks; i++)
             {
-                if(i == 3)
-                {
-                    Console.WriteLine("i is 3 my g");
-                }
 
-                rosters[i] = await networker.GetRooster(currentDate);
+                rosters[i] = await networker.GetRooster(startDate);
 
-                currentDate = currentDate.AddDays(7);
+                startDate = startDate.AddDays(7);
 
             }
             if (dateFrom.DayOfWeek != DayOfWeek.Monday)
