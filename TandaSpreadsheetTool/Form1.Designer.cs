@@ -148,7 +148,7 @@
             this.pnlMain.Controls.Add(this.lblDateTo);
             this.pnlMain.Controls.Add(this.lblInDate);
             this.pnlMain.Controls.Add(this.btnGetJSON);
-            this.pnlMain.Location = new System.Drawing.Point(12, 160);
+            this.pnlMain.Location = new System.Drawing.Point(15, 9);
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(733, 142);
             this.pnlMain.TabIndex = 1;
@@ -282,7 +282,7 @@
             // pgBarMain
             // 
             this.pgBarMain.Enabled = false;
-            this.pgBarMain.Location = new System.Drawing.Point(346, 354);
+            this.pgBarMain.Location = new System.Drawing.Point(346, 183);
             this.pgBarMain.Name = "pgBarMain";
             this.pgBarMain.Size = new System.Drawing.Size(232, 22);
             this.pgBarMain.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
@@ -291,7 +291,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(595, 353);
+            this.btnExit.Location = new System.Drawing.Point(595, 182);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(150, 23);
             this.btnExit.TabIndex = 17;
@@ -305,10 +305,10 @@
             this.lstBxNotifier.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lstBxNotifier.Enabled = false;
             this.lstBxNotifier.FormattingEnabled = true;
-            this.lstBxNotifier.Location = new System.Drawing.Point(12, 330);
+            this.lstBxNotifier.Location = new System.Drawing.Point(12, 160);
             this.lstBxNotifier.Name = "lstBxNotifier";
             this.lstBxNotifier.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.lstBxNotifier.Size = new System.Drawing.Size(328, 65);
+            this.lstBxNotifier.Size = new System.Drawing.Size(320, 65);
             this.lstBxNotifier.TabIndex = 18;
             this.lstBxNotifier.TabStop = false;
             // 
@@ -316,7 +316,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(757, 407);
+            this.ClientSize = new System.Drawing.Size(757, 241);
             this.Controls.Add(this.lstBxNotifier);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.pgBarMain);

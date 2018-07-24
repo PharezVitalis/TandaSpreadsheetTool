@@ -82,7 +82,7 @@ namespace TandaSpreadsheetTool
                 colWidth = 22,
                 font = "Calibri",
                 fontSize = 11,
-                divBy = SpreadSheetDiv.NONE,
+                divBy = SpreadSheetDiv.WEEKLY,
                 useShiftLegends = false,
                 useTeamLegends = false            
             };

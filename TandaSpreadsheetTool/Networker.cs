@@ -77,6 +77,7 @@ namespace TandaSpreadsheetTool
                             if (str == "Failed")
                             {
                                 form.UpdateProgress("Failed to login, access denied");
+                                form.DisableNotifiers();
                                 return false;
                             }
 
@@ -89,6 +90,7 @@ namespace TandaSpreadsheetTool
                     {
                         form.UpdateProgress("Failed to get token");// problem where use can't remove local data
                         mostRecentError = e.Message;
+                        form.DisableNotifiers();
                         return false;
                     }
                 }
@@ -97,6 +99,7 @@ namespace TandaSpreadsheetTool
             }
             else
             {
+                form.DisableNotifiers();
                 return false;
             }
             form.DisableNotifiers();
@@ -342,13 +345,13 @@ namespace TandaSpreadsheetTool
             }
             catch (Exception ex)
             {
-                
+                form.DisableNotifiers();
                 
                 return false;
             }
-           
 
 
+            form.DisableNotifiers();
             return true;
 
         }

@@ -106,6 +106,7 @@ namespace TandaSpreadsheetTool
 
             DateTime currentDate;
             form.UpdateProgress("Building cell data");
+           
             switch (nOfDaysToAdd)
             {
                 case 0:
@@ -129,6 +130,8 @@ namespace TandaSpreadsheetTool
                            
                         }
                         sheet = workBook.CreateSheet(fromDate.ToString("dd-MM-yy") + " to " + toDate.ToString("dd-MM-yy"));
+                       
+                        
                         CreateRosterTable(roster, style, sheet, workBook, fromDate, toDate.AddDays(-1),(fromDate-roster.start).Days-1);
                     }
                     break;
@@ -143,7 +146,9 @@ namespace TandaSpreadsheetTool
                             nextDate = roster.finish;
                         }
                         var worksheetName = currentDate.ToString("dd-MM-yy") + " to " + nextDate.ToString("dd-MM-yy");
+                       
                         sheet = workBook.CreateSheet(worksheetName);
+                        
                         CreateRosterTable(roster, style, sheet, workBook, currentDate, nextDate,(currentDate-roster.start).Days);
                         currentDate = nextDate.AddDays(1);
                     }

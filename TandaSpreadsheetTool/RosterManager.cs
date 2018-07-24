@@ -43,7 +43,6 @@ namespace TandaSpreadsheetTool
             }
         }
 
-
         public RosterManager(Networker networker, INotifiable form, int maxTries = 5, int retryDelay = 500)
         {
             this.maxTries = maxTries;
@@ -70,7 +69,6 @@ namespace TandaSpreadsheetTool
                 return teamObjs.ToArray();
             }
         }
-      
 
         public string LastStaffUpdate
         {
@@ -151,6 +149,7 @@ namespace TandaSpreadsheetTool
                 form.UpdateProgress("Failed: Failed to get staff from Tanda API: "+e.Message);
                 
                 form.RaiseMessage("Error Building Roster", "Failed to Build Roster, the file from Tanda is Invalid. ");
+                form.DisableNotifiers();
                 hasStaff = false;
                 return false;
             }
@@ -275,7 +274,7 @@ namespace TandaSpreadsheetTool
             catch(Exception e)
             {
                 form.UpdateProgress("Failed, data formats changed or incorrect: "+e.Message);
-
+                form.DisableNotifiers();
                 hasTeams = false;
                 return false;
             }
@@ -363,6 +362,7 @@ namespace TandaSpreadsheetTool
 
 
             }
+            form.DisableNotifiers();
         }
 
         public async Task<FormattedRoster> BuildRoster(DateTime dateFrom, DateTime dateTo, bool save = true)
@@ -433,6 +433,7 @@ namespace TandaSpreadsheetTool
                         {
                             form.UpdateProgress("Failed to get team data");
                             form.RaiseMessage("Failed to get teams", "Failed to get team data", MessageBoxIcon.Error);
+                            form.DisableNotifiers();
                             return null;
                         }
                     }
@@ -441,9 +442,10 @@ namespace TandaSpreadsheetTool
                         break;
                     }
                 }
+                form.UpdateProgress("Got team data");
             }
 
-            form.UpdateProgress("Got team data");
+           
 
             if (!hasStaff)
             {
@@ -465,6 +467,7 @@ namespace TandaSpreadsheetTool
                         {
                             form.UpdateProgress("Failed to get staff data");
                             form.RaiseMessage("Failed to get staff", "Failed to get staff data", MessageBoxIcon.Warning);
+                            form.DisableNotifiers();
                             return null;
                         }
                     }
@@ -473,6 +476,7 @@ namespace TandaSpreadsheetTool
                         break;
                     }
                 }
+                form.UpdateProgress("Got Staff data");
             }
 
 
@@ -494,6 +498,7 @@ namespace TandaSpreadsheetTool
             {
                 form.UpdateProgress("Failed: failed to format roster data: " + e.Message);
                 form.RaiseMessage("Failed to format Roster", "Failed to format roster data: " + e.Message, MessageBoxIcon.Warning);
+                form.DisableNotifiers();
                 return null;
             }
             var outRoster = CreateRoster(rosterObjs, dateFrom,dateTo);
@@ -631,8 +636,6 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        
-
         private FormattedRoster CreateRoster(Roster[] rosters,DateTime dateFrom, DateTime dateTo)
         {
 
@@ -736,16 +739,12 @@ namespace TandaSpreadsheetTool
             return roster;
         }
 
-
         public FormattedRoster[] GetAllRosters()
         {
 
             return builtRosters.ToArray();
 
         }
-
-
-
 
     }
 }

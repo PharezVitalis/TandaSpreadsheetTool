@@ -374,32 +374,20 @@ namespace TandaSpreadsheetTool
             notifierCount++;
             if (notifierCount > 0)
             {
-                if (SynchronizationContext.Current != null)
+                if (SynchronizationContext.Current == null)
                 {
-                    ShowLogProgress();
+                    Invoke(new MethodInvoker(EnableNotifiers));
+                    notifierCount--;
+                    return;
                 }
-                else
-                {
-                    Invoke(new MethodInvoker(ShowLogProgress));
-                }
-               
+
+                pgBarMain.Visible = true;
+                pgBarMain.Enabled = true;
+
+                lstBxNotifier.Enabled = true;
+
             }
             
-        }
-
-        private void ShowLogProgress()
-        {
-            pgBarMain.Visible = true;
-            pgBarMain.Enabled = true;
-
-            lstBxNotifier.Enabled = true;
-        }
-
-        private void HideProgress()
-        {
-            pgBarMain.Enabled = false;
-            pgBarMain.Visible = false;
-            lstBxNotifier.Enabled = false;
         }
 
         public void DisableNotifiers()
@@ -408,15 +396,15 @@ namespace TandaSpreadsheetTool
             if (notifierCount < 1)
             {
 
-                if (SynchronizationContext.Current != null)
+                if (SynchronizationContext.Current == null)
                 {
-                    HideProgress();
+                    Invoke(new MethodInvoker((DisableNotifiers)));
+                  
+                    return;
                 }
-                else
-                {
-                    Invoke(new MethodInvoker(HideProgress));
-                }
-               
+                pgBarMain.Enabled = false;
+                pgBarMain.Visible = false;
+                lstBxNotifier.Enabled = false;
                 notifierCount = 0;
             }            
         }
@@ -424,19 +412,12 @@ namespace TandaSpreadsheetTool
         public void UpdateProgress(string progressUpdate, int progress = -1)
         {
            
-            if (SynchronizationContext.Current!=null)
+            if (SynchronizationContext.Current==null)
             {
-                UpdateProgressUI(progressUpdate, progress);
+                Invoke(new MethodInvoker(() => UpdateProgress(progressUpdate, progress)));
+                return;
             }
-            else
-            {
-                Invoke(new MethodInvoker(() => UpdateProgressUI(progressUpdate, progress)));
-            }
-            
-        }
-
-        private void UpdateProgressUI(string progressInfo, int progress = -1)
-        {
+           
             if (progress > -1 & progress < 101)
             {
                 pgBarMain.Value = progress;
@@ -444,13 +425,21 @@ namespace TandaSpreadsheetTool
 
             if (lstBxNotifier.Items.Count > 4)
             {
-                lstBxNotifier.Items.RemoveAt(lstBxNotifier.Items.Count - 1);
+                lstBxNotifier.Items.RemoveAt(0);
             }
-            lstBxNotifier.Items.Add(progressInfo);
+            lstBxNotifier.Items.Add(progressUpdate);
         }
+
+       
 
         public void RaiseMessage(string title, string message, MessageBoxIcon icon = MessageBoxIcon.Information)
         {
+            if (SynchronizationContext.Current == null)
+            {
+                Invoke(new MethodInvoker(() => RaiseMessage(title, message, icon)));
+                return;
+            }
+
             MessageBox.Show(title, message, MessageBoxButtons.OK, icon);
         }
 
