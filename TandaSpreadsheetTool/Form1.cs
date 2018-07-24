@@ -31,7 +31,7 @@ namespace TandaSpreadsheetTool
             builder = new RosterManager(networker,this);
             
             Directory.CreateDirectory(RosterManager.Path + "Rosters");
-            Directory.CreateDirectory(SpreadSheetBuilder.SpreadSheetPath);
+          
 
             stylerForm = new StylerForm(style);
             stylerForm.Hide();

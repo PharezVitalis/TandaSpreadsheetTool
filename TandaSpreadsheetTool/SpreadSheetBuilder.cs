@@ -56,6 +56,11 @@ namespace TandaSpreadsheetTool
 
             var nOfDaysToAdd = -1;
 
+            if (path == null)
+            {
+                path = SpreadSheetPath + "Roster " + roster.start.ToString("dd-MM-yy") + " to " + roster.finish.ToString("dd-MM-yy") + ".xlsx";
+            }
+
             switch (style.divBy)
             {
                 
@@ -149,10 +154,7 @@ namespace TandaSpreadsheetTool
             }
 
             form.UpdateProgress("Saving File");
-            if (path == null)
-            {
-                path = SpreadSheetPath + "Roster " + roster.start.ToString("dd-MM-yy") + " to " + roster.finish.ToString("dd-MM-yy") + ".xlsx"; 
-            }
+           
            
             try
             {

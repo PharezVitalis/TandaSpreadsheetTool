@@ -386,6 +386,10 @@ namespace TandaSpreadsheetTool
 
             for (int i = 0; i < weeks; i++)
             {
+                if(i == 3)
+                {
+                    Console.WriteLine("i is 3 my g");
+                }
 
                 rosters[i] = await networker.GetRooster(currentDate);
 

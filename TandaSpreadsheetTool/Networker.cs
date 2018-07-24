@@ -370,7 +370,10 @@ namespace TandaSpreadsheetTool
                  payload = await httpresponse.Content.ReadAsStringAsync();
 
                 roster = JObject.Parse(payload);
-               
+               if (!httpresponse.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Failed to get roster from : " + containingDate.ToShortDateString());
+                }
             }
             catch (Exception ex)
             {
