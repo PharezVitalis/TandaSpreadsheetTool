@@ -53,7 +53,7 @@ namespace TandaSpreadsheetTool
             BuildStyleDicts(ref style, workBook);
             
             var sheet = (ISheet)null;
-
+            
             var nOfDaysToAdd = -1;
 
             if (path == null)
@@ -176,6 +176,7 @@ namespace TandaSpreadsheetTool
             {
                 form.UpdateProgress("Failed to save file: " + e.Message);
                 form.RaiseMessage("Failed To save Excel File", "Excel File failed to save: " + e.Message);
+                form.DisableNotifiers();
                     return false;
             }
             workBook.Close();
@@ -422,14 +423,23 @@ namespace TandaSpreadsheetTool
             var fieldFont = wBk.CreateFont();
             fieldFont.FontName = style.font; ;
             fieldFont.FontHeight = style.fontSize;
+            fieldFont.IsBold = style.boldFs;
+            fieldFont.IsItalic = style.italicFs;
+            fieldFont.Underline = style.underLineFs ? FontUnderlineType.Single : FontUnderlineType.None;
+            fieldFont.IsStrikeout = style.strikeThroughFs;
+
+
 
             var nextStyle = (XSSFCellStyle)null;
 
-            // add font size options?
+
+
+            
             var headingFont = wBk.CreateFont();
             headingFont.IsBold = style.boldHeadings;
             headingFont.FontHeight = style.fontSize;
             headingFont.FontName = style.font;
+            
 
             var titleFont = wBk.CreateFont();
             titleFont.IsBold = true;

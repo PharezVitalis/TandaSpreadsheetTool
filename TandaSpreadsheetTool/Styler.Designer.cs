@@ -37,8 +37,6 @@
             this.pnlDayName = new System.Windows.Forms.Panel();
             this.pnlDate = new System.Windows.Forms.Panel();
             this.pnlMinBright = new System.Windows.Forms.Panel();
-            this.lstBxFont = new System.Windows.Forms.ListBox();
-            this.lblFont = new System.Windows.Forms.Label();
             this.btnNameHeadCl = new System.Windows.Forms.Button();
             this.btnNameFieldCL = new System.Windows.Forms.Button();
             this.btnRotaFieldCl = new System.Windows.Forms.Button();
@@ -56,11 +54,14 @@
             this.lblBrightness = new System.Windows.Forms.Label();
             this.btnAccept = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.cD = new System.Windows.Forms.ColorDialog();
+            this.clrD = new System.Windows.Forms.ColorDialog();
             this.lblColWidth = new System.Windows.Forms.Label();
             this.nUDColWidth = new System.Windows.Forms.NumericUpDown();
             this.cBxDiv = new System.Windows.Forms.ComboBox();
             this.btnDefault = new System.Windows.Forms.Button();
+            this.lblSheetDiv = new System.Windows.Forms.Label();
+            this.fontD = new System.Windows.Forms.FontDialog();
+            this.btnFonts = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nUDColWidth)).BeginInit();
             this.SuspendLayout();
@@ -143,27 +144,10 @@
             // 
             this.pnlMinBright.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlMinBright.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.pnlMinBright.Location = new System.Drawing.Point(33, 118);
+            this.pnlMinBright.Location = new System.Drawing.Point(23, 107);
             this.pnlMinBright.Name = "pnlMinBright";
             this.pnlMinBright.Size = new System.Drawing.Size(199, 25);
             this.pnlMinBright.TabIndex = 5;
-            // 
-            // lstBxFont
-            // 
-            this.lstBxFont.FormattingEnabled = true;
-            this.lstBxFont.Location = new System.Drawing.Point(315, 91);
-            this.lstBxFont.Name = "lstBxFont";
-            this.lstBxFont.Size = new System.Drawing.Size(139, 147);
-            this.lstBxFont.TabIndex = 6;
-            // 
-            // lblFont
-            // 
-            this.lblFont.AutoSize = true;
-            this.lblFont.Location = new System.Drawing.Point(312, 75);
-            this.lblFont.Name = "lblFont";
-            this.lblFont.Size = new System.Drawing.Size(60, 13);
-            this.lblFont.TabIndex = 7;
-            this.lblFont.Text = "Font Family";
             // 
             // btnNameHeadCl
             // 
@@ -290,10 +274,10 @@
             // tkBarBrightness
             // 
             this.tkBarBrightness.LargeChange = 10;
-            this.tkBarBrightness.Location = new System.Drawing.Point(38, 149);
+            this.tkBarBrightness.Location = new System.Drawing.Point(228, 107);
             this.tkBarBrightness.Maximum = 100;
             this.tkBarBrightness.Name = "tkBarBrightness";
-            this.tkBarBrightness.Size = new System.Drawing.Size(196, 45);
+            this.tkBarBrightness.Size = new System.Drawing.Size(164, 45);
             this.tkBarBrightness.SmallChange = 5;
             this.tkBarBrightness.TabIndex = 22;
             this.tkBarBrightness.Scroll += new System.EventHandler(this.tkBarBrightness_Scroll);
@@ -362,7 +346,7 @@
             "Weekly",
             "Biweekly",
             "Monthly"});
-            this.cBxDiv.Location = new System.Drawing.Point(90, 247);
+            this.cBxDiv.Location = new System.Drawing.Point(128, 251);
             this.cBxDiv.MaxLength = 8;
             this.cBxDiv.Name = "cBxDiv";
             this.cBxDiv.Size = new System.Drawing.Size(142, 21);
@@ -378,6 +362,25 @@
             this.btnDefault.UseVisualStyleBackColor = true;
             this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
             // 
+            // lblSheetDiv
+            // 
+            this.lblSheetDiv.AutoSize = true;
+            this.lblSheetDiv.Location = new System.Drawing.Point(25, 254);
+            this.lblSheetDiv.Name = "lblSheetDiv";
+            this.lblSheetDiv.Size = new System.Drawing.Size(83, 13);
+            this.lblSheetDiv.TabIndex = 30;
+            this.lblSheetDiv.Text = "Divide Sheet By";
+            // 
+            // btnFonts
+            // 
+            this.btnFonts.Location = new System.Drawing.Point(315, 196);
+            this.btnFonts.Name = "btnFonts";
+            this.btnFonts.Size = new System.Drawing.Size(75, 23);
+            this.btnFonts.TabIndex = 31;
+            this.btnFonts.Text = "Fonts";
+            this.btnFonts.UseVisualStyleBackColor = true;
+            this.btnFonts.Click += new System.EventHandler(this.btnFonts_Click);
+            // 
             // StylerForm
             // 
             this.AcceptButton = this.btnAccept;
@@ -385,6 +388,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(466, 516);
+            this.Controls.Add(this.btnFonts);
+            this.Controls.Add(this.lblSheetDiv);
             this.Controls.Add(this.btnDefault);
             this.Controls.Add(this.cBxDiv);
             this.Controls.Add(this.nUDColWidth);
@@ -406,8 +411,6 @@
             this.Controls.Add(this.btnRotaFieldCl);
             this.Controls.Add(this.btnNameFieldCL);
             this.Controls.Add(this.btnNameHeadCl);
-            this.Controls.Add(this.lblFont);
-            this.Controls.Add(this.lstBxFont);
             this.Controls.Add(this.pnlMinBright);
             this.Controls.Add(this.pnlDate);
             this.Controls.Add(this.pnlDayName);
@@ -437,8 +440,6 @@
         private System.Windows.Forms.Panel pnlDayName;
         private System.Windows.Forms.Panel pnlDate;
         private System.Windows.Forms.Panel pnlMinBright;
-        private System.Windows.Forms.ListBox lstBxFont;
-        private System.Windows.Forms.Label lblFont;
         private System.Windows.Forms.Button btnNameHeadCl;
         private System.Windows.Forms.Button btnNameFieldCL;
         private System.Windows.Forms.Button btnRotaFieldCl;
@@ -456,10 +457,13 @@
         private System.Windows.Forms.Label lblBrightness;
         private System.Windows.Forms.Button btnAccept;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.ColorDialog cD;
+        private System.Windows.Forms.ColorDialog clrD;
         private System.Windows.Forms.Label lblColWidth;
         private System.Windows.Forms.NumericUpDown nUDColWidth;
         private System.Windows.Forms.ComboBox cBxDiv;
         private System.Windows.Forms.Button btnDefault;
+        private System.Windows.Forms.Label lblSheetDiv;
+        private System.Windows.Forms.FontDialog fontD;
+        private System.Windows.Forms.Button btnFonts;
     }
 }

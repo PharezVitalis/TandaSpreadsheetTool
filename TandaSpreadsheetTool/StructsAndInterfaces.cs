@@ -59,8 +59,13 @@ namespace TandaSpreadsheetTool
         public bool useTeamCls;
         public string font;
         public int fontSize;
-        bool useTeamLegends;
-        bool useShiftLegends;
+        public bool boldFs;
+        public bool italicFs;
+        public bool strikeThroughFs;
+        public bool underLineFs;
+
+        public bool useTeamLegends;
+        public bool useShiftLegends;
         public SpreadSheetDiv divBy;
 
         
@@ -80,11 +85,15 @@ namespace TandaSpreadsheetTool
                 dayNameCl = new byte[] { 56, 118, 29 },
                 dateCl = new byte[] { 147, 196, 125 },
                 colWidth = 22,
-                font = "Calibri",
+                font = "Arial",
                 fontSize = 11,
                 divBy = SpreadSheetDiv.WEEKLY,
                 useShiftLegends = false,
-                useTeamLegends = false            
+                useTeamLegends = false,
+                boldFs = false,
+                italicFs = false,
+                strikeThroughFs = false,
+                underLineFs = false            
             };
            
 

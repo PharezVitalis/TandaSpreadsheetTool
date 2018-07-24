@@ -22,17 +22,8 @@ namespace TandaSpreadsheetTool
         {
             InitializeComponent();
             currentStyle = style;
-            SetFormToStyle();
-           
             
-            using (var fontCollection = new InstalledFontCollection())
-            {
-                var fontFamilies = fontCollection.Families;
-                foreach(var font in fontFamilies)
-                {
-                    lstBxFont.Items.Add(font.Name);
-                }
-            }
+            SetFormToStyle();
         }
 
 
@@ -56,11 +47,9 @@ namespace TandaSpreadsheetTool
             pnlRotaEmptyCl.BackColor = GetColorFromByte(currentStyle.rotaEmptyCl);
             pnlRotaField.BackColor = GetColorFromByte(currentStyle.rotaFieldCl);
 
-           
+            fontD.Font = new Font(currentStyle.font, currentStyle.fontSize, GetFontStyle());
 
-            var fontSelection = lstBxFont.FindString("Calibri");
 
-            lstBxFont.SelectedIndex = fontSelection != -1 ? fontSelection : lstBxFont.FindString("Arial");
             cBxDiv.SelectedIndex = (int)currentStyle.divBy;
             
             tkBarBrightness.Value = Convert.ToInt32(currentStyle.minBrightness * 100);
@@ -96,33 +85,33 @@ namespace TandaSpreadsheetTool
 
         private void btnNameHeadCl_Click(object sender, EventArgs e)
         {
-           if (cD.ShowDialog() == DialogResult.OK)
+           if (clrD.ShowDialog() == DialogResult.OK)
             {
-                pnlNameHeadCL.BackColor = cD.Color;
+                pnlNameHeadCL.BackColor = clrD.Color;
             }
         }
 
         private void btnNameFieldCL_Click(object sender, EventArgs e)
         {
-            if (cD.ShowDialog() == DialogResult.OK)
+            if (clrD.ShowDialog() == DialogResult.OK)
             {
-               pnlNameField.BackColor = cD.Color;
+               pnlNameField.BackColor = clrD.Color;
             }
         }
 
         private void btnRotaFieldCl_Click(object sender, EventArgs e)
         {
-            if (cD.ShowDialog() == DialogResult.OK)
+            if (clrD.ShowDialog() == DialogResult.OK)
             {
-               pnlRotaField.BackColor = cD.Color;
+               pnlRotaField.BackColor = clrD.Color;
             }
         }
 
         private void btnRotaEmptyCl_Click(object sender, EventArgs e)
         {
-            if (cD.ShowDialog() == DialogResult.OK)
+            if (clrD.ShowDialog() == DialogResult.OK)
             {
-                pnlRotaEmptyCl.BackColor = cD.Color;
+                pnlRotaEmptyCl.BackColor = clrD.Color;
             }
         }
              
@@ -141,25 +130,62 @@ namespace TandaSpreadsheetTool
             currentStyle.minBrightness = (float)tkBarBrightness.Value/100;
             currentStyle.colWidth = (int)nUDColWidth.Value;
             currentStyle.useTeamCls = ckBxTeamColours.Checked;
-            currentStyle.font = lstBxFont.GetItemText(lstBxFont.SelectedItem);
+
+            currentStyle.underLineFs = fontD.Font.Underline;
+            currentStyle.strikeThroughFs = fontD.Font.Strikeout;
+            currentStyle.fontSize = (int)fontD.Font.Size;
+            currentStyle.boldFs = fontD.Font.Bold;
+            currentStyle.italicFs = fontD.Font.Italic;
+            currentStyle.font = fontD.Font.Name;
+            
+
 
             currentStyle.divBy = (SpreadSheetDiv)cBxDiv.SelectedIndex;
         }
 
+        private FontStyle GetFontStyle()
+        {
+            var style = 0;
+
+            if (currentStyle.italicFs)
+            {
+                style += 2;
+            }
+
+            if (currentStyle.boldFs)
+            {
+                style += 1;
+            }
+
+            if (currentStyle.strikeThroughFs)
+            {
+                style += 8;
+            }
+
+            if (currentStyle.underLineFs)
+            {
+                style += 4;
+            }
+
+            return (FontStyle)style;
+        }
+
+        
+
         private void btnDayNameCl_Click(object sender, EventArgs e)
         {
-            if (cD.ShowDialog() == DialogResult.OK)
+            if (clrD.ShowDialog() == DialogResult.OK)
             {
-                pnlDayName.BackColor = cD.Color;
+                pnlDayName.BackColor = clrD.Color;
             }
 
         }
 
         private void btnDateCl_Click(object sender, EventArgs e)
         {
-            if (cD.ShowDialog() == DialogResult.OK)
+            if (clrD.ShowDialog() == DialogResult.OK)
             {
-                pnlDate.BackColor = cD.Color;
+                pnlDate.BackColor = clrD.Color;
             }
         }
 
@@ -190,6 +216,20 @@ namespace TandaSpreadsheetTool
                 currentStyle = SpreadSheetStyle.Default();
                 SetFormToStyle();
             }
+            
+        }
+
+        private void btnFonts_Click(object sender, EventArgs e)
+        {
+            
+           
+            if (!(fontD.ShowDialog() == DialogResult.OK))
+            {
+                fontD.Font = new Font(currentStyle.font, currentStyle.fontSize, GetFontStyle());
+
+            }
+            
+            
             
         }
     }

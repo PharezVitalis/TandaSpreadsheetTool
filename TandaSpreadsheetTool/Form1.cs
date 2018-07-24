@@ -440,7 +440,7 @@ namespace TandaSpreadsheetTool
                 return;
             }
 
-            MessageBox.Show(title, message, MessageBoxButtons.OK, icon);
+            MessageBox.Show(message, title, MessageBoxButtons.OK, icon);
         }
 
         public int ProcessCount
