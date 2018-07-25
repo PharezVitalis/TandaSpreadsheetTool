@@ -82,6 +82,8 @@ namespace TandaSpreadsheetTool
             cBxNameAlign.SelectedIndex = (int)currentStyle.nameAlign-1;
             cBxRotaAlign.SelectedIndex = (int)currentStyle.rotaAlign - 1;
 
+            tkBarColumnWidth.Value = (int)Math.Round(currentStyle.colWidth * 100);
+
             tkBarBrightness.Value = Convert.ToInt32(currentStyle.minBrightness * 100);
             var brightness = Convert.ToByte(Math.Round((double)currentStyle.minBrightness  * 255));
             pnlMinBright.BackColor = Color.FromArgb(brightness, brightness, brightness);

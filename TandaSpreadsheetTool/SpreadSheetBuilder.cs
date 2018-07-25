@@ -404,7 +404,8 @@ namespace TandaSpreadsheetTool
               
 
                 var dateCell = currentRow.CreateCell(2 + i);
-                dateCell.SetCellValue(currentDate.ToShortDateString());                
+                dateCell.SetCellValue(currentDate.ToShortDateString());         
+                
 
                 if (useVertHead)
                 {
@@ -416,6 +417,7 @@ namespace TandaSpreadsheetTool
 
                 sheet.SetColumnWidth(i + 2, colWidth);
             }
+
         }
 
         private IRow GetRow(int rowIndex, ISheet sheet)
