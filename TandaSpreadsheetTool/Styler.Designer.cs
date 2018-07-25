@@ -62,6 +62,12 @@
             this.lblSheetDiv = new System.Windows.Forms.Label();
             this.fontD = new System.Windows.Forms.FontDialog();
             this.btnFonts = new System.Windows.Forms.Button();
+            this.cBxNameAlign = new System.Windows.Forms.ComboBox();
+            this.lblCellAlign = new System.Windows.Forms.Label();
+            this.cBxHeadAlign = new System.Windows.Forms.ComboBox();
+            this.lblHeadAlign = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cBxRotaAlign = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarBrightness)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nUDColWidth)).BeginInit();
             this.SuspendLayout();
@@ -293,7 +299,7 @@
             // 
             // btnAccept
             // 
-            this.btnAccept.Location = new System.Drawing.Point(369, 481);
+            this.btnAccept.Location = new System.Drawing.Point(543, 481);
             this.btnAccept.Name = "btnAccept";
             this.btnAccept.Size = new System.Drawing.Size(75, 23);
             this.btnAccept.TabIndex = 24;
@@ -315,7 +321,7 @@
             // lblColWidth
             // 
             this.lblColWidth.AutoSize = true;
-            this.lblColWidth.Location = new System.Drawing.Point(87, 202);
+            this.lblColWidth.Location = new System.Drawing.Point(439, 114);
             this.lblColWidth.Name = "lblColWidth";
             this.lblColWidth.Size = new System.Drawing.Size(73, 13);
             this.lblColWidth.TabIndex = 26;
@@ -323,7 +329,7 @@
             // 
             // nUDColWidth
             // 
-            this.nUDColWidth.Location = new System.Drawing.Point(178, 200);
+            this.nUDColWidth.Location = new System.Drawing.Point(530, 112);
             this.nUDColWidth.Minimum = new decimal(new int[] {
             10,
             0,
@@ -346,7 +352,7 @@
             "Weekly",
             "Biweekly",
             "Monthly"});
-            this.cBxDiv.Location = new System.Drawing.Point(128, 251);
+            this.cBxDiv.Location = new System.Drawing.Point(106, 147);
             this.cBxDiv.MaxLength = 8;
             this.cBxDiv.Name = "cBxDiv";
             this.cBxDiv.Size = new System.Drawing.Size(142, 21);
@@ -354,7 +360,7 @@
             // 
             // btnDefault
             // 
-            this.btnDefault.Location = new System.Drawing.Point(369, 446);
+            this.btnDefault.Location = new System.Drawing.Point(462, 481);
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size(75, 23);
             this.btnDefault.TabIndex = 29;
@@ -365,7 +371,7 @@
             // lblSheetDiv
             // 
             this.lblSheetDiv.AutoSize = true;
-            this.lblSheetDiv.Location = new System.Drawing.Point(25, 254);
+            this.lblSheetDiv.Location = new System.Drawing.Point(17, 150);
             this.lblSheetDiv.Name = "lblSheetDiv";
             this.lblSheetDiv.Size = new System.Drawing.Size(83, 13);
             this.lblSheetDiv.TabIndex = 30;
@@ -373,7 +379,7 @@
             // 
             // btnFonts
             // 
-            this.btnFonts.Location = new System.Drawing.Point(315, 196);
+            this.btnFonts.Location = new System.Drawing.Point(381, 481);
             this.btnFonts.Name = "btnFonts";
             this.btnFonts.Size = new System.Drawing.Size(75, 23);
             this.btnFonts.TabIndex = 31;
@@ -381,13 +387,82 @@
             this.btnFonts.UseVisualStyleBackColor = true;
             this.btnFonts.Click += new System.EventHandler(this.btnFonts_Click);
             // 
+            // cBxNameAlign
+            // 
+            this.cBxNameAlign.FormattingEnabled = true;
+            this.cBxNameAlign.Items.AddRange(new object[] {
+            "Left",
+            "Right",
+            "Centre"});
+            this.cBxNameAlign.Location = new System.Drawing.Point(106, 193);
+            this.cBxNameAlign.Name = "cBxNameAlign";
+            this.cBxNameAlign.Size = new System.Drawing.Size(142, 21);
+            this.cBxNameAlign.TabIndex = 32;
+            // 
+            // lblCellAlign
+            // 
+            this.lblCellAlign.AutoSize = true;
+            this.lblCellAlign.Location = new System.Drawing.Point(14, 199);
+            this.lblCellAlign.Name = "lblCellAlign";
+            this.lblCellAlign.Size = new System.Drawing.Size(86, 13);
+            this.lblCellAlign.TabIndex = 33;
+            this.lblCellAlign.Text = "Name Field Align";
+            // 
+            // cBxHeadAlign
+            // 
+            this.cBxHeadAlign.FormattingEnabled = true;
+            this.cBxHeadAlign.Items.AddRange(new object[] {
+            "Left",
+            "Right",
+            "Centre"});
+            this.cBxHeadAlign.Location = new System.Drawing.Point(374, 147);
+            this.cBxHeadAlign.Name = "cBxHeadAlign";
+            this.cBxHeadAlign.Size = new System.Drawing.Size(142, 21);
+            this.cBxHeadAlign.TabIndex = 34;
+            // 
+            // lblHeadAlign
+            // 
+            this.lblHeadAlign.AutoSize = true;
+            this.lblHeadAlign.Location = new System.Drawing.Point(291, 155);
+            this.lblHeadAlign.Name = "lblHeadAlign";
+            this.lblHeadAlign.Size = new System.Drawing.Size(73, 13);
+            this.lblHeadAlign.TabIndex = 35;
+            this.lblHeadAlign.Text = "Heading Align";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(308, 199);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(56, 13);
+            this.label1.TabIndex = 37;
+            this.label1.Text = "Rota Align";
+            // 
+            // cBxRotaAlign
+            // 
+            this.cBxRotaAlign.FormattingEnabled = true;
+            this.cBxRotaAlign.Items.AddRange(new object[] {
+            "Left",
+            "Right",
+            "Centre"});
+            this.cBxRotaAlign.Location = new System.Drawing.Point(374, 193);
+            this.cBxRotaAlign.Name = "cBxRotaAlign";
+            this.cBxRotaAlign.Size = new System.Drawing.Size(142, 21);
+            this.cBxRotaAlign.TabIndex = 38;
+            // 
             // StylerForm
             // 
             this.AcceptButton = this.btnAccept;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(466, 516);
+            this.ClientSize = new System.Drawing.Size(630, 516);
+            this.Controls.Add(this.cBxRotaAlign);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblHeadAlign);
+            this.Controls.Add(this.cBxHeadAlign);
+            this.Controls.Add(this.lblCellAlign);
+            this.Controls.Add(this.cBxNameAlign);
             this.Controls.Add(this.btnFonts);
             this.Controls.Add(this.lblSheetDiv);
             this.Controls.Add(this.btnDefault);
@@ -465,5 +540,11 @@
         private System.Windows.Forms.Label lblSheetDiv;
         private System.Windows.Forms.FontDialog fontD;
         private System.Windows.Forms.Button btnFonts;
+        private System.Windows.Forms.ComboBox cBxNameAlign;
+        private System.Windows.Forms.Label lblCellAlign;
+        private System.Windows.Forms.ComboBox cBxHeadAlign;
+        private System.Windows.Forms.Label lblHeadAlign;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cBxRotaAlign;
     }
 }

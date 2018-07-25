@@ -1,5 +1,6 @@
 ﻿
 
+using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
 
@@ -56,6 +57,7 @@ namespace TandaSpreadsheetTool
         public bool teamTxtFilter;
         public float minBrightness;
         public int colWidth;
+       
         public bool useTeamCls;
         public string font;
         public int fontSize;
@@ -63,6 +65,9 @@ namespace TandaSpreadsheetTool
         public bool italicFs;
         public bool strikeThroughFs;
         public bool underLineFs;
+        public HorizontalAlignment nameAlign;
+        public HorizontalAlignment headAlign;
+        public HorizontalAlignment rotaAlign;
 
         public bool useTeamLegends;
         public bool useShiftLegends;
@@ -87,16 +92,18 @@ namespace TandaSpreadsheetTool
                 colWidth = 22,
                 font = "Arial",
                 fontSize = 11,
-                divBy = SpreadSheetDiv.WEEKLY,
+                divBy = SpreadSheetDiv.NONE,
                 useShiftLegends = false,
                 useTeamLegends = false,
                 boldFs = false,
                 italicFs = false,
                 strikeThroughFs = false,
-                underLineFs = false            
+                underLineFs = false,
+                nameAlign = HorizontalAlignment.Left,
+                headAlign = HorizontalAlignment.Left,
+                rotaAlign = HorizontalAlignment.Left
             };
            
-
           
         }
        

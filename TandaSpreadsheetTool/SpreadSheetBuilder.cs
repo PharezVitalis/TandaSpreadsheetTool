@@ -427,12 +427,12 @@ namespace TandaSpreadsheetTool
             fieldFont.IsItalic = style.italicFs;
             fieldFont.Underline = style.underLineFs ? FontUnderlineType.Single : FontUnderlineType.None;
             fieldFont.IsStrikeout = style.strikeThroughFs;
-
+            
 
 
             var nextStyle = (XSSFCellStyle)null;
 
-
+           
 
             
             var headingFont = wBk.CreateFont();
@@ -454,16 +454,19 @@ namespace TandaSpreadsheetTool
             // date field style
             nextStyle = AutoStyle(wBk, headingFont);
             nextStyle.SetFillForegroundColor(new XSSFColor(style.dateCl));
+            nextStyle.Alignment = style.headAlign;
             styleDict.Add(nameof(style.dateCl), nextStyle);
 
             //day field style
             nextStyle = AutoStyle(wBk, headingFont);
             nextStyle.SetFillForegroundColor(new XSSFColor(style.dayNameCl));
+            nextStyle.Alignment = style.headAlign;
             styleDict.Add(nameof(style.dayNameCl), nextStyle);
 
             //rota field style
             nextStyle = AutoStyle(wBk, fieldFont);
             nextStyle.SetFillForegroundColor(new XSSFColor(style.rotaFieldCl));
+            nextStyle.Alignment = style.nameAlign;
             styleDict.Add(nameof(style.rotaFieldCl), nextStyle);
 
             //empty rota field style
@@ -474,11 +477,13 @@ namespace TandaSpreadsheetTool
             //name field style
             nextStyle = AutoStyle(wBk, fieldFont);
             nextStyle.SetFillForegroundColor(new XSSFColor(style.nameFieldCl));
+            nextStyle.Alignment = style.nameAlign;
             styleDict.Add(nameof(style.nameFieldCl), nextStyle);
 
             //name heading style
             nextStyle = AutoStyle(wBk, headingFont);
             nextStyle.SetFillForegroundColor(new XSSFColor(style.nameHeadingCl));
+            nextStyle.Alignment = style.headAlign;
             styleDict.Add(nameof(style.nameHeadingCl), nextStyle);
 
             if (!style.useTeamCls)
@@ -487,13 +492,14 @@ namespace TandaSpreadsheetTool
             }
 
             
-
+            
            
                 bool brigthnessValid = style.minBrightness > 0 & style.minBrightness < 1;
                 for (int i = 0; i < teams.Length; i++)
                 {
                     var currentTeam = teams[i];
                     nextStyle = AutoStyle(wBk, fieldFont);
+                    nextStyle.Alignment = style.nameAlign;
                     var colour = GetColourFromHex(currentTeam.colour);
                    
                     if (colour != null)
@@ -619,6 +625,7 @@ namespace TandaSpreadsheetTool
             autoValue.BorderTop = BorderStyle.Thin;
             autoValue.BorderLeft = BorderStyle.Thin;
             autoValue.BorderRight = BorderStyle.Thin;
+            
             if (font != null)
             {
                 autoValue.SetFont(font);

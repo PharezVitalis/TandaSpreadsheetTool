@@ -8,12 +8,13 @@ using System.Drawing.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
 namespace TandaSpreadsheetTool
 {
     public partial class StylerForm : Form
     {
         SpreadSheetStyle currentStyle;
-
+        
 
         
         
@@ -22,7 +23,12 @@ namespace TandaSpreadsheetTool
         {
             InitializeComponent();
             currentStyle = style;
-            
+
+            cBxRotaAlign.DropDownStyle = ComboBoxStyle.DropDownList;
+            cBxNameAlign.DropDownStyle = ComboBoxStyle.DropDownList;
+            cBxHeadAlign.DropDownStyle = ComboBoxStyle.DropDownList;
+            cBxDiv.DropDownStyle = ComboBoxStyle.DropDownList;
+
             SetFormToStyle();
         }
 
@@ -35,6 +41,8 @@ namespace TandaSpreadsheetTool
                 SetFormToStyle();
             }            
         }
+
+        
 
         
 
@@ -51,12 +59,48 @@ namespace TandaSpreadsheetTool
 
 
             cBxDiv.SelectedIndex = (int)currentStyle.divBy;
-            
+
+            cBxHeadAlign.SelectedIndex = (int)currentStyle.headAlign-1;
+            cBxNameAlign.SelectedIndex = (int)currentStyle.nameAlign-1;
+            cBxRotaAlign.SelectedIndex = (int)currentStyle.rotaAlign - 1;
+
             tkBarBrightness.Value = Convert.ToInt32(currentStyle.minBrightness * 100);
-            var brightness = Convert.ToByte(Math.Round((double)(currentStyle.minBrightness / 100) * 255));
-            pnlMinBright.BackColor = GetColorFromByte(new byte[] { brightness, brightness, brightness });
+            var brightness = Convert.ToByte(Math.Round((double)currentStyle.minBrightness  * 255));
+            pnlMinBright.BackColor = Color.FromArgb(brightness, brightness, brightness);
+            Refresh();
         }
 
+        void SetStyleToForm()
+        {
+            currentStyle.nameHeadingCl = GetByteFromColor(pnlNameHeadCL.BackColor);
+            currentStyle.nameFieldCl = GetByteFromColor(pnlNameField.BackColor);
+            currentStyle.rotaFieldCl = GetByteFromColor(pnlRotaField.BackColor);
+            currentStyle.rotaEmptyCl = GetByteFromColor(pnlRotaEmptyCl.BackColor);
+            currentStyle.dayNameCl = GetByteFromColor(pnlDayName.BackColor);
+            currentStyle.dateCl = GetByteFromColor(pnlDate.BackColor);
+
+            currentStyle.boldHeadings = ckBxBoldHead.Checked;
+            currentStyle.useTeamCls = ckBxTeamColours.Checked;
+
+            currentStyle.minBrightness = (float)tkBarBrightness.Value / 100;
+            currentStyle.colWidth = (int)nUDColWidth.Value;
+            currentStyle.useTeamCls = ckBxTeamColours.Checked;
+
+            currentStyle.underLineFs = fontD.Font.Underline;
+            currentStyle.strikeThroughFs = fontD.Font.Strikeout;
+            currentStyle.fontSize = (int)fontD.Font.Size;
+            currentStyle.boldFs = fontD.Font.Bold;
+            currentStyle.italicFs = fontD.Font.Italic;
+            currentStyle.font = fontD.Font.Name;
+
+
+
+            currentStyle.headAlign = (NPOI.SS.UserModel.HorizontalAlignment)cBxHeadAlign.SelectedIndex + 1;
+            currentStyle.nameAlign = (NPOI.SS.UserModel.HorizontalAlignment)cBxNameAlign.SelectedIndex + 1;
+            currentStyle.rotaAlign = (NPOI.SS.UserModel.HorizontalAlignment)cBxRotaAlign.SelectedIndex + 1;
+
+            currentStyle.divBy = (SpreadSheetDiv)cBxDiv.SelectedIndex;
+        }
 
         private Color GetColorFromByte(byte[] rgb)
         {
@@ -115,33 +159,7 @@ namespace TandaSpreadsheetTool
             }
         }
              
-        void SetStyleToFormOptions()
-        {
-            currentStyle.nameHeadingCl = GetByteFromColor(pnlNameHeadCL.BackColor);
-            currentStyle.nameFieldCl= GetByteFromColor(pnlNameField.BackColor);
-            currentStyle.rotaFieldCl = GetByteFromColor(pnlRotaField.BackColor);
-            currentStyle.rotaEmptyCl = GetByteFromColor(pnlRotaEmptyCl.BackColor);
-            currentStyle.dayNameCl = GetByteFromColor(pnlDayName.BackColor);
-            currentStyle.dateCl = GetByteFromColor(pnlDate.BackColor);
-
-            currentStyle.boldHeadings = ckBxBoldHead.Checked;
-            currentStyle.useTeamCls = ckBxTeamColours.Checked;
-
-            currentStyle.minBrightness = (float)tkBarBrightness.Value/100;
-            currentStyle.colWidth = (int)nUDColWidth.Value;
-            currentStyle.useTeamCls = ckBxTeamColours.Checked;
-
-            currentStyle.underLineFs = fontD.Font.Underline;
-            currentStyle.strikeThroughFs = fontD.Font.Strikeout;
-            currentStyle.fontSize = (int)fontD.Font.Size;
-            currentStyle.boldFs = fontD.Font.Bold;
-            currentStyle.italicFs = fontD.Font.Italic;
-            currentStyle.font = fontD.Font.Name;
-            
-
-
-            currentStyle.divBy = (SpreadSheetDiv)cBxDiv.SelectedIndex;
-        }
+       
 
         private FontStyle GetFontStyle()
         {
@@ -191,7 +209,7 @@ namespace TandaSpreadsheetTool
 
         private void btnAccept_Click(object sender, EventArgs e)
         {
-            SetStyleToFormOptions();
+            SetStyleToForm();
             DialogResult = DialogResult.OK;
         }
 
@@ -223,7 +241,7 @@ namespace TandaSpreadsheetTool
         {
             
            
-            if (!(fontD.ShowDialog() == DialogResult.OK))
+            if (fontD.ShowDialog() != DialogResult.OK)
             {
                 fontD.Font = new Font(currentStyle.font, currentStyle.fontSize, GetFontStyle());
 
