@@ -56,7 +56,6 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.clrD = new System.Windows.Forms.ColorDialog();
             this.lblColWidth = new System.Windows.Forms.Label();
-            this.nUDColWidth = new System.Windows.Forms.NumericUpDown();
             this.cBxDiv = new System.Windows.Forms.ComboBox();
             this.btnDefault = new System.Windows.Forms.Button();
             this.lblSheetDiv = new System.Windows.Forms.Label();
@@ -68,8 +67,17 @@
             this.lblHeadAlign = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.cBxRotaAlign = new System.Windows.Forms.ComboBox();
+            this.rbtnVertDateYes = new System.Windows.Forms.RadioButton();
+            this.rbtnVertDateNo = new System.Windows.Forms.RadioButton();
+            this.rbtnVertDateAuto = new System.Windows.Forms.RadioButton();
+            this.gBxUseVertDates = new System.Windows.Forms.GroupBox();
+            this.tkBarColumnWidth = new System.Windows.Forms.TrackBar();
+            this.lblBrightVal = new System.Windows.Forms.Label();
+            this.lblColWidthVal = new System.Windows.Forms.Label();
+            this.ckBxShiftAnalysis = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarBrightness)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nUDColWidth)).BeginInit();
+            this.gBxUseVertDates.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tkBarColumnWidth)).BeginInit();
             this.SuspendLayout();
             // 
             // ckBxBoldHead
@@ -150,9 +158,9 @@
             // 
             this.pnlMinBright.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlMinBright.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.pnlMinBright.Location = new System.Drawing.Point(23, 107);
+            this.pnlMinBright.Location = new System.Drawing.Point(333, 251);
             this.pnlMinBright.Name = "pnlMinBright";
-            this.pnlMinBright.Size = new System.Drawing.Size(199, 25);
+            this.pnlMinBright.Size = new System.Drawing.Size(82, 25);
             this.pnlMinBright.TabIndex = 5;
             // 
             // btnNameHeadCl
@@ -280,7 +288,7 @@
             // tkBarBrightness
             // 
             this.tkBarBrightness.LargeChange = 10;
-            this.tkBarBrightness.Location = new System.Drawing.Point(228, 107);
+            this.tkBarBrightness.Location = new System.Drawing.Point(421, 251);
             this.tkBarBrightness.Maximum = 100;
             this.tkBarBrightness.Name = "tkBarBrightness";
             this.tkBarBrightness.Size = new System.Drawing.Size(164, 45);
@@ -291,7 +299,7 @@
             // lblBrightness
             // 
             this.lblBrightness.AutoSize = true;
-            this.lblBrightness.Location = new System.Drawing.Point(41, 91);
+            this.lblBrightness.Location = new System.Drawing.Point(330, 235);
             this.lblBrightness.Name = "lblBrightness";
             this.lblBrightness.Size = new System.Drawing.Size(139, 13);
             this.lblBrightness.TabIndex = 23;
@@ -321,28 +329,11 @@
             // lblColWidth
             // 
             this.lblColWidth.AutoSize = true;
-            this.lblColWidth.Location = new System.Drawing.Point(439, 114);
+            this.lblColWidth.Location = new System.Drawing.Point(383, 318);
             this.lblColWidth.Name = "lblColWidth";
             this.lblColWidth.Size = new System.Drawing.Size(73, 13);
             this.lblColWidth.TabIndex = 26;
             this.lblColWidth.Text = "Column Width";
-            // 
-            // nUDColWidth
-            // 
-            this.nUDColWidth.Location = new System.Drawing.Point(530, 112);
-            this.nUDColWidth.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.nUDColWidth.Name = "nUDColWidth";
-            this.nUDColWidth.Size = new System.Drawing.Size(56, 20);
-            this.nUDColWidth.TabIndex = 27;
-            this.nUDColWidth.Value = new decimal(new int[] {
-            22,
-            0,
-            0,
-            0});
             // 
             // cBxDiv
             // 
@@ -450,6 +441,89 @@
             this.cBxRotaAlign.Size = new System.Drawing.Size(142, 21);
             this.cBxRotaAlign.TabIndex = 38;
             // 
+            // rbtnVertDateYes
+            // 
+            this.rbtnVertDateYes.AutoSize = true;
+            this.rbtnVertDateYes.Location = new System.Drawing.Point(53, 19);
+            this.rbtnVertDateYes.Name = "rbtnVertDateYes";
+            this.rbtnVertDateYes.Size = new System.Drawing.Size(43, 17);
+            this.rbtnVertDateYes.TabIndex = 40;
+            this.rbtnVertDateYes.Text = "Yes";
+            this.rbtnVertDateYes.UseVisualStyleBackColor = true;
+            // 
+            // rbtnVertDateNo
+            // 
+            this.rbtnVertDateNo.AutoSize = true;
+            this.rbtnVertDateNo.Location = new System.Drawing.Point(102, 19);
+            this.rbtnVertDateNo.Name = "rbtnVertDateNo";
+            this.rbtnVertDateNo.Size = new System.Drawing.Size(39, 17);
+            this.rbtnVertDateNo.TabIndex = 41;
+            this.rbtnVertDateNo.Text = "No";
+            this.rbtnVertDateNo.UseVisualStyleBackColor = true;
+            // 
+            // rbtnVertDateAuto
+            // 
+            this.rbtnVertDateAuto.AutoSize = true;
+            this.rbtnVertDateAuto.Checked = true;
+            this.rbtnVertDateAuto.Location = new System.Drawing.Point(2, 19);
+            this.rbtnVertDateAuto.Name = "rbtnVertDateAuto";
+            this.rbtnVertDateAuto.Size = new System.Drawing.Size(47, 17);
+            this.rbtnVertDateAuto.TabIndex = 42;
+            this.rbtnVertDateAuto.TabStop = true;
+            this.rbtnVertDateAuto.Text = "Auto";
+            this.rbtnVertDateAuto.UseVisualStyleBackColor = true;
+            // 
+            // gBxUseVertDates
+            // 
+            this.gBxUseVertDates.Controls.Add(this.rbtnVertDateAuto);
+            this.gBxUseVertDates.Controls.Add(this.rbtnVertDateNo);
+            this.gBxUseVertDates.Controls.Add(this.rbtnVertDateYes);
+            this.gBxUseVertDates.Location = new System.Drawing.Point(12, 232);
+            this.gBxUseVertDates.Name = "gBxUseVertDates";
+            this.gBxUseVertDates.Size = new System.Drawing.Size(154, 49);
+            this.gBxUseVertDates.TabIndex = 43;
+            this.gBxUseVertDates.TabStop = false;
+            this.gBxUseVertDates.Text = "Use Vertical Date Headings";
+            // 
+            // tkBarColumnWidth
+            // 
+            this.tkBarColumnWidth.LargeChange = 1000;
+            this.tkBarColumnWidth.Location = new System.Drawing.Point(333, 332);
+            this.tkBarColumnWidth.Maximum = 10000;
+            this.tkBarColumnWidth.Name = "tkBarColumnWidth";
+            this.tkBarColumnWidth.Size = new System.Drawing.Size(285, 45);
+            this.tkBarColumnWidth.SmallChange = 100;
+            this.tkBarColumnWidth.TabIndex = 44;
+            this.tkBarColumnWidth.Scroll += new System.EventHandler(this.trackBar1_Scroll);
+            // 
+            // lblBrightVal
+            // 
+            this.lblBrightVal.AutoSize = true;
+            this.lblBrightVal.Location = new System.Drawing.Point(488, 283);
+            this.lblBrightVal.Name = "lblBrightVal";
+            this.lblBrightVal.Size = new System.Drawing.Size(28, 13);
+            this.lblBrightVal.TabIndex = 45;
+            this.lblBrightVal.Text = "XXX";
+            // 
+            // lblColWidthVal
+            // 
+            this.lblColWidthVal.AutoSize = true;
+            this.lblColWidthVal.Location = new System.Drawing.Point(441, 368);
+            this.lblColWidthVal.Name = "lblColWidthVal";
+            this.lblColWidthVal.Size = new System.Drawing.Size(28, 13);
+            this.lblColWidthVal.TabIndex = 46;
+            this.lblColWidthVal.Text = "XXX";
+            // 
+            // ckBxShiftAnalysis
+            // 
+            this.ckBxShiftAnalysis.AutoSize = true;
+            this.ckBxShiftAnalysis.Location = new System.Drawing.Point(311, 59);
+            this.ckBxShiftAnalysis.Name = "ckBxShiftAnalysis";
+            this.ckBxShiftAnalysis.Size = new System.Drawing.Size(118, 17);
+            this.ckBxShiftAnalysis.TabIndex = 47;
+            this.ckBxShiftAnalysis.Text = "Show Shift Analysis";
+            this.ckBxShiftAnalysis.UseVisualStyleBackColor = true;
+            // 
             // StylerForm
             // 
             this.AcceptButton = this.btnAccept;
@@ -457,8 +531,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(630, 516);
+            this.Controls.Add(this.ckBxShiftAnalysis);
+            this.Controls.Add(this.lblColWidthVal);
+            this.Controls.Add(this.lblBrightVal);
+            this.Controls.Add(this.tkBarColumnWidth);
+            this.Controls.Add(this.gBxUseVertDates);
             this.Controls.Add(this.cBxRotaAlign);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.pnlMinBright);
             this.Controls.Add(this.lblHeadAlign);
             this.Controls.Add(this.cBxHeadAlign);
             this.Controls.Add(this.lblCellAlign);
@@ -467,7 +547,6 @@
             this.Controls.Add(this.lblSheetDiv);
             this.Controls.Add(this.btnDefault);
             this.Controls.Add(this.cBxDiv);
-            this.Controls.Add(this.nUDColWidth);
             this.Controls.Add(this.lblColWidth);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnAccept);
@@ -486,7 +565,6 @@
             this.Controls.Add(this.btnRotaFieldCl);
             this.Controls.Add(this.btnNameFieldCL);
             this.Controls.Add(this.btnNameHeadCl);
-            this.Controls.Add(this.pnlMinBright);
             this.Controls.Add(this.pnlDate);
             this.Controls.Add(this.pnlDayName);
             this.Controls.Add(this.pnlRotaField);
@@ -498,7 +576,9 @@
             this.Name = "StylerForm";
             this.Text = "Styler";
             ((System.ComponentModel.ISupportInitialize)(this.tkBarBrightness)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nUDColWidth)).EndInit();
+            this.gBxUseVertDates.ResumeLayout(false);
+            this.gBxUseVertDates.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tkBarColumnWidth)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -534,7 +614,6 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.ColorDialog clrD;
         private System.Windows.Forms.Label lblColWidth;
-        private System.Windows.Forms.NumericUpDown nUDColWidth;
         private System.Windows.Forms.ComboBox cBxDiv;
         private System.Windows.Forms.Button btnDefault;
         private System.Windows.Forms.Label lblSheetDiv;
@@ -546,5 +625,13 @@
         private System.Windows.Forms.Label lblHeadAlign;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cBxRotaAlign;
+        private System.Windows.Forms.RadioButton rbtnVertDateYes;
+        private System.Windows.Forms.RadioButton rbtnVertDateNo;
+        private System.Windows.Forms.RadioButton rbtnVertDateAuto;
+        private System.Windows.Forms.GroupBox gBxUseVertDates;
+        private System.Windows.Forms.TrackBar tkBarColumnWidth;
+        private System.Windows.Forms.Label lblBrightVal;
+        private System.Windows.Forms.Label lblColWidthVal;
+        private System.Windows.Forms.CheckBox ckBxShiftAnalysis;
     }
 }

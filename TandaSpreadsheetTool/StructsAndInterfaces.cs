@@ -42,6 +42,11 @@ namespace TandaSpreadsheetTool
 
     }
 
+    public enum UseVerticalDates
+    {
+        TRUE, AUTO, FALSE
+    }
+
     public struct SpreadSheetStyle
     {
         //cl = colour
@@ -56,8 +61,8 @@ namespace TandaSpreadsheetTool
         public bool boldHeadings;
         public bool teamTxtFilter;
         public float minBrightness;
-        public int colWidth;
-       
+        public float colWidth;
+        public UseVerticalDates useVertDates;
         public bool useTeamCls;
         public string font;
         public int fontSize;
@@ -71,9 +76,10 @@ namespace TandaSpreadsheetTool
 
         public bool useTeamLegends;
         public bool useShiftLegends;
+        public bool shiftAnalysis;
         public SpreadSheetDiv divBy;
 
-        
+       
 
         public static SpreadSheetStyle Default()
         {
@@ -99,9 +105,11 @@ namespace TandaSpreadsheetTool
                 italicFs = false,
                 strikeThroughFs = false,
                 underLineFs = false,
+                shiftAnalysis = true,
                 nameAlign = HorizontalAlignment.Left,
                 headAlign = HorizontalAlignment.Left,
-                rotaAlign = HorizontalAlignment.Left
+                rotaAlign = HorizontalAlignment.Left,              
+                useVertDates = UseVerticalDates.AUTO
             };
            
           

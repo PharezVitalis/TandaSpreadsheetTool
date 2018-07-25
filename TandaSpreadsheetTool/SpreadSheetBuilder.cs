@@ -279,7 +279,7 @@ namespace TandaSpreadsheetTool
             var currentCell = (ICell)null;
             
             
-
+            
 
             for (int i = 0; i < staffCount; i++)
             {
@@ -387,24 +387,34 @@ namespace TandaSpreadsheetTool
             styleDict.TryGetValue(nameof(style.dateCl), out var currentStyle2);
          
 
-            var colWidth = style.colWidth * 256;
+            var colWidth = (int)Math.Round(style.colWidth * 256);
             sheet.SetColumnWidth(0, colWidth);
             sheet.SetColumnWidth(1, colWidth);
+
+            bool useVertHead = style.useVertDates == UseVerticalDates.TRUE || style.useVertDates == UseVerticalDates.AUTO & style.colWidth < 11.15f;
 
             var nOfDays = (int)(to-from).TotalDays;
 
             for (int i = 0; i <= nOfDays; i++)
             {// currentStyle = date field style, currentStyle2 = day field style
-                sheet.SetColumnWidth(i + 2, colWidth);
 
                 var currentDate = from.AddDays(i);
                 currentCell = dayRow.CreateCell(i + 2);
                 currentCell.SetCellValue(Enum.GetName(typeof(DayOfWeek), currentDate.DayOfWeek));
-                currentCell.CellStyle = currentStyle;
+              
 
-                currentCell = currentRow.CreateCell(2 + i);
-                currentCell.SetCellValue(currentDate.ToShortDateString());
-                currentCell.CellStyle = currentStyle2;
+                var dateCell = currentRow.CreateCell(2 + i);
+                dateCell.SetCellValue(currentDate.ToShortDateString());                
+
+                if (useVertHead)
+                {
+                    currentStyle.Rotation = 90;
+                    currentStyle2.Rotation = 90;
+                }
+                currentCell.CellStyle = currentStyle;
+                dateCell.CellStyle = currentStyle2;
+
+                sheet.SetColumnWidth(i + 2, colWidth);
             }
         }
 
@@ -523,6 +533,8 @@ namespace TandaSpreadsheetTool
             
             
         }
+
+        
 
        XSSFColor SetMinBrightness(XSSFColor colour, float minBrightness)
         {

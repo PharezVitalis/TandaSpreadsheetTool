@@ -29,6 +29,9 @@ namespace TandaSpreadsheetTool
             cBxHeadAlign.DropDownStyle = ComboBoxStyle.DropDownList;
             cBxDiv.DropDownStyle = ComboBoxStyle.DropDownList;
 
+            lblColWidthVal.Text = "";
+            lblBrightVal.Text = "";
+
             SetFormToStyle();
         }
 
@@ -55,10 +58,25 @@ namespace TandaSpreadsheetTool
             pnlRotaEmptyCl.BackColor = GetColorFromByte(currentStyle.rotaEmptyCl);
             pnlRotaField.BackColor = GetColorFromByte(currentStyle.rotaFieldCl);
 
-            fontD.Font = new Font(currentStyle.font, currentStyle.fontSize, GetFontStyle());
+            ckBxShiftAnalysis.Checked = currentStyle.shiftAnalysis;
 
+            fontD.Font = new Font(currentStyle.font, currentStyle.fontSize, GetFontStyle());
+            // need to set: col width 
 
             cBxDiv.SelectedIndex = (int)currentStyle.divBy;
+
+            switch (currentStyle.useVertDates)
+            {
+                case UseVerticalDates.AUTO:
+                    rbtnVertDateAuto.Checked = true;
+                    break;
+                case UseVerticalDates.FALSE:
+                    rbtnVertDateNo.Checked = true;
+                    break;
+                case UseVerticalDates.TRUE:
+                    rbtnVertDateYes.Checked = true;
+                    break;
+            }
 
             cBxHeadAlign.SelectedIndex = (int)currentStyle.headAlign-1;
             cBxNameAlign.SelectedIndex = (int)currentStyle.nameAlign-1;
@@ -83,7 +101,7 @@ namespace TandaSpreadsheetTool
             currentStyle.useTeamCls = ckBxTeamColours.Checked;
 
             currentStyle.minBrightness = (float)tkBarBrightness.Value / 100;
-            currentStyle.colWidth = (int)nUDColWidth.Value;
+            currentStyle.colWidth = (float)tkBarColumnWidth.Value / 100;
             currentStyle.useTeamCls = ckBxTeamColours.Checked;
 
             currentStyle.underLineFs = fontD.Font.Underline;
@@ -93,7 +111,18 @@ namespace TandaSpreadsheetTool
             currentStyle.italicFs = fontD.Font.Italic;
             currentStyle.font = fontD.Font.Name;
 
-
+            if (rbtnVertDateAuto.Checked)
+            {
+                currentStyle.useVertDates = UseVerticalDates.AUTO;
+            }
+            else if (rbtnVertDateYes.Checked)
+            {
+                currentStyle.useVertDates = UseVerticalDates.TRUE;
+            }
+            else
+            {
+                currentStyle.useVertDates = UseVerticalDates.FALSE;
+            }
 
             currentStyle.headAlign = (NPOI.SS.UserModel.HorizontalAlignment)cBxHeadAlign.SelectedIndex + 1;
             currentStyle.nameAlign = (NPOI.SS.UserModel.HorizontalAlignment)cBxNameAlign.SelectedIndex + 1;
@@ -224,6 +253,7 @@ namespace TandaSpreadsheetTool
             var brightValue= ((double)tkBarBrightness.Value / 100) * 255;
             var brightByte = Convert.ToByte(brightValue);
             pnlMinBright.BackColor = GetColorFromByte(new byte[] { brightByte, brightByte, brightByte });
+            lblBrightVal.Text = tkBarBrightness.Value + "%";
         }
 
         private void btnDefault_Click(object sender, EventArgs e)
@@ -249,6 +279,11 @@ namespace TandaSpreadsheetTool
             
             
             
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+            lblColWidthVal.Text = Convert.ToString(((double)tkBarColumnWidth.Value)/ 100);
         }
     }
 }
