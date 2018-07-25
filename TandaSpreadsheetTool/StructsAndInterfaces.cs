@@ -57,6 +57,7 @@ namespace TandaSpreadsheetTool
         public byte[] rotaEmptyCl;
         public byte[] dayNameCl;
         public byte[] dateCl;
+        public byte[] shiftLegHeadCl;
 
         public bool boldHeadings;
         public bool teamTxtFilter;
@@ -95,11 +96,12 @@ namespace TandaSpreadsheetTool
                 rotaEmptyCl = new byte[] { 163, 168, 175 },
                 dayNameCl = new byte[] { 56, 118, 29 },
                 dateCl = new byte[] { 147, 196, 125 },
+                shiftLegHeadCl = new byte[] { 108, 101, 245},
                 colWidth = 22,
                 font = "Arial",
                 fontSize = 11,
                 divBy = SpreadSheetDiv.NONE,
-                useShiftLegends = false,
+                useShiftLegends = true,
                 useTeamLegends = false,
                 boldFs = false,
                 italicFs = false,

@@ -112,6 +112,10 @@ namespace TandaSpreadsheetTool
                 case 0:
                     sheet = workBook.CreateSheet(roster.start.ToString("dd-MM-yy") + " to " + roster.finish.ToString("dd-MM-yy"));
                     CreateRosterTable(roster, style, sheet, workBook);
+                    if (style.useShiftLegends)
+                    {
+                        GenShiftLegends(sheet, roster, style);
+                    }
                     break;
 
                 case -1:
@@ -133,6 +137,11 @@ namespace TandaSpreadsheetTool
                        
                         
                         CreateRosterTable(roster, style, sheet, workBook, fromDate, toDate.AddDays(-1),(fromDate-roster.start).Days-1);
+
+                        if (style.useShiftLegends)
+                        {
+                            GenShiftLegends(sheet, roster, style);
+                        }
                     }
                     break;
 
@@ -150,13 +159,20 @@ namespace TandaSpreadsheetTool
                         sheet = workBook.CreateSheet(worksheetName);
                         
                         CreateRosterTable(roster, style, sheet, workBook, currentDate, nextDate,(currentDate-roster.start).Days);
+                        if (style.useShiftLegends)
+                        {
+                            GenShiftLegends(sheet, roster, style);
+                        }
+
                         currentDate = nextDate.AddDays(1);
+
                     }
                     while (currentDate < roster.finish);
 
                     break;
                     
             }
+            
 
             form.UpdateProgress("Saving File");
            
@@ -180,6 +196,8 @@ namespace TandaSpreadsheetTool
                     return false;
             }
             workBook.Close();
+            teamColourDict.Clear();
+            styleDict.Clear();
             form.UpdateProgress("Finished creating excel sheet at: " + path);
             form.DisableNotifiers();
             return true;
@@ -429,8 +447,7 @@ namespace TandaSpreadsheetTool
 
         private void BuildStyleDicts(ref SpreadSheetStyle style, IWorkbook wBk)
         {
-            teamColourDict.Clear();
-            styleDict.Clear();
+            
 
             var fieldFont = wBk.CreateFont();
             fieldFont.FontName = style.font; ;
@@ -440,10 +457,10 @@ namespace TandaSpreadsheetTool
             fieldFont.Underline = style.underLineFs ? FontUnderlineType.Single : FontUnderlineType.None;
             fieldFont.IsStrikeout = style.strikeThroughFs;
             
-
+            
 
             var nextStyle = (XSSFCellStyle)null;
-
+            
            
 
             
@@ -498,6 +515,12 @@ namespace TandaSpreadsheetTool
             nextStyle.Alignment = style.headAlign;
             styleDict.Add(nameof(style.nameHeadingCl), nextStyle);
 
+            //Team Legend heading style (can be conditional)
+            nextStyle = AutoStyle(wBk, headingFont);
+            nextStyle.SetFillForegroundColor(new XSSFColor(style.shiftLegHeadCl));
+            nextStyle.Alignment = style.headAlign;
+            styleDict.Add(nameof(style.shiftLegHeadCl), nextStyle);
+
             if (!style.useTeamCls)
             {
                 return;
@@ -537,6 +560,33 @@ namespace TandaSpreadsheetTool
         }
 
         
+       private void GenShiftLegends(ISheet sheet, FormattedRoster roster,SpreadSheetStyle style, bool useHeading= false)
+        {
+            
+            var nextRowPos = roster.staff.Count;
+            var row = sheet.CreateRow(nextRowPos);
+            var currentCell = row.CreateCell(1);
+            XSSFCellStyle currentStyle;
+
+            if (useHeading)
+            {
+                currentCell.SetCellValue("Team Legend");
+                styleDict.TryGetValue(nameof(style.shiftLegHeadCl), out currentStyle);
+                currentCell.CellStyle = currentStyle;
+                nextRowPos++;
+            }
+            foreach (var entry in teamColourDict)
+            {
+                row = sheet.CreateRow(nextRowPos);
+                currentCell = row.CreateCell(1);
+                currentCell.SetCellValue(entry.Key);
+                currentCell.CellStyle = entry.Value;
+
+                nextRowPos++;
+            }
+
+
+        }
 
        XSSFColor SetMinBrightness(XSSFColor colour, float minBrightness)
         {
