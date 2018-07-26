@@ -241,7 +241,7 @@ namespace TandaSpreadsheetTool
 
         }
 
-        void BuildExcelSheet(int selectedIndex)
+        void BuildExcelSheet(int selectedIndex, bool open = false)
         {
             if (!sheetBuilder.TeamsSet)
             {
@@ -256,6 +256,11 @@ namespace TandaSpreadsheetTool
             if (sheetBuilder.CreateWorkbook(rosters[selectedIndex], style, spreadSheetPath))
             {
                 // sucessful
+
+            if (open)
+                {
+                    System.Diagnostics.Process.Start(@spreadSheetPath);
+                }
             }
             else
             {
@@ -294,7 +299,7 @@ namespace TandaSpreadsheetTool
             if (!bgThread.IsAlive)
             {
                 var dResult = excelSaveDialog.ShowDialog();
-
+                
                 if (dResult == DialogResult.OK || dResult == DialogResult.Yes)
                 {
                     spreadSheetPath = excelSaveDialog.FileName;
@@ -304,9 +309,9 @@ namespace TandaSpreadsheetTool
                 {
                     return;
                 }
-
+                var open = ckBxOpenSpreadsheet.Checked;
                 var selectedindex = lstBxRosters.SelectedIndex;
-                bgThread = new Thread(()=> BuildExcelSheet(selectedindex));
+                bgThread = new Thread(()=> BuildExcelSheet(selectedindex,open));
                 bgThread.Start();
             }
             else

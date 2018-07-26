@@ -45,10 +45,6 @@ namespace TandaSpreadsheetTool
             }            
         }
 
-        
-
-        
-
        public void SetFormToStyle()
         {
             pnlDate.BackColor = GetColorFromByte(currentStyle.dateCl);
@@ -193,9 +189,7 @@ namespace TandaSpreadsheetTool
             {
                 pnlRotaEmptyCl.BackColor = clrD.Color;
             }
-        }
-             
-       
+        }       
 
         private FontStyle GetFontStyle()
         {
@@ -223,8 +217,6 @@ namespace TandaSpreadsheetTool
 
             return (FontStyle)style;
         }
-
-        
 
         private void btnDayNameCl_Click(object sender, EventArgs e)
         {

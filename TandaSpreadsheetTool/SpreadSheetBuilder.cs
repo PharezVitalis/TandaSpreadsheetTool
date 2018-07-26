@@ -3,7 +3,6 @@ using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System.IO;
 using System;
-using System.Drawing;
 using System.Collections.Generic;
 
 namespace TandaSpreadsheetTool
@@ -13,17 +12,23 @@ namespace TandaSpreadsheetTool
 
         Team[] teams;
         bool setTeams = false;
+        // may need to make these parameters
+        int maxColCount;
+        int maxRowCount;
+        int nOfDays;
+        Dictionary<string, int> shiftCountDict;
       
 
-        Dictionary<string, XSSFCellStyle> teamColourDict;
+        Dictionary<string, XSSFCellStyle> teamDict;
         Dictionary<string, XSSFCellStyle> styleDict;
         INotifiable form;
 
         public SpreadSheetBuilder(INotifiable form)
         {
             this.form = form;
-            teamColourDict = new Dictionary<string, XSSFCellStyle>();
+            teamDict = new Dictionary<string, XSSFCellStyle>();
             styleDict = new Dictionary<string, XSSFCellStyle>();
+            shiftCountDict = new Dictionary<string, int>();
         }
 
         public void SetTeams(Team[] teams)
@@ -41,10 +46,16 @@ namespace TandaSpreadsheetTool
             }
         }
 
+        bool IsWeekend(DayOfWeek day)
+        {
+            return day == DayOfWeek.Saturday || day == DayOfWeek.Sunday;
+        }
 
         public bool CreateWorkbook(FormattedRoster roster, SpreadSheetStyle style,  string path  = null)
         {
             var workBook = (IWorkbook)new XSSFWorkbook();
+            maxColCount = 0;
+            maxRowCount = 0;
 
             form.EnableNotifiers();
             form.UpdateProgress("Building Spreadsheet...");
@@ -196,7 +207,7 @@ namespace TandaSpreadsheetTool
                     return false;
             }
             workBook.Close();
-            teamColourDict.Clear();
+            teamDict.Clear();
             styleDict.Clear();
             form.UpdateProgress("Finished creating excel sheet at: " + path);
             form.DisableNotifiers();
@@ -210,9 +221,18 @@ namespace TandaSpreadsheetTool
            to = RosterManager.SetToTime(to, 23, 59);
 
             CreateHeadings(style, sheet, from, to);
+            shiftCountDict = new Dictionary<string, int>();
+
+
+            styleDict.TryGetValue(nameof(style.nameFieldCl), out var cellStyle);
+
+            for (int i = 0; i <= nOfDays; i++)
+            {
+                shiftCountDict.Add(from.AddDays(i).ToShortDateString(), 0);
+            }
 
            
-            
+
 
             styleDict.TryGetValue(nameof(style.nameFieldCl), out var currentStyle);
             currentStyle.SetFillForegroundColor(new XSSFColor(style.nameFieldCl));
@@ -258,10 +278,10 @@ namespace TandaSpreadsheetTool
 
                     currentCell = currentRow.CreateCell(2-colOffset + (currentSchedule.startDate - roster.start).Days);
                     currentCell.SetCellValue(currentSchedule.team + ": " + currentSchedule.startTime + " - " + currentSchedule.endTime);
-
+                  
                     if (style.useTeamCls)
                     {
-                        if (teamColourDict.TryGetValue(currentSchedule.team, out teamStyle))
+                        if (teamDict.TryGetValue(currentSchedule.team, out teamStyle))
                         {
                             currentCell.CellStyle = teamStyle;
                         }
@@ -270,23 +290,42 @@ namespace TandaSpreadsheetTool
                             currentCell.CellStyle = fieldStyle;
                         }
                     }
+
+
                 }//end inner for
             }//end outer for
 
-            var emptyStyle = AutoStyle(workbook, null);
-            emptyStyle.SetFillBackgroundColor(new XSSFColor(style.rotaEmptyCl));
-            //DrawLinesFillEmpties(emptyStyle, sheet, 2, j + 2, 3, i + 3);
+            maxRowCount++;
+
+             currentRow = sheet.CreateRow(maxRowCount);
+             currentCell = currentRow.CreateCell(1);
+            styleDict.TryGetValue(nameof(style.dateCl), out cellStyle);
+            currentCell.SetCellValue("Total Shifts");
+            currentCell.CellStyle = cellStyle;
+
+            cellStyle = styleDict[nameof(style.dayNameCl)];
+
+            for (int i = 0; i <= nOfDays; i++)
+            {
+                currentCell = currentRow.CreateCell(i + 2);
+                currentCell.SetCellValue(shiftCountDict[from.AddDays(i).ToShortDateString()]);
+                currentCell.CellStyle = cellStyle;
+            }
+
         }        
         
         private void CreateRosterTable(FormattedRoster roster, SpreadSheetStyle style, ISheet sheet, IWorkbook workbook)
         {
             CreateHeadings(style, sheet, roster.start, roster.finish);
-
+            shiftCountDict = new Dictionary<string, int>();
       
 
-            styleDict.TryGetValue(nameof(style.nameFieldCl), out var currentStyle);
+            styleDict.TryGetValue(nameof(style.nameFieldCl), out var cellStyle);
 
-            
+            for (int i = 0; i <= nOfDays; i++)
+            {
+                shiftCountDict.Add(roster.start.AddDays(i).ToShortDateString(), 0);
+            }
 
             var teamStyle = (XSSFCellStyle)null;
 
@@ -295,10 +334,10 @@ namespace TandaSpreadsheetTool
             var staffCount = roster.staff.Count;
             var currentRow = (IRow)null;
             var currentCell = (ICell)null;
-            
-            
-            
 
+
+
+            maxRowCount = staffCount + 1;
             for (int i = 0; i < staffCount; i++)
             {
                 currentRow = sheet.CreateRow(i + 3);
@@ -307,7 +346,7 @@ namespace TandaSpreadsheetTool
 
                 currentCell = currentRow.CreateCell(1);
                 currentCell.SetCellValue(currentStaff.name);
-                currentCell.CellStyle = currentStyle;
+                currentCell.CellStyle = cellStyle;
                 
                 for (int j = 0; j < scheduleCount; j++)
                 {
@@ -318,12 +357,14 @@ namespace TandaSpreadsheetTool
                         continue;
                     }
 
+                    
+
                     currentCell = currentRow.CreateCell(2 + (currentSchedule.startDate - roster.start).Days);
                     currentCell.SetCellValue(currentSchedule.team + ": " + currentSchedule.startTime + " - " + currentSchedule.endTime);
-
+                    
                     if (style.useTeamCls)
                     {
-                        if (teamColourDict.TryGetValue(currentSchedule.team, out teamStyle))
+                        if (teamDict.TryGetValue(currentSchedule.team, out teamStyle))
                         {
                             currentCell.CellStyle = teamStyle;
                         }
@@ -336,13 +377,32 @@ namespace TandaSpreadsheetTool
                     {
                         currentCell.CellStyle = fieldStyle;
                     }
+
+                    shiftCountDict[currentSchedule.startDate.ToShortDateString()]++;
+
                 }//end inner for
             }//end outer for
 
-           
-           // DrawLinesFillEmpties(sheet, 2, colCount + 2, 3, rowCount + 3);
+
+            maxRowCount++;
+
+             currentRow = sheet.CreateRow(maxRowCount);
+            currentCell = currentRow.CreateCell(1);
+            styleDict.TryGetValue(nameof(style.dateCl), out  cellStyle);
+            currentCell.SetCellValue("Total Shifts");
+            currentCell.CellStyle = cellStyle;
+
+            cellStyle = styleDict[nameof(style.dayNameCl)];
+
+            for (int i = 0; i <= nOfDays; i++)
+            {
+                currentCell = currentRow.CreateCell(i + 2);
+                currentCell.SetCellValue(shiftCountDict[roster.start.AddDays(i).ToShortDateString()]);
+                currentCell.CellStyle = cellStyle;
+            }
 
         }
+      
 
         private void DrawLinesFillEmpties( XSSFCellStyle emptyStyle, ISheet sheet, int fromCol,int toCol, int fromRow, int toRow)
         {
@@ -411,8 +471,8 @@ namespace TandaSpreadsheetTool
 
             bool useVertHead = style.useVertDates == UseVerticalDates.TRUE || style.useVertDates == UseVerticalDates.AUTO & style.colWidth < 11.15f;
 
-            var nOfDays = (int)(to-from).TotalDays;
-
+             nOfDays = (int)(to-from).TotalDays;
+            maxColCount = 2 + nOfDays;
             for (int i = 0; i <= nOfDays; i++)
             {// currentStyle = date field style, currentStyle2 = day field style
 
@@ -447,6 +507,9 @@ namespace TandaSpreadsheetTool
 
         private void BuildStyleDicts(ref SpreadSheetStyle style, IWorkbook wBk)
         {
+            teamDict.Clear();
+            styleDict.Clear();
+            shiftCountDict.Clear();
             
 
             var fieldFont = wBk.CreateFont();
@@ -476,55 +539,50 @@ namespace TandaSpreadsheetTool
             titleFont.FontName = style.font;
 
             //title style
-            nextStyle = AutoStyle(wBk, titleFont);
-            nextStyle.SetFillForegroundColor(new XSSFColor(Color.White));
+            nextStyle = AutoStyle(wBk, titleFont);           
             styleDict.Add("title", nextStyle);
 
             // date field style
-            nextStyle = AutoStyle(wBk, headingFont);
-            nextStyle.SetFillForegroundColor(new XSSFColor(style.dateCl));
-            nextStyle.Alignment = style.headAlign;
+            nextStyle = AutoStyle(wBk, headingFont,style.headAlign, new XSSFColor(style.dateCl));
             styleDict.Add(nameof(style.dateCl), nextStyle);
 
             //day field style
-            nextStyle = AutoStyle(wBk, headingFont);
-            nextStyle.SetFillForegroundColor(new XSSFColor(style.dayNameCl));
-            nextStyle.Alignment = style.headAlign;
+            nextStyle = AutoStyle(wBk, headingFont,style.headAlign, new XSSFColor(style.dayNameCl));
             styleDict.Add(nameof(style.dayNameCl), nextStyle);
 
             //rota field style
-            nextStyle = AutoStyle(wBk, fieldFont);
-            nextStyle.SetFillForegroundColor(new XSSFColor(style.rotaFieldCl));
-            nextStyle.Alignment = style.nameAlign;
+            nextStyle = AutoStyle(wBk, fieldFont,style.nameAlign, new XSSFColor(style.rotaFieldCl));
             styleDict.Add(nameof(style.rotaFieldCl), nextStyle);
 
             //empty rota field style
-            nextStyle = AutoStyle(wBk);
-            nextStyle.SetFillForegroundColor(new XSSFColor(style.rotaEmptyCl));
+            nextStyle = AutoStyle(wBk,null,HorizontalAlignment.Left, new XSSFColor(style.rotaEmptyCl));
             styleDict.Add(nameof(style.rotaEmptyCl), nextStyle);
 
             //name field style
-            nextStyle = AutoStyle(wBk, fieldFont);
-            nextStyle.SetFillForegroundColor(new XSSFColor(style.nameFieldCl));
-            nextStyle.Alignment = style.nameAlign;
+            nextStyle = AutoStyle(wBk, fieldFont,style.nameAlign, new XSSFColor(style.nameFieldCl));
             styleDict.Add(nameof(style.nameFieldCl), nextStyle);
 
             //name heading style
-            nextStyle = AutoStyle(wBk, headingFont);
-            nextStyle.SetFillForegroundColor(new XSSFColor(style.nameHeadingCl));
-            nextStyle.Alignment = style.headAlign;
+            nextStyle = AutoStyle(wBk, headingFont, style.headAlign, new XSSFColor(style.nameHeadingCl));
             styleDict.Add(nameof(style.nameHeadingCl), nextStyle);
 
             //Team Legend heading style (can be conditional)
-            nextStyle = AutoStyle(wBk, headingFont);
-            nextStyle.SetFillForegroundColor(new XSSFColor(style.shiftLegHeadCl));
-            nextStyle.Alignment = style.headAlign;
-            styleDict.Add(nameof(style.shiftLegHeadCl), nextStyle);
+            nextStyle = AutoStyle(wBk, headingFont,style.headAlign, new XSSFColor(style.teamLegHeadCl));
+            styleDict.Add(nameof(style.teamLegHeadCl), nextStyle);
 
-            if (!style.useTeamCls)
-            {
-                return;
-            }
+            //style for total shifts (weekday only, may need to create weekend version)
+            nextStyle = AutoStyle(wBk, headingFont, style.rotaAlign, new XSSFColor(style.tlShiftFieldCl));
+            styleDict.Add(nameof(style.tlShiftFieldCl), nextStyle);
+
+            //style for total shifts header
+            nextStyle = AutoStyle(wBk, headingFont, style.nameAlign, new XSSFColor(style.tlShiftHeadCl));
+            styleDict.Add(nameof(style.tlShiftHeadCl), nextStyle);
+
+
+            //if (!style.useTeamCls) - could either remove completely or add | for using shift analysis
+            //{
+            //    return;
+            //}
 
             
             
@@ -533,8 +591,8 @@ namespace TandaSpreadsheetTool
                 for (int i = 0; i < teams.Length; i++)
                 {
                     var currentTeam = teams[i];
-                    nextStyle = AutoStyle(wBk, fieldFont);
-                    nextStyle.Alignment = style.nameAlign;
+                    
+                    
                     var colour = GetColourFromHex(currentTeam.colour);
                    
                     if (colour != null)
@@ -547,23 +605,29 @@ namespace TandaSpreadsheetTool
                                 
                            
                         }
-                        nextStyle.SetFillForegroundColor(colour);
+                    nextStyle = AutoStyle(wBk, fieldFont,style.rotaAlign,colour);
+
+                   
                     }
-                    if (!teamColourDict.ContainsKey(currentTeam.name))
+                    if (!teamDict.ContainsKey(currentTeam.name))
                 {
-                    teamColourDict.Add(currentTeam.name, nextStyle);
+                    teamDict.Add(currentTeam.name, nextStyle);
+                }
+
+                if (!shiftCountDict.ContainsKey(currentTeam.name))
+                {
+                    shiftCountDict.Add(currentTeam.name, 0);
                 }
                     
                 }
             
             
         }
-
         
        private void GenShiftLegends(ISheet sheet, FormattedRoster roster,SpreadSheetStyle style, bool useHeading= false)
         {
             
-            var nextRowPos = roster.staff.Count;
+            var nextRowPos = maxRowCount+1;
             var row = sheet.CreateRow(nextRowPos);
             var currentCell = row.CreateCell(1);
             XSSFCellStyle currentStyle;
@@ -571,11 +635,11 @@ namespace TandaSpreadsheetTool
             if (useHeading)
             {
                 currentCell.SetCellValue("Team Legend");
-                styleDict.TryGetValue(nameof(style.shiftLegHeadCl), out currentStyle);
+                styleDict.TryGetValue(nameof(style.teamLegHeadCl), out currentStyle);
                 currentCell.CellStyle = currentStyle;
                 nextRowPos++;
             }
-            foreach (var entry in teamColourDict)
+            foreach (var entry in teamDict)
             {
                 row = sheet.CreateRow(nextRowPos);
                 currentCell = row.CreateCell(1);
@@ -680,7 +744,8 @@ namespace TandaSpreadsheetTool
         }
 
 
-        private XSSFCellStyle AutoStyle(IWorkbook wbk, IFont font=null)
+        private XSSFCellStyle AutoStyle(IWorkbook wbk, IFont font= null, HorizontalAlignment alignment = HorizontalAlignment.Left,
+            XSSFColor colour = null)
         {
             var autoValue = (XSSFCellStyle)wbk.CreateCellStyle();
             autoValue.FillPattern = FillPattern.SolidForeground;
@@ -689,13 +754,17 @@ namespace TandaSpreadsheetTool
             autoValue.BorderTop = BorderStyle.Thin;
             autoValue.BorderLeft = BorderStyle.Thin;
             autoValue.BorderRight = BorderStyle.Thin;
+            autoValue.Alignment = alignment;
             
             if (font != null)
             {
                 autoValue.SetFont(font);
             }
             
-
+            if (colour != null)
+            {
+                autoValue.SetFillForegroundColor(colour);
+            }
 
 
 

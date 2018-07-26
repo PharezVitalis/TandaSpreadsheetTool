@@ -54,6 +54,7 @@
             this.pgBarMain = new System.Windows.Forms.ProgressBar();
             this.btnExit = new System.Windows.Forms.Button();
             this.lstBxNotifier = new System.Windows.Forms.ListBox();
+            this.ckBxOpenSpreadsheet = new System.Windows.Forms.CheckBox();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -67,7 +68,7 @@
             this.pnlLogIn.Controls.Add(this.lblPwd);
             this.pnlLogIn.Controls.Add(this.lblUName);
             this.pnlLogIn.Controls.Add(this.lblToContinue);
-            this.pnlLogIn.Location = new System.Drawing.Point(12, 12);
+            this.pnlLogIn.Location = new System.Drawing.Point(15, 263);
             this.pnlLogIn.Name = "pnlLogIn";
             this.pnlLogIn.Size = new System.Drawing.Size(733, 142);
             this.pnlLogIn.TabIndex = 0;
@@ -135,6 +136,7 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.ckBxOpenSpreadsheet);
             this.pnlMain.Controls.Add(this.btnFormat);
             this.pnlMain.Controls.Add(this.btnRemove);
             this.pnlMain.Controls.Add(this.lstBxRosters);
@@ -312,11 +314,23 @@
             this.lstBxNotifier.TabIndex = 18;
             this.lstBxNotifier.TabStop = false;
             // 
+            // ckBxOpenSpreadsheet
+            // 
+            this.ckBxOpenSpreadsheet.AutoSize = true;
+            this.ckBxOpenSpreadsheet.Checked = true;
+            this.ckBxOpenSpreadsheet.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckBxOpenSpreadsheet.Location = new System.Drawing.Point(546, 55);
+            this.ckBxOpenSpreadsheet.Name = "ckBxOpenSpreadsheet";
+            this.ckBxOpenSpreadsheet.Size = new System.Drawing.Size(131, 17);
+            this.ckBxOpenSpreadsheet.TabIndex = 17;
+            this.ckBxOpenSpreadsheet.Text = "Open When Complete";
+            this.ckBxOpenSpreadsheet.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(757, 241);
+            this.ClientSize = new System.Drawing.Size(757, 536);
             this.Controls.Add(this.lstBxNotifier);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.pgBarMain);
@@ -363,6 +377,7 @@
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.ListBox lstBxNotifier;
         private System.Windows.Forms.ProgressBar pgBarMain;
+        private System.Windows.Forms.CheckBox ckBxOpenSpreadsheet;
     }
 }
 

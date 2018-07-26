@@ -25,7 +25,6 @@ namespace TandaSpreadsheetTool
 
     }
 
-    
 
     public class Roster
     {
@@ -47,6 +46,8 @@ namespace TandaSpreadsheetTool
         TRUE, AUTO, FALSE
     }
 
+   
+
     public struct SpreadSheetStyle
     {
         //cl = colour
@@ -57,7 +58,9 @@ namespace TandaSpreadsheetTool
         public byte[] rotaEmptyCl;
         public byte[] dayNameCl;
         public byte[] dateCl;
-        public byte[] shiftLegHeadCl;
+        public byte[] teamLegHeadCl;
+        public byte[] tlShiftHeadCl;
+        public byte[] tlShiftFieldCl;
 
         public bool boldHeadings;
         public bool teamTxtFilter;
@@ -89,6 +92,8 @@ namespace TandaSpreadsheetTool
                 boldHeadings = true,
                 nameHeadingCl = new byte[] { 61, 133, 198 },
                 nameFieldCl = new byte[] { 207, 226, 243 },
+                tlShiftHeadCl = new byte[] { 142,169,219},
+                tlShiftFieldCl = new byte[] {56,118,29},
                 teamTxtFilter = true,
                 minBrightness = 0.7f,
                 useTeamCls = true,
@@ -96,7 +101,7 @@ namespace TandaSpreadsheetTool
                 rotaEmptyCl = new byte[] { 163, 168, 175 },
                 dayNameCl = new byte[] { 56, 118, 29 },
                 dateCl = new byte[] { 147, 196, 125 },
-                shiftLegHeadCl = new byte[] { 108, 101, 245},
+                teamLegHeadCl = new byte[] { 108, 101, 245},
                 colWidth = 22,
                 font = "Arial",
                 fontSize = 11,
