@@ -490,7 +490,7 @@ namespace TandaSpreadsheetTool
             {
                 for (int i = 0; i < rosterObjs.Length; i++)
                 {
-                    rosterObjs[i] = JsonConvert.DeserializeObject<Roster>(rosters[i].ToString());
+                   var currentRoster = rosterObjs[i] = JsonConvert.DeserializeObject<Roster>(rosters[i].ToString());
                 }
             }
 
@@ -690,11 +690,11 @@ namespace TandaSpreadsheetTool
                         if (start != null)
                         {
                             formattedSch.startDate = UnixToDate(Convert.ToInt32(start));
-                            if (formattedSch.startDate > dateTo)
+                            if (formattedSch.startDate.Date> dateTo.Date)
                             {
                                 break;
                             }
-                            else if (formattedSch.startDate < dateFrom)
+                            else if (formattedSch.startDate.Date < dateFrom.Date)
                             {
                                 continue;
                             }
@@ -715,6 +715,7 @@ namespace TandaSpreadsheetTool
                         if (team != null)
                         {
                             formattedSch.team = team.name;
+                           
                             formattedSch.teamColour = team.colour;
                             formattedSch.teamNameShort = team.export_name;
                         }

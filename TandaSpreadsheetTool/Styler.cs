@@ -53,7 +53,8 @@ namespace TandaSpreadsheetTool
             pnlNameHeadCL.BackColor = GetColorFromByte(currentStyle.nameHeadingCl);
             pnlRotaEmptyCl.BackColor = GetColorFromByte(currentStyle.rotaEmptyCl);
             pnlRotaField.BackColor = GetColorFromByte(currentStyle.rotaFieldCl);
-
+            pnlShiftHeadCl.BackColor = GetColorFromByte(currentStyle.tlShiftHeadCl);
+            pnlTotalShiftFdCl.BackColor = GetColorFromByte(currentStyle.tlShiftFieldCl);
             ckBxShiftAnalysis.Checked = currentStyle.shiftAnalysis;
 
             fontD.Font = new Font(currentStyle.font, currentStyle.fontSize, GetFontStyle());
@@ -99,13 +100,15 @@ namespace TandaSpreadsheetTool
             currentStyle.rotaEmptyCl = GetByteFromColor(pnlRotaEmptyCl.BackColor);
             currentStyle.dayNameCl = GetByteFromColor(pnlDayName.BackColor);
             currentStyle.dateCl = GetByteFromColor(pnlDate.BackColor);
+            currentStyle.tlShiftFieldCl = GetByteFromColor(pnlTotalShiftFdCl.BackColor);
+            currentStyle.tlShiftHeadCl = GetByteFromColor(pnlShiftHeadCl.BackColor);
 
             currentStyle.boldHeadings = ckBxBoldHead.Checked;
-            currentStyle.useTeamCls = ckBxTeamColours.Checked;
+            
 
             currentStyle.minBrightness = (float)tkBarBrightness.Value / 100;
             currentStyle.colWidth = (float)tkBarColumnWidth.Value / 100;
-            currentStyle.useTeamCls = ckBxTeamColours.Checked;
+            
 
             currentStyle.underLineFs = fontD.Font.Underline;
             currentStyle.strikeThroughFs = fontD.Font.Strikeout;
@@ -113,6 +116,8 @@ namespace TandaSpreadsheetTool
             currentStyle.boldFs = fontD.Font.Bold;
             currentStyle.italicFs = fontD.Font.Italic;
             currentStyle.font = fontD.Font.Name;
+
+           
 
             if (rbtnVertDateAuto.Checked)
             {
@@ -283,6 +288,23 @@ namespace TandaSpreadsheetTool
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
             lblColWidthVal.Text = Convert.ToString(((double)tkBarColumnWidth.Value)/ 100);
+        }
+
+        private void btnShiftHeadCl_Click(object sender, EventArgs e)
+        {
+            if (clrD.ShowDialog() == DialogResult.OK)
+            {
+                pnlShiftHeadCl.BackColor = clrD.Color;
+            }
+           
+        }
+
+        private void btnTotShiftFd_Click(object sender, EventArgs e)
+        {
+            if (clrD.ShowDialog() == DialogResult.OK)
+            {
+                pnlTotalShiftFdCl.BackColor = clrD.Color;
+            }
         }
     }
 }

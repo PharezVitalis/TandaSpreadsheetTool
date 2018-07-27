@@ -75,9 +75,17 @@
             this.lblBrightVal = new System.Windows.Forms.Label();
             this.lblColWidthVal = new System.Windows.Forms.Label();
             this.ckBxShiftAnalysis = new System.Windows.Forms.CheckBox();
+            this.lbltlShiftHeadCl = new System.Windows.Forms.Label();
+            this.btnShiftHeadCl = new System.Windows.Forms.Button();
+            this.pnlShiftHeadCl = new System.Windows.Forms.Panel();
+            this.lblTotalShiftFd = new System.Windows.Forms.Label();
+            this.btnTotShiftFd = new System.Windows.Forms.Button();
+            this.pnlTotalShiftFdCl = new System.Windows.Forms.Panel();
+            this.gBxColours = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarBrightness)).BeginInit();
             this.gBxUseVertDates.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarColumnWidth)).BeginInit();
+            this.gBxColours.SuspendLayout();
             this.SuspendLayout();
             // 
             // ckBxBoldHead
@@ -117,7 +125,7 @@
             // pnlNameHeadCL
             // 
             this.pnlNameHeadCL.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlNameHeadCL.Location = new System.Drawing.Point(130, 301);
+            this.pnlNameHeadCL.Location = new System.Drawing.Point(123, 16);
             this.pnlNameHeadCL.Name = "pnlNameHeadCL";
             this.pnlNameHeadCL.Size = new System.Drawing.Size(82, 25);
             this.pnlNameHeadCL.TabIndex = 3;
@@ -125,7 +133,7 @@
             // pnlNameField
             // 
             this.pnlNameField.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlNameField.Location = new System.Drawing.Point(130, 332);
+            this.pnlNameField.Location = new System.Drawing.Point(129, 59);
             this.pnlNameField.Name = "pnlNameField";
             this.pnlNameField.Size = new System.Drawing.Size(82, 25);
             this.pnlNameField.TabIndex = 4;
@@ -133,7 +141,7 @@
             // pnlRotaField
             // 
             this.pnlRotaField.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlRotaField.Location = new System.Drawing.Point(130, 359);
+            this.pnlRotaField.Location = new System.Drawing.Point(129, 86);
             this.pnlRotaField.Name = "pnlRotaField";
             this.pnlRotaField.Size = new System.Drawing.Size(82, 25);
             this.pnlRotaField.TabIndex = 4;
@@ -141,7 +149,7 @@
             // pnlDayName
             // 
             this.pnlDayName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlDayName.Location = new System.Drawing.Point(128, 420);
+            this.pnlDayName.Location = new System.Drawing.Point(127, 147);
             this.pnlDayName.Name = "pnlDayName";
             this.pnlDayName.Size = new System.Drawing.Size(82, 25);
             this.pnlDayName.TabIndex = 4;
@@ -149,7 +157,7 @@
             // pnlDate
             // 
             this.pnlDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlDate.Location = new System.Drawing.Point(128, 451);
+            this.pnlDate.Location = new System.Drawing.Point(127, 178);
             this.pnlDate.Name = "pnlDate";
             this.pnlDate.Size = new System.Drawing.Size(82, 25);
             this.pnlDate.TabIndex = 4;
@@ -165,7 +173,7 @@
             // 
             // btnNameHeadCl
             // 
-            this.btnNameHeadCl.Location = new System.Drawing.Point(218, 305);
+            this.btnNameHeadCl.Location = new System.Drawing.Point(211, 18);
             this.btnNameHeadCl.Name = "btnNameHeadCl";
             this.btnNameHeadCl.Size = new System.Drawing.Size(75, 23);
             this.btnNameHeadCl.TabIndex = 8;
@@ -175,7 +183,7 @@
             // 
             // btnNameFieldCL
             // 
-            this.btnNameFieldCL.Location = new System.Drawing.Point(218, 334);
+            this.btnNameFieldCL.Location = new System.Drawing.Point(217, 61);
             this.btnNameFieldCL.Name = "btnNameFieldCL";
             this.btnNameFieldCL.Size = new System.Drawing.Size(75, 23);
             this.btnNameFieldCL.TabIndex = 9;
@@ -185,7 +193,7 @@
             // 
             // btnRotaFieldCl
             // 
-            this.btnRotaFieldCl.Location = new System.Drawing.Point(218, 363);
+            this.btnRotaFieldCl.Location = new System.Drawing.Point(217, 90);
             this.btnRotaFieldCl.Name = "btnRotaFieldCl";
             this.btnRotaFieldCl.Size = new System.Drawing.Size(75, 23);
             this.btnRotaFieldCl.TabIndex = 10;
@@ -195,7 +203,7 @@
             // 
             // btnDayNameCl
             // 
-            this.btnDayNameCl.Location = new System.Drawing.Point(216, 422);
+            this.btnDayNameCl.Location = new System.Drawing.Point(215, 149);
             this.btnDayNameCl.Name = "btnDayNameCl";
             this.btnDayNameCl.Size = new System.Drawing.Size(75, 23);
             this.btnDayNameCl.TabIndex = 11;
@@ -205,7 +213,7 @@
             // 
             // btnDateCl
             // 
-            this.btnDateCl.Location = new System.Drawing.Point(216, 451);
+            this.btnDateCl.Location = new System.Drawing.Point(215, 178);
             this.btnDateCl.Name = "btnDateCl";
             this.btnDateCl.Size = new System.Drawing.Size(75, 23);
             this.btnDateCl.TabIndex = 12;
@@ -215,7 +223,7 @@
             // 
             // btnRotaEmptyCl
             // 
-            this.btnRotaEmptyCl.Location = new System.Drawing.Point(216, 393);
+            this.btnRotaEmptyCl.Location = new System.Drawing.Point(215, 120);
             this.btnRotaEmptyCl.Name = "btnRotaEmptyCl";
             this.btnRotaEmptyCl.Size = new System.Drawing.Size(75, 23);
             this.btnRotaEmptyCl.TabIndex = 15;
@@ -226,7 +234,7 @@
             // pnlRotaEmptyCl
             // 
             this.pnlRotaEmptyCl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlRotaEmptyCl.Location = new System.Drawing.Point(128, 389);
+            this.pnlRotaEmptyCl.Location = new System.Drawing.Point(127, 116);
             this.pnlRotaEmptyCl.Name = "pnlRotaEmptyCl";
             this.pnlRotaEmptyCl.Size = new System.Drawing.Size(82, 25);
             this.pnlRotaEmptyCl.TabIndex = 14;
@@ -234,7 +242,7 @@
             // lblNameHeadCl
             // 
             this.lblNameHeadCl.AutoSize = true;
-            this.lblNameHeadCl.Location = new System.Drawing.Point(13, 310);
+            this.lblNameHeadCl.Location = new System.Drawing.Point(10, 28);
             this.lblNameHeadCl.Name = "lblNameHeadCl";
             this.lblNameHeadCl.Size = new System.Drawing.Size(111, 13);
             this.lblNameHeadCl.TabIndex = 16;
@@ -243,7 +251,7 @@
             // lblNameFieldCl
             // 
             this.lblNameFieldCl.AutoSize = true;
-            this.lblNameFieldCl.Location = new System.Drawing.Point(13, 339);
+            this.lblNameFieldCl.Location = new System.Drawing.Point(12, 66);
             this.lblNameFieldCl.Name = "lblNameFieldCl";
             this.lblNameFieldCl.Size = new System.Drawing.Size(93, 13);
             this.lblNameFieldCl.TabIndex = 17;
@@ -252,7 +260,7 @@
             // lblRotaFieldCl
             // 
             this.lblRotaFieldCl.AutoSize = true;
-            this.lblRotaFieldCl.Location = new System.Drawing.Point(13, 368);
+            this.lblRotaFieldCl.Location = new System.Drawing.Point(12, 95);
             this.lblRotaFieldCl.Name = "lblRotaFieldCl";
             this.lblRotaFieldCl.Size = new System.Drawing.Size(88, 13);
             this.lblRotaFieldCl.TabIndex = 18;
@@ -261,7 +269,7 @@
             // lblERotaCl
             // 
             this.lblERotaCl.AutoSize = true;
-            this.lblERotaCl.Location = new System.Drawing.Point(13, 398);
+            this.lblERotaCl.Location = new System.Drawing.Point(12, 125);
             this.lblERotaCl.Name = "lblERotaCl";
             this.lblERotaCl.Size = new System.Drawing.Size(95, 13);
             this.lblERotaCl.TabIndex = 19;
@@ -270,7 +278,7 @@
             // lblDayCl
             // 
             this.lblDayCl.AutoSize = true;
-            this.lblDayCl.Location = new System.Drawing.Point(13, 427);
+            this.lblDayCl.Location = new System.Drawing.Point(12, 159);
             this.lblDayCl.Name = "lblDayCl";
             this.lblDayCl.Size = new System.Drawing.Size(90, 13);
             this.lblDayCl.TabIndex = 20;
@@ -279,7 +287,7 @@
             // lblDateCl
             // 
             this.lblDateCl.AutoSize = true;
-            this.lblDateCl.Location = new System.Drawing.Point(13, 456);
+            this.lblDateCl.Location = new System.Drawing.Point(16, 188);
             this.lblDateCl.Name = "lblDateCl";
             this.lblDateCl.Size = new System.Drawing.Size(63, 13);
             this.lblDateCl.TabIndex = 21;
@@ -307,7 +315,7 @@
             // 
             // btnAccept
             // 
-            this.btnAccept.Location = new System.Drawing.Point(543, 481);
+            this.btnAccept.Location = new System.Drawing.Point(543, 568);
             this.btnAccept.Name = "btnAccept";
             this.btnAccept.Size = new System.Drawing.Size(75, 23);
             this.btnAccept.TabIndex = 24;
@@ -318,7 +326,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(23, 481);
+            this.btnCancel.Location = new System.Drawing.Point(14, 568);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 25;
@@ -343,7 +351,7 @@
             "Weekly",
             "Biweekly",
             "Monthly"});
-            this.cBxDiv.Location = new System.Drawing.Point(106, 147);
+            this.cBxDiv.Location = new System.Drawing.Point(105, 102);
             this.cBxDiv.MaxLength = 8;
             this.cBxDiv.Name = "cBxDiv";
             this.cBxDiv.Size = new System.Drawing.Size(142, 21);
@@ -351,7 +359,7 @@
             // 
             // btnDefault
             // 
-            this.btnDefault.Location = new System.Drawing.Point(462, 481);
+            this.btnDefault.Location = new System.Drawing.Point(462, 568);
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size(75, 23);
             this.btnDefault.TabIndex = 29;
@@ -362,7 +370,7 @@
             // lblSheetDiv
             // 
             this.lblSheetDiv.AutoSize = true;
-            this.lblSheetDiv.Location = new System.Drawing.Point(17, 150);
+            this.lblSheetDiv.Location = new System.Drawing.Point(16, 105);
             this.lblSheetDiv.Name = "lblSheetDiv";
             this.lblSheetDiv.Size = new System.Drawing.Size(83, 13);
             this.lblSheetDiv.TabIndex = 30;
@@ -370,7 +378,7 @@
             // 
             // btnFonts
             // 
-            this.btnFonts.Location = new System.Drawing.Point(381, 481);
+            this.btnFonts.Location = new System.Drawing.Point(381, 568);
             this.btnFonts.Name = "btnFonts";
             this.btnFonts.Size = new System.Drawing.Size(75, 23);
             this.btnFonts.TabIndex = 31;
@@ -385,7 +393,7 @@
             "Left",
             "Right",
             "Centre"});
-            this.cBxNameAlign.Location = new System.Drawing.Point(106, 193);
+            this.cBxNameAlign.Location = new System.Drawing.Point(105, 148);
             this.cBxNameAlign.Name = "cBxNameAlign";
             this.cBxNameAlign.Size = new System.Drawing.Size(142, 21);
             this.cBxNameAlign.TabIndex = 32;
@@ -393,7 +401,7 @@
             // lblCellAlign
             // 
             this.lblCellAlign.AutoSize = true;
-            this.lblCellAlign.Location = new System.Drawing.Point(14, 199);
+            this.lblCellAlign.Location = new System.Drawing.Point(13, 154);
             this.lblCellAlign.Name = "lblCellAlign";
             this.lblCellAlign.Size = new System.Drawing.Size(86, 13);
             this.lblCellAlign.TabIndex = 33;
@@ -406,7 +414,7 @@
             "Left",
             "Right",
             "Centre"});
-            this.cBxHeadAlign.Location = new System.Drawing.Point(374, 147);
+            this.cBxHeadAlign.Location = new System.Drawing.Point(373, 102);
             this.cBxHeadAlign.Name = "cBxHeadAlign";
             this.cBxHeadAlign.Size = new System.Drawing.Size(142, 21);
             this.cBxHeadAlign.TabIndex = 34;
@@ -414,7 +422,7 @@
             // lblHeadAlign
             // 
             this.lblHeadAlign.AutoSize = true;
-            this.lblHeadAlign.Location = new System.Drawing.Point(291, 155);
+            this.lblHeadAlign.Location = new System.Drawing.Point(290, 110);
             this.lblHeadAlign.Name = "lblHeadAlign";
             this.lblHeadAlign.Size = new System.Drawing.Size(73, 13);
             this.lblHeadAlign.TabIndex = 35;
@@ -423,7 +431,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(308, 199);
+            this.label1.Location = new System.Drawing.Point(307, 154);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 13);
             this.label1.TabIndex = 37;
@@ -436,7 +444,7 @@
             "Left",
             "Right",
             "Centre"});
-            this.cBxRotaAlign.Location = new System.Drawing.Point(374, 193);
+            this.cBxRotaAlign.Location = new System.Drawing.Point(373, 148);
             this.cBxRotaAlign.Name = "cBxRotaAlign";
             this.cBxRotaAlign.Size = new System.Drawing.Size(142, 21);
             this.cBxRotaAlign.TabIndex = 38;
@@ -478,7 +486,7 @@
             this.gBxUseVertDates.Controls.Add(this.rbtnVertDateAuto);
             this.gBxUseVertDates.Controls.Add(this.rbtnVertDateNo);
             this.gBxUseVertDates.Controls.Add(this.rbtnVertDateYes);
-            this.gBxUseVertDates.Location = new System.Drawing.Point(12, 232);
+            this.gBxUseVertDates.Location = new System.Drawing.Point(20, 184);
             this.gBxUseVertDates.Name = "gBxUseVertDates";
             this.gBxUseVertDates.Size = new System.Drawing.Size(154, 49);
             this.gBxUseVertDates.TabIndex = 43;
@@ -524,13 +532,101 @@
             this.ckBxShiftAnalysis.Text = "Show Shift Analysis";
             this.ckBxShiftAnalysis.UseVisualStyleBackColor = true;
             // 
+            // lbltlShiftHeadCl
+            // 
+            this.lbltlShiftHeadCl.AutoSize = true;
+            this.lbltlShiftHeadCl.Location = new System.Drawing.Point(16, 214);
+            this.lbltlShiftHeadCl.Name = "lbltlShiftHeadCl";
+            this.lbltlShiftHeadCl.Size = new System.Drawing.Size(98, 13);
+            this.lbltlShiftHeadCl.TabIndex = 50;
+            this.lbltlShiftHeadCl.Text = "Total Shift Heading";
+            // 
+            // btnShiftHeadCl
+            // 
+            this.btnShiftHeadCl.Location = new System.Drawing.Point(211, 209);
+            this.btnShiftHeadCl.Name = "btnShiftHeadCl";
+            this.btnShiftHeadCl.Size = new System.Drawing.Size(75, 23);
+            this.btnShiftHeadCl.TabIndex = 49;
+            this.btnShiftHeadCl.Text = "Change";
+            this.btnShiftHeadCl.UseVisualStyleBackColor = true;
+            this.btnShiftHeadCl.Click += new System.EventHandler(this.btnShiftHeadCl_Click);
+            // 
+            // pnlShiftHeadCl
+            // 
+            this.pnlShiftHeadCl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlShiftHeadCl.Location = new System.Drawing.Point(123, 209);
+            this.pnlShiftHeadCl.Name = "pnlShiftHeadCl";
+            this.pnlShiftHeadCl.Size = new System.Drawing.Size(82, 25);
+            this.pnlShiftHeadCl.TabIndex = 48;
+            // 
+            // lblTotalShiftFd
+            // 
+            this.lblTotalShiftFd.AutoSize = true;
+            this.lblTotalShiftFd.Location = new System.Drawing.Point(20, 255);
+            this.lblTotalShiftFd.Name = "lblTotalShiftFd";
+            this.lblTotalShiftFd.Size = new System.Drawing.Size(80, 13);
+            this.lblTotalShiftFd.TabIndex = 53;
+            this.lblTotalShiftFd.Text = "Total Shift Field";
+            // 
+            // btnTotShiftFd
+            // 
+            this.btnTotShiftFd.Location = new System.Drawing.Point(211, 250);
+            this.btnTotShiftFd.Name = "btnTotShiftFd";
+            this.btnTotShiftFd.Size = new System.Drawing.Size(75, 23);
+            this.btnTotShiftFd.TabIndex = 52;
+            this.btnTotShiftFd.Text = "Change";
+            this.btnTotShiftFd.UseVisualStyleBackColor = true;
+            this.btnTotShiftFd.Click += new System.EventHandler(this.btnTotShiftFd_Click);
+            // 
+            // pnlTotalShiftFdCl
+            // 
+            this.pnlTotalShiftFdCl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlTotalShiftFdCl.Location = new System.Drawing.Point(123, 250);
+            this.pnlTotalShiftFdCl.Name = "pnlTotalShiftFdCl";
+            this.pnlTotalShiftFdCl.Size = new System.Drawing.Size(82, 25);
+            this.pnlTotalShiftFdCl.TabIndex = 51;
+            // 
+            // gBxColours
+            // 
+            this.gBxColours.Controls.Add(this.pnlNameHeadCL);
+            this.gBxColours.Controls.Add(this.lblTotalShiftFd);
+            this.gBxColours.Controls.Add(this.pnlNameField);
+            this.gBxColours.Controls.Add(this.btnTotShiftFd);
+            this.gBxColours.Controls.Add(this.pnlRotaField);
+            this.gBxColours.Controls.Add(this.pnlTotalShiftFdCl);
+            this.gBxColours.Controls.Add(this.pnlDayName);
+            this.gBxColours.Controls.Add(this.lbltlShiftHeadCl);
+            this.gBxColours.Controls.Add(this.pnlDate);
+            this.gBxColours.Controls.Add(this.btnShiftHeadCl);
+            this.gBxColours.Controls.Add(this.btnNameHeadCl);
+            this.gBxColours.Controls.Add(this.pnlShiftHeadCl);
+            this.gBxColours.Controls.Add(this.btnNameFieldCL);
+            this.gBxColours.Controls.Add(this.btnRotaFieldCl);
+            this.gBxColours.Controls.Add(this.btnDayNameCl);
+            this.gBxColours.Controls.Add(this.btnDateCl);
+            this.gBxColours.Controls.Add(this.pnlRotaEmptyCl);
+            this.gBxColours.Controls.Add(this.btnRotaEmptyCl);
+            this.gBxColours.Controls.Add(this.lblNameHeadCl);
+            this.gBxColours.Controls.Add(this.lblNameFieldCl);
+            this.gBxColours.Controls.Add(this.lblRotaFieldCl);
+            this.gBxColours.Controls.Add(this.lblERotaCl);
+            this.gBxColours.Controls.Add(this.lblDayCl);
+            this.gBxColours.Controls.Add(this.lblDateCl);
+            this.gBxColours.Location = new System.Drawing.Point(22, 239);
+            this.gBxColours.Name = "gBxColours";
+            this.gBxColours.Size = new System.Drawing.Size(294, 288);
+            this.gBxColours.TabIndex = 54;
+            this.gBxColours.TabStop = false;
+            this.gBxColours.Text = "Colours";
+            // 
             // StylerForm
             // 
             this.AcceptButton = this.btnAccept;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(630, 516);
+            this.ClientSize = new System.Drawing.Size(627, 603);
+            this.Controls.Add(this.gBxColours);
             this.Controls.Add(this.ckBxShiftAnalysis);
             this.Controls.Add(this.lblColWidthVal);
             this.Controls.Add(this.lblBrightVal);
@@ -552,24 +648,6 @@
             this.Controls.Add(this.btnAccept);
             this.Controls.Add(this.lblBrightness);
             this.Controls.Add(this.tkBarBrightness);
-            this.Controls.Add(this.lblDateCl);
-            this.Controls.Add(this.lblDayCl);
-            this.Controls.Add(this.lblERotaCl);
-            this.Controls.Add(this.lblRotaFieldCl);
-            this.Controls.Add(this.lblNameFieldCl);
-            this.Controls.Add(this.lblNameHeadCl);
-            this.Controls.Add(this.btnRotaEmptyCl);
-            this.Controls.Add(this.pnlRotaEmptyCl);
-            this.Controls.Add(this.btnDateCl);
-            this.Controls.Add(this.btnDayNameCl);
-            this.Controls.Add(this.btnRotaFieldCl);
-            this.Controls.Add(this.btnNameFieldCL);
-            this.Controls.Add(this.btnNameHeadCl);
-            this.Controls.Add(this.pnlDate);
-            this.Controls.Add(this.pnlDayName);
-            this.Controls.Add(this.pnlRotaField);
-            this.Controls.Add(this.pnlNameField);
-            this.Controls.Add(this.pnlNameHeadCL);
             this.Controls.Add(this.ckBxTeamColours);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.ckBxBoldHead);
@@ -579,6 +657,8 @@
             this.gBxUseVertDates.ResumeLayout(false);
             this.gBxUseVertDates.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarColumnWidth)).EndInit();
+            this.gBxColours.ResumeLayout(false);
+            this.gBxColours.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -633,5 +713,12 @@
         private System.Windows.Forms.Label lblBrightVal;
         private System.Windows.Forms.Label lblColWidthVal;
         private System.Windows.Forms.CheckBox ckBxShiftAnalysis;
+        private System.Windows.Forms.Label lbltlShiftHeadCl;
+        private System.Windows.Forms.Button btnShiftHeadCl;
+        private System.Windows.Forms.Panel pnlShiftHeadCl;
+        private System.Windows.Forms.Label lblTotalShiftFd;
+        private System.Windows.Forms.Button btnTotShiftFd;
+        private System.Windows.Forms.Panel pnlTotalShiftFdCl;
+        private System.Windows.Forms.GroupBox gBxColours;
     }
 }

@@ -3,6 +3,7 @@
 using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
+using NPOI.XSSF.UserModel;
 
 namespace TandaSpreadsheetTool
 {
@@ -46,7 +47,26 @@ namespace TandaSpreadsheetTool
         TRUE, AUTO, FALSE
     }
 
-   
+   public class TeamValue
+    {
+        public XSSFCellStyle style;
+        public XSSFCellStyle styleBold;
+        public bool isUsed;
+        public int dayCount;
+        public int legendPosition;
+
+        public TeamValue()
+        {
+        }
+        public TeamValue( XSSFCellStyle style,XSSFCellStyle styleBold, bool isUsed=false, int dayCount =0, int legendPosition = 0)
+        {
+            this.isUsed = isUsed;
+            this.style = style;
+            this.dayCount = dayCount;
+            this.legendPosition = legendPosition;
+            this.styleBold = styleBold;
+        }
+    }
 
     public struct SpreadSheetStyle
     {
@@ -62,12 +82,12 @@ namespace TandaSpreadsheetTool
         public byte[] tlShiftHeadCl;
         public byte[] tlShiftFieldCl;
 
+        public char teamNameSep;
         public bool boldHeadings;
         public bool teamTxtFilter;
         public float minBrightness;
         public float colWidth;
-        public UseVerticalDates useVertDates;
-        public bool useTeamCls;
+        public UseVerticalDates useVertDates;      
         public string font;
         public int fontSize;
         public bool boldFs;
@@ -96,7 +116,7 @@ namespace TandaSpreadsheetTool
                 tlShiftFieldCl = new byte[] {56,118,29},
                 teamTxtFilter = true,
                 minBrightness = 0.7f,
-                useTeamCls = true,
+                teamNameSep = ':',
                 rotaFieldCl = new byte[] { 255, 255, 255 },
                 rotaEmptyCl = new byte[] { 163, 168, 175 },
                 dayNameCl = new byte[] { 56, 118, 29 },
