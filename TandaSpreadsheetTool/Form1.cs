@@ -39,7 +39,7 @@ namespace TandaSpreadsheetTool
 
             networker.LoadUsername();
 
-
+          
             if(networker.LastUser != "")
             {
                 txtBxUName.Text = networker.LastUser;
