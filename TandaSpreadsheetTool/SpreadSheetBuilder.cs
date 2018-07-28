@@ -378,11 +378,12 @@ namespace TandaSpreadsheetTool
             currentCell.CellStyle = cellStyle;
 
             cellStyle = styleDict[nameof(style.tlShiftFieldCl)];
-
+            styleDict.TryGetValue(nameof(style.tlShiftFieldCl),)
+           
             
 
             for (int i = 2; i <= maxColCount; i++)
-            {
+            {//cellstye = total shift weekday field style
                 currentCell = currentRow.CreateCell(i);
                 var currentColName = GetColumnName(i);
                 var formula = String.Format("COUNTA({0}4:{0}{1})", currentColName, maxRowCount);
@@ -452,6 +453,7 @@ namespace TandaSpreadsheetTool
 
             var dateString = from.ToShortDateString() + " to " + to.ToShortDateString();
 
+            
             //title cell
             var currentCell = currentRow.CreateCell(0);
             currentCell.SetCellValue(dateString);
@@ -478,6 +480,8 @@ namespace TandaSpreadsheetTool
             //date heading style
             styleDict.TryGetValue(nameof(style.dateCl), out var currentStyle2);
 
+            styleDict.TryGetValue(nameof(style.wkndDateCl), out var wknDateSt);
+            styleDict.TryGetValue(nameof(style.wkndDateCl), out var wknDaySt);
 
             var colWidth = (int)Math.Round(style.colWidth * 256);
             sheet.SetColumnWidth(0, colWidth);
@@ -491,8 +495,9 @@ namespace TandaSpreadsheetTool
             {// currentStyle = date field style, currentStyle2 = day field style
 
                 var currentDate = from.AddDays(i);
+                var currentDay = currentDate.DayOfWeek;
                 currentCell = dayRow.CreateCell(i + 2);
-                currentCell.SetCellValue(Enum.GetName(typeof(DayOfWeek), currentDate.DayOfWeek));
+                currentCell.SetCellValue(Enum.GetName(typeof(DayOfWeek), currentDay));
 
 
                 var dateCell = currentRow.CreateCell(2 + i);
@@ -504,8 +509,10 @@ namespace TandaSpreadsheetTool
                     currentStyle.Rotation = 90;
                     currentStyle2.Rotation = 90;
                 }
-                currentCell.CellStyle = currentStyle;
-                dateCell.CellStyle = currentStyle2;
+                var isWeekend = IsWeekend(currentDay);
+
+                currentCell.CellStyle =(isWeekend)?wknDaySt: currentStyle;
+                dateCell.CellStyle =(isWeekend)?wknDateSt: currentStyle2;
 
                 sheet.SetColumnWidth(i + 2, colWidth);
             }
@@ -556,13 +563,21 @@ namespace TandaSpreadsheetTool
             nextStyle = AutoStyle(wBk, titleFont, HorizontalAlignment.Left, new XSSFColor(System.Drawing.Color.White));
             styleDict.Add("title", nextStyle);
 
-            // date field style
+            // weekdate field style
             nextStyle = AutoStyle(wBk, headingFont, style.headAlign, new XSSFColor(style.dateCl));
             styleDict.Add(nameof(style.dateCl), nextStyle);
 
-            //day field style
+            //weekday field style
             nextStyle = AutoStyle(wBk, headingFont, style.headAlign, new XSSFColor(style.dayNameCl));
             styleDict.Add(nameof(style.dayNameCl), nextStyle);
+
+            //weekend date style
+            nextStyle = AutoStyle(wBk, headingFont, style.headAlign, new XSSFColor(style.wkndDateCl));
+            styleDict.Add(nameof(style.wkndDateCl), nextStyle);
+
+            //weekend day style
+            nextStyle = AutoStyle(wBk, headingFont, style.headAlign, new XSSFColor(style.wkndDayCl));
+            styleDict.Add(nameof(style.wkndDayCl), nextStyle);
 
             //rota field style
             nextStyle = AutoStyle(wBk, fieldFont, style.nameAlign, new XSSFColor(style.rotaFieldCl));
@@ -592,6 +607,7 @@ namespace TandaSpreadsheetTool
             nextStyle = AutoStyle(wBk, headingFont, style.nameAlign, new XSSFColor(style.tlShiftHeadCl));
             styleDict.Add(nameof(style.tlShiftHeadCl), nextStyle);
 
+            
 
             //if (!style.useTeamCls) - could either remove completely or add | for using shift analysis
             //{
@@ -715,7 +731,7 @@ namespace TandaSpreadsheetTool
                     {
                         bool sameRgb =
                             IsSameRGB(currentCell.CellStyle.FillForegroundColorColor.RGB, team.Value.style.FillForegroundColorColor.RGB);
-                        if (sameRgb || team.Key == GetTeamFromCell(style.teamNameSep, currentCell))
+                        if (sameRgb ||string.Equals( team.Key, TeamFromCell(style.teamNameSep, currentCell)))
                         {
                             team.Value.dayCount++;
                             break;
@@ -738,9 +754,6 @@ namespace TandaSpreadsheetTool
                     team.Value.dayCount = 0;
                 }
             }
-           
-
-
 
         }
 
@@ -811,7 +824,7 @@ namespace TandaSpreadsheetTool
             return colour;
         }
 
-        public string TeamNameFromCell(char seperator,ICell cell)
+        public string TeamFromCell(char seperator,ICell cell)
         {
             if (cell.CellType != CellType.String)
             {
@@ -880,27 +893,7 @@ namespace TandaSpreadsheetTool
 
 
             return autoValue;
-        }
-
-        public string GetTeamFromCell(char seperator,ICell cell)
-        {
-            if (cell.CellType != CellType.String)
-            {
-                return null;
-            }
-
-            var cellStr = cell.StringCellValue;
-            var subIndex = 0;
-            for ( ; subIndex < cellStr.Length; subIndex++)
-            {
-                if (cellStr[subIndex] == seperator)
-                {
-                    break;
-                }
-            }
-
-            return cellStr.Substring(0, subIndex);
-        }
+        }     
 
         bool IsSameRGB(byte[]rgb1, byte[] rgb2)
         {

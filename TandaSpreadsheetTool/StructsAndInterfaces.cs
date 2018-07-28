@@ -81,10 +81,12 @@ namespace TandaSpreadsheetTool
         public byte[] teamLegHeadCl;
         public byte[] tlShiftHeadCl;
         public byte[] tlShiftFieldCl;
+        public byte[] wkndDayCl;
+        public byte[] wkndDateCl;
 
         public char teamNameSep;
-        public bool boldHeadings;
-        public bool teamTxtFilter;
+        public FillPattern fieldWkndPat; 
+        public bool boldHeadings;      
         public float minBrightness;
         public float colWidth;
         public UseVerticalDates useVertDates;      
@@ -112,9 +114,10 @@ namespace TandaSpreadsheetTool
                 boldHeadings = true,
                 nameHeadingCl = new byte[] { 61, 133, 198 },
                 nameFieldCl = new byte[] { 207, 226, 243 },
-                tlShiftHeadCl = new byte[] { 142,169,219},
-                tlShiftFieldCl = new byte[] {56,118,29},
-                teamTxtFilter = true,
+                tlShiftHeadCl = new byte[] { 142, 169, 219 },
+                tlShiftFieldCl = new byte[] { 56, 118, 29 },
+                wkndDayCl = new byte[] { 255, 255, 0 },
+                wkndDateCl = new byte[] {255,255,153},
                 minBrightness = 0.7f,
                 teamNameSep = ':',
                 rotaFieldCl = new byte[] { 255, 255, 255 },

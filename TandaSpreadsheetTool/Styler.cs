@@ -14,10 +14,6 @@ namespace TandaSpreadsheetTool
     public partial class StylerForm : Form
     {
         SpreadSheetStyle currentStyle;
-        
-
-        
-        
 
         public StylerForm(SpreadSheetStyle style)
         {
@@ -54,6 +50,9 @@ namespace TandaSpreadsheetTool
             pnlRotaEmptyCl.BackColor = GetColorFromByte(currentStyle.rotaEmptyCl);
             pnlRotaField.BackColor = GetColorFromByte(currentStyle.rotaFieldCl);
             pnlShiftHeadCl.BackColor = GetColorFromByte(currentStyle.tlShiftHeadCl);
+            pnlWkndDayCl.BackColor = GetColorFromByte(currentStyle.wkndDayCl);
+            pnlWkndDateCl.BackColor = GetColorFromByte(currentStyle.wkndDateCl);
+
             pnlTotalShiftFdCl.BackColor = GetColorFromByte(currentStyle.tlShiftFieldCl);
             ckBxShiftAnalysis.Checked = currentStyle.shiftAnalysis;
 
@@ -102,6 +101,8 @@ namespace TandaSpreadsheetTool
             currentStyle.dateCl = GetByteFromColor(pnlDate.BackColor);
             currentStyle.tlShiftFieldCl = GetByteFromColor(pnlTotalShiftFdCl.BackColor);
             currentStyle.tlShiftHeadCl = GetByteFromColor(pnlShiftHeadCl.BackColor);
+            currentStyle.wkndDateCl = GetByteFromColor(pnlWkndDateCl.BackColor);
+            currentStyle.wkndDayCl = GetByteFromColor(pnlWkndDayCl.BackColor);
 
             currentStyle.boldHeadings = ckBxBoldHead.Checked;
             
@@ -139,6 +140,7 @@ namespace TandaSpreadsheetTool
             currentStyle.divBy = (SpreadSheetDiv)cBxDiv.SelectedIndex;
         }
 
+        // remove - just an extra function call
         private Color GetColorFromByte(byte[] rgb)
         {
             return Color.FromArgb(rgb[0], rgb[1], rgb[2]);
@@ -304,6 +306,22 @@ namespace TandaSpreadsheetTool
             if (clrD.ShowDialog() == DialogResult.OK)
             {
                 pnlTotalShiftFdCl.BackColor = clrD.Color;
+            }
+        }
+
+        private void btnWkndDayCl_Click(object sender, EventArgs e)
+        {
+            if(clrD.ShowDialog() == DialogResult.OK)
+            {
+                pnlWkndDayCl.BackColor = clrD.Color;
+            }
+        }
+
+        private void btnWkndDateCl_Click(object sender, EventArgs e)
+        {
+            if(clrD.ShowDialog() == DialogResult.OK)
+            {
+                pnlWkndDateCl.BackColor = clrD.Color;
             }
         }
     }
