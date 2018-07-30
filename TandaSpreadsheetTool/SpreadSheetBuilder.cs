@@ -279,7 +279,7 @@ namespace TandaSpreadsheetTool
                     }
 
                     currentCell = currentRow.CreateCell(2 - colOffset + (currentSchedule.startDate - roster.start).Days);
-                    currentCell.SetCellValue(currentSchedule.team + ": " + currentSchedule.startTime + " - " + currentSchedule.endTime);
+                    currentCell.SetCellValue(currentSchedule.startTime + "-" + currentSchedule.endTime);
 
 
                     if (teamDict.TryGetValue(currentSchedule.team, out teamStyle))
@@ -345,7 +345,7 @@ namespace TandaSpreadsheetTool
 
 
                     currentCell = currentRow.CreateCell(2 + (currentSchedule.startDate - roster.start).Days);
-                    currentCell.SetCellValue(currentSchedule.team + ": " + currentSchedule.startTime + " - " + currentSchedule.endTime);
+                    currentCell.SetCellValue(currentSchedule.startTime + "-" + currentSchedule.endTime);
 
 
                     if (teamDict.TryGetValue(currentSchedule.team, out teamStyle))
@@ -372,8 +372,7 @@ namespace TandaSpreadsheetTool
             }//end outer for
             
 
-
-
+           
 
 
             CreateTotalShiftCount(style, sheet);
@@ -406,7 +405,6 @@ namespace TandaSpreadsheetTool
             }
 
         }
-
 
         private string GetColumnName(int index)
         {
@@ -673,9 +671,9 @@ namespace TandaSpreadsheetTool
         private void GenTeamData(ISheet sheet, FormattedRoster roster, SpreadSheetStyle style, bool legendOnly = false)
         {
 
-            maxRowCount++;
-            sheet.CreateRow(maxRowCount);
-            maxRowCount++;
+            maxRowCount+=2;
+          
+           
             var currentRow = sheet.CreateRow(maxRowCount);
             var currentCell = currentRow.CreateCell(1);
 
@@ -689,24 +687,21 @@ namespace TandaSpreadsheetTool
                 currentCell.SetCellValue("Team Analysis");
             }
 
+
+
             styleDict.TryGetValue(nameof(style.teamLegHeadCl), out var currentStyle);
             currentCell.CellStyle = currentStyle;
-            maxRowCount++;
-
-            var teamOffset = 0;
-
-
-            
 
             if (legendOnly)
             {
+                maxRowCount++;
                 foreach (var entry in teamDict)
                 {
                     if (!entry.Value.isUsed)
                     {
                         continue;
                     }
-                    teamOffset--;
+                    
                     currentRow = sheet.CreateRow(maxRowCount);
                     currentCell = currentRow.CreateCell(1);
                     currentCell.SetCellValue(entry.Key);
@@ -719,8 +714,14 @@ namespace TandaSpreadsheetTool
                 return;
             }
 
-            int usedTeamCount = 0;    
-                foreach (var entry in teamDict)
+            var teamFieldVal = currentRow.RowNum + 1;
+
+            currentCell = currentRow.CreateCell(maxColCount);
+            currentCell.SetCellValue("Total");
+
+            currentCell.CellStyle = currentStyle;
+            maxRowCount++;
+            foreach (var entry in teamDict)
                 {
                     if (!entry.Value.isUsed)
                     {
@@ -733,26 +734,27 @@ namespace TandaSpreadsheetTool
                     currentCell.SetCellValue(entry.Key);
                 currentCell.CellStyle = entry.Value.styleBold;
                 maxRowCount++;
-                usedTeamCount++;
+                
                 }
 
             var fieldSize = roster.staff.Count+1;
 
             for (int i = 2; i < maxColCount; i++)
             {
-                for (int j= 3; j <= fieldSize; j++)
+                for (int j= 3; j < fieldSize; j++)
                 {
                     currentCell = sheet.GetRow(j).GetCell(i);
                     if (currentCell == null)
                     {
                         continue;
                     }
-                    
+                  
                     foreach (var team in teamDict)
                     {
-                        bool sameRgb =
+                        
+                        var sameRgb =
                             IsSameRGB(currentCell.CellStyle.FillForegroundColorColor.RGB, team.Value.style.FillForegroundColorColor.RGB);
-                        if (sameRgb ||string.Equals( team.Key, TeamFromCell(style.teamNameSep, currentCell)))
+                        if (sameRgb)
                         {
                             team.Value.dayCount++;
                             break;
@@ -776,6 +778,14 @@ namespace TandaSpreadsheetTool
                 }
             }
 
+
+            for (;teamFieldVal<maxRowCount;teamFieldVal++ )
+            {
+                currentRow = sheet.GetRow(teamFieldVal);
+                currentCell = currentRow.CreateCell(maxColCount);
+                currentCell.SetCellFormula(String.Format("SUM(C{0}:{1}{0})",currentRow.RowNum+1,GetColumnName(currentCell.ColumnIndex-1)));
+                currentCell.CellStyle = currentRow.GetCell(currentCell.ColumnIndex-1).CellStyle;
+            }
         }
 
         XSSFColor SetMinBrightness(XSSFColor colour, float minBrightness)
@@ -845,25 +855,7 @@ namespace TandaSpreadsheetTool
             return colour;
         }
 
-        public string TeamFromCell(char seperator,ICell cell)
-        {
-            if (cell.CellType != CellType.String)
-            {
-                return null;
-            }
-            var cellStr = cell.StringCellValue;
-            var subIndex = 0;
-            for ( ; subIndex < cellStr.Length; subIndex++)
-            {
-                if(cellStr[subIndex] == seperator)
-                {
-                    
-                    break;
-                }
-            }
-
-            return cellStr.Substring(0,subIndex);
-        }
+    
 
         private XSSFColor GetColourFromHex(string hexValue)
         {
