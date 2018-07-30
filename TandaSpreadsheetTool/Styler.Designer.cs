@@ -82,12 +82,15 @@
             this.btnTotShiftFd = new System.Windows.Forms.Button();
             this.pnlTotalShiftFdCl = new System.Windows.Forms.Panel();
             this.gBxColours = new System.Windows.Forms.GroupBox();
-            this.lblWkndDayCl = new System.Windows.Forms.Label();
-            this.btnWkndDayCl = new System.Windows.Forms.Button();
-            this.pnlWkndDayCl = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.btnTlShiftWknd = new System.Windows.Forms.Button();
+            this.pnlTlStWkndCl = new System.Windows.Forms.Panel();
             this.lblWkndDate = new System.Windows.Forms.Label();
+            this.lblWkndDayCl = new System.Windows.Forms.Label();
             this.btnWkndDateCl = new System.Windows.Forms.Button();
+            this.btnWkndDayCl = new System.Windows.Forms.Button();
             this.pnlWkndDateCl = new System.Windows.Forms.Panel();
+            this.pnlWkndDayCl = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarBrightness)).BeginInit();
             this.gBxUseVertDates.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarColumnWidth)).BeginInit();
@@ -99,7 +102,7 @@
             this.ckBxBoldHead.AutoSize = true;
             this.ckBxBoldHead.Checked = true;
             this.ckBxBoldHead.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckBxBoldHead.Location = new System.Drawing.Point(33, 59);
+            this.ckBxBoldHead.Location = new System.Drawing.Point(444, 413);
             this.ckBxBoldHead.Name = "ckBxBoldHead";
             this.ckBxBoldHead.Size = new System.Drawing.Size(95, 17);
             this.ckBxBoldHead.TabIndex = 0;
@@ -121,7 +124,7 @@
             this.ckBxTeamColours.AutoSize = true;
             this.ckBxTeamColours.Checked = true;
             this.ckBxTeamColours.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckBxTeamColours.Location = new System.Drawing.Point(178, 59);
+            this.ckBxTeamColours.Location = new System.Drawing.Point(444, 442);
             this.ckBxTeamColours.Name = "ckBxTeamColours";
             this.ckBxTeamColours.Size = new System.Drawing.Size(113, 17);
             this.ckBxTeamColours.TabIndex = 2;
@@ -155,7 +158,7 @@
             // pnlDayName
             // 
             this.pnlDayName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlDayName.Location = new System.Drawing.Point(123, 199);
+            this.pnlDayName.Location = new System.Drawing.Point(123, 230);
             this.pnlDayName.Name = "pnlDayName";
             this.pnlDayName.Size = new System.Drawing.Size(82, 25);
             this.pnlDayName.TabIndex = 4;
@@ -163,7 +166,7 @@
             // pnlDate
             // 
             this.pnlDate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlDate.Location = new System.Drawing.Point(123, 230);
+            this.pnlDate.Location = new System.Drawing.Point(123, 261);
             this.pnlDate.Name = "pnlDate";
             this.pnlDate.Size = new System.Drawing.Size(82, 25);
             this.pnlDate.TabIndex = 4;
@@ -172,7 +175,7 @@
             // 
             this.pnlMinBright.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlMinBright.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.pnlMinBright.Location = new System.Drawing.Point(333, 251);
+            this.pnlMinBright.Location = new System.Drawing.Point(333, 146);
             this.pnlMinBright.Name = "pnlMinBright";
             this.pnlMinBright.Size = new System.Drawing.Size(82, 25);
             this.pnlMinBright.TabIndex = 5;
@@ -209,7 +212,7 @@
             // 
             // btnDayNameCl
             // 
-            this.btnDayNameCl.Location = new System.Drawing.Point(211, 199);
+            this.btnDayNameCl.Location = new System.Drawing.Point(211, 230);
             this.btnDayNameCl.Name = "btnDayNameCl";
             this.btnDayNameCl.Size = new System.Drawing.Size(75, 23);
             this.btnDayNameCl.TabIndex = 11;
@@ -219,7 +222,7 @@
             // 
             // btnDateCl
             // 
-            this.btnDateCl.Location = new System.Drawing.Point(211, 230);
+            this.btnDateCl.Location = new System.Drawing.Point(211, 261);
             this.btnDateCl.Name = "btnDateCl";
             this.btnDateCl.Size = new System.Drawing.Size(75, 23);
             this.btnDateCl.TabIndex = 12;
@@ -284,7 +287,7 @@
             // lblDayCl
             // 
             this.lblDayCl.AutoSize = true;
-            this.lblDayCl.Location = new System.Drawing.Point(33, 199);
+            this.lblDayCl.Location = new System.Drawing.Point(33, 230);
             this.lblDayCl.Name = "lblDayCl";
             this.lblDayCl.Size = new System.Drawing.Size(84, 13);
             this.lblDayCl.TabIndex = 20;
@@ -293,7 +296,7 @@
             // lblDateCl
             // 
             this.lblDateCl.AutoSize = true;
-            this.lblDateCl.Location = new System.Drawing.Point(38, 230);
+            this.lblDateCl.Location = new System.Drawing.Point(38, 261);
             this.lblDateCl.Name = "lblDateCl";
             this.lblDateCl.Size = new System.Drawing.Size(79, 13);
             this.lblDateCl.TabIndex = 21;
@@ -302,10 +305,10 @@
             // tkBarBrightness
             // 
             this.tkBarBrightness.LargeChange = 10;
-            this.tkBarBrightness.Location = new System.Drawing.Point(421, 251);
+            this.tkBarBrightness.Location = new System.Drawing.Point(421, 146);
             this.tkBarBrightness.Maximum = 100;
             this.tkBarBrightness.Name = "tkBarBrightness";
-            this.tkBarBrightness.Size = new System.Drawing.Size(164, 45);
+            this.tkBarBrightness.Size = new System.Drawing.Size(194, 45);
             this.tkBarBrightness.SmallChange = 5;
             this.tkBarBrightness.TabIndex = 22;
             this.tkBarBrightness.Scroll += new System.EventHandler(this.tkBarBrightness_Scroll);
@@ -313,7 +316,7 @@
             // lblBrightness
             // 
             this.lblBrightness.AutoSize = true;
-            this.lblBrightness.Location = new System.Drawing.Point(330, 235);
+            this.lblBrightness.Location = new System.Drawing.Point(330, 130);
             this.lblBrightness.Name = "lblBrightness";
             this.lblBrightness.Size = new System.Drawing.Size(139, 13);
             this.lblBrightness.TabIndex = 23;
@@ -357,7 +360,7 @@
             "Weekly",
             "Biweekly",
             "Monthly"});
-            this.cBxDiv.Location = new System.Drawing.Point(105, 102);
+            this.cBxDiv.Location = new System.Drawing.Point(102, 54);
             this.cBxDiv.MaxLength = 8;
             this.cBxDiv.Name = "cBxDiv";
             this.cBxDiv.Size = new System.Drawing.Size(142, 21);
@@ -376,7 +379,7 @@
             // lblSheetDiv
             // 
             this.lblSheetDiv.AutoSize = true;
-            this.lblSheetDiv.Location = new System.Drawing.Point(16, 105);
+            this.lblSheetDiv.Location = new System.Drawing.Point(13, 57);
             this.lblSheetDiv.Name = "lblSheetDiv";
             this.lblSheetDiv.Size = new System.Drawing.Size(83, 13);
             this.lblSheetDiv.TabIndex = 30;
@@ -399,7 +402,7 @@
             "Left",
             "Right",
             "Centre"});
-            this.cBxNameAlign.Location = new System.Drawing.Point(105, 148);
+            this.cBxNameAlign.Location = new System.Drawing.Point(102, 100);
             this.cBxNameAlign.Name = "cBxNameAlign";
             this.cBxNameAlign.Size = new System.Drawing.Size(142, 21);
             this.cBxNameAlign.TabIndex = 32;
@@ -407,7 +410,7 @@
             // lblCellAlign
             // 
             this.lblCellAlign.AutoSize = true;
-            this.lblCellAlign.Location = new System.Drawing.Point(13, 154);
+            this.lblCellAlign.Location = new System.Drawing.Point(10, 106);
             this.lblCellAlign.Name = "lblCellAlign";
             this.lblCellAlign.Size = new System.Drawing.Size(86, 13);
             this.lblCellAlign.TabIndex = 33;
@@ -420,7 +423,7 @@
             "Left",
             "Right",
             "Centre"});
-            this.cBxHeadAlign.Location = new System.Drawing.Point(373, 102);
+            this.cBxHeadAlign.Location = new System.Drawing.Point(370, 54);
             this.cBxHeadAlign.Name = "cBxHeadAlign";
             this.cBxHeadAlign.Size = new System.Drawing.Size(142, 21);
             this.cBxHeadAlign.TabIndex = 34;
@@ -428,7 +431,7 @@
             // lblHeadAlign
             // 
             this.lblHeadAlign.AutoSize = true;
-            this.lblHeadAlign.Location = new System.Drawing.Point(290, 110);
+            this.lblHeadAlign.Location = new System.Drawing.Point(287, 62);
             this.lblHeadAlign.Name = "lblHeadAlign";
             this.lblHeadAlign.Size = new System.Drawing.Size(73, 13);
             this.lblHeadAlign.TabIndex = 35;
@@ -437,7 +440,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(307, 154);
+            this.label1.Location = new System.Drawing.Point(304, 106);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(56, 13);
             this.label1.TabIndex = 37;
@@ -450,7 +453,7 @@
             "Left",
             "Right",
             "Centre"});
-            this.cBxRotaAlign.Location = new System.Drawing.Point(373, 148);
+            this.cBxRotaAlign.Location = new System.Drawing.Point(370, 100);
             this.cBxRotaAlign.Name = "cBxRotaAlign";
             this.cBxRotaAlign.Size = new System.Drawing.Size(142, 21);
             this.cBxRotaAlign.TabIndex = 38;
@@ -492,7 +495,7 @@
             this.gBxUseVertDates.Controls.Add(this.rbtnVertDateAuto);
             this.gBxUseVertDates.Controls.Add(this.rbtnVertDateNo);
             this.gBxUseVertDates.Controls.Add(this.rbtnVertDateYes);
-            this.gBxUseVertDates.Location = new System.Drawing.Point(20, 184);
+            this.gBxUseVertDates.Location = new System.Drawing.Point(421, 505);
             this.gBxUseVertDates.Name = "gBxUseVertDates";
             this.gBxUseVertDates.Size = new System.Drawing.Size(154, 49);
             this.gBxUseVertDates.TabIndex = 43;
@@ -513,7 +516,7 @@
             // lblBrightVal
             // 
             this.lblBrightVal.AutoSize = true;
-            this.lblBrightVal.Location = new System.Drawing.Point(488, 283);
+            this.lblBrightVal.Location = new System.Drawing.Point(488, 178);
             this.lblBrightVal.Name = "lblBrightVal";
             this.lblBrightVal.Size = new System.Drawing.Size(28, 13);
             this.lblBrightVal.TabIndex = 45;
@@ -531,7 +534,7 @@
             // ckBxShiftAnalysis
             // 
             this.ckBxShiftAnalysis.AutoSize = true;
-            this.ckBxShiftAnalysis.Location = new System.Drawing.Point(311, 59);
+            this.ckBxShiftAnalysis.Location = new System.Drawing.Point(444, 471);
             this.ckBxShiftAnalysis.Name = "ckBxShiftAnalysis";
             this.ckBxShiftAnalysis.Size = new System.Drawing.Size(118, 17);
             this.ckBxShiftAnalysis.TabIndex = 47;
@@ -568,11 +571,11 @@
             // lblTotalShiftFd
             // 
             this.lblTotalShiftFd.AutoSize = true;
-            this.lblTotalShiftFd.Location = new System.Drawing.Point(37, 168);
+            this.lblTotalShiftFd.Location = new System.Drawing.Point(13, 173);
             this.lblTotalShiftFd.Name = "lblTotalShiftFd";
-            this.lblTotalShiftFd.Size = new System.Drawing.Size(80, 13);
+            this.lblTotalShiftFd.Size = new System.Drawing.Size(104, 13);
             this.lblTotalShiftFd.TabIndex = 53;
-            this.lblTotalShiftFd.Text = "Total Shift Field";
+            this.lblTotalShiftFd.Text = "Total Shift Weekday";
             // 
             // btnTotShiftFd
             // 
@@ -594,82 +597,94 @@
             // 
             // gBxColours
             // 
+            this.gBxColours.Controls.Add(this.label2);
+            this.gBxColours.Controls.Add(this.btnTlShiftWknd);
+            this.gBxColours.Controls.Add(this.pnlTlStWkndCl);
             this.gBxColours.Controls.Add(this.lblWkndDate);
-            this.gBxColours.Controls.Add(this.lblWkndDayCl);
-            this.gBxColours.Controls.Add(this.btnWkndDateCl);
-            this.gBxColours.Controls.Add(this.btnWkndDayCl);
-            this.gBxColours.Controls.Add(this.pnlWkndDateCl);
-            this.gBxColours.Controls.Add(this.pnlWkndDayCl);
             this.gBxColours.Controls.Add(this.pnlNameHeadCL);
             this.gBxColours.Controls.Add(this.lblTotalShiftFd);
+            this.gBxColours.Controls.Add(this.lblWkndDayCl);
             this.gBxColours.Controls.Add(this.pnlNameField);
             this.gBxColours.Controls.Add(this.btnTotShiftFd);
+            this.gBxColours.Controls.Add(this.btnWkndDateCl);
             this.gBxColours.Controls.Add(this.pnlRotaField);
             this.gBxColours.Controls.Add(this.pnlTotalShiftFdCl);
-            this.gBxColours.Controls.Add(this.pnlDayName);
+            this.gBxColours.Controls.Add(this.btnWkndDayCl);
             this.gBxColours.Controls.Add(this.lbltlShiftHeadCl);
             this.gBxColours.Controls.Add(this.btnShiftHeadCl);
-            this.gBxColours.Controls.Add(this.pnlDate);
+            this.gBxColours.Controls.Add(this.pnlWkndDateCl);
             this.gBxColours.Controls.Add(this.btnNameHeadCl);
             this.gBxColours.Controls.Add(this.pnlShiftHeadCl);
+            this.gBxColours.Controls.Add(this.pnlWkndDayCl);
             this.gBxColours.Controls.Add(this.btnNameFieldCL);
             this.gBxColours.Controls.Add(this.btnRotaFieldCl);
             this.gBxColours.Controls.Add(this.pnlRotaEmptyCl);
             this.gBxColours.Controls.Add(this.btnRotaEmptyCl);
             this.gBxColours.Controls.Add(this.lblNameHeadCl);
-            this.gBxColours.Controls.Add(this.btnDayNameCl);
             this.gBxColours.Controls.Add(this.lblNameFieldCl);
             this.gBxColours.Controls.Add(this.lblRotaFieldCl);
-            this.gBxColours.Controls.Add(this.btnDateCl);
             this.gBxColours.Controls.Add(this.lblERotaCl);
+            this.gBxColours.Controls.Add(this.pnlDayName);
             this.gBxColours.Controls.Add(this.lblDayCl);
+            this.gBxColours.Controls.Add(this.btnDateCl);
             this.gBxColours.Controls.Add(this.lblDateCl);
-            this.gBxColours.Location = new System.Drawing.Point(22, 239);
+            this.gBxColours.Controls.Add(this.pnlDate);
+            this.gBxColours.Controls.Add(this.btnDayNameCl);
+            this.gBxColours.Location = new System.Drawing.Point(16, 130);
             this.gBxColours.Name = "gBxColours";
-            this.gBxColours.Size = new System.Drawing.Size(294, 319);
+            this.gBxColours.Size = new System.Drawing.Size(294, 358);
             this.gBxColours.TabIndex = 54;
             this.gBxColours.TabStop = false;
             this.gBxColours.Text = "Colours";
             // 
-            // lblWkndDayCl
+            // label2
             // 
-            this.lblWkndDayCl.AutoSize = true;
-            this.lblWkndDayCl.Location = new System.Drawing.Point(41, 261);
-            this.lblWkndDayCl.Name = "lblWkndDayCl";
-            this.lblWkndDayCl.Size = new System.Drawing.Size(76, 13);
-            this.lblWkndDayCl.TabIndex = 56;
-            this.lblWkndDayCl.Text = "Weekend Day";
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 204);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(105, 13);
+            this.label2.TabIndex = 59;
+            this.label2.Text = "Total Shift Weekend";
             // 
-            // btnWkndDayCl
+            // btnTlShiftWknd
             // 
-            this.btnWkndDayCl.Location = new System.Drawing.Point(211, 261);
-            this.btnWkndDayCl.Name = "btnWkndDayCl";
-            this.btnWkndDayCl.Size = new System.Drawing.Size(75, 23);
-            this.btnWkndDayCl.TabIndex = 55;
-            this.btnWkndDayCl.Text = "Change";
-            this.btnWkndDayCl.UseVisualStyleBackColor = true;
-            this.btnWkndDayCl.Click += new System.EventHandler(this.btnWkndDayCl_Click);
+            this.btnTlShiftWknd.Location = new System.Drawing.Point(211, 199);
+            this.btnTlShiftWknd.Name = "btnTlShiftWknd";
+            this.btnTlShiftWknd.Size = new System.Drawing.Size(75, 23);
+            this.btnTlShiftWknd.TabIndex = 58;
+            this.btnTlShiftWknd.Text = "Change";
+            this.btnTlShiftWknd.UseVisualStyleBackColor = true;
+            this.btnTlShiftWknd.Click += new System.EventHandler(this.btnTlShiftWknd_Click);
             // 
-            // pnlWkndDayCl
+            // pnlTlStWkndCl
             // 
-            this.pnlWkndDayCl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlWkndDayCl.Location = new System.Drawing.Point(123, 261);
-            this.pnlWkndDayCl.Name = "pnlWkndDayCl";
-            this.pnlWkndDayCl.Size = new System.Drawing.Size(82, 25);
-            this.pnlWkndDayCl.TabIndex = 54;
+            this.pnlTlStWkndCl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlTlStWkndCl.Location = new System.Drawing.Point(123, 199);
+            this.pnlTlStWkndCl.Name = "pnlTlStWkndCl";
+            this.pnlTlStWkndCl.Size = new System.Drawing.Size(82, 25);
+            this.pnlTlStWkndCl.TabIndex = 57;
             // 
             // lblWkndDate
             // 
             this.lblWkndDate.AutoSize = true;
-            this.lblWkndDate.Location = new System.Drawing.Point(37, 292);
+            this.lblWkndDate.Location = new System.Drawing.Point(37, 323);
             this.lblWkndDate.Name = "lblWkndDate";
             this.lblWkndDate.Size = new System.Drawing.Size(80, 13);
             this.lblWkndDate.TabIndex = 56;
             this.lblWkndDate.Text = "Weekend Date";
             // 
+            // lblWkndDayCl
+            // 
+            this.lblWkndDayCl.AutoSize = true;
+            this.lblWkndDayCl.Location = new System.Drawing.Point(41, 292);
+            this.lblWkndDayCl.Name = "lblWkndDayCl";
+            this.lblWkndDayCl.Size = new System.Drawing.Size(76, 13);
+            this.lblWkndDayCl.TabIndex = 56;
+            this.lblWkndDayCl.Text = "Weekend Day";
+            // 
             // btnWkndDateCl
             // 
-            this.btnWkndDateCl.Location = new System.Drawing.Point(211, 292);
+            this.btnWkndDateCl.Location = new System.Drawing.Point(211, 323);
             this.btnWkndDateCl.Name = "btnWkndDateCl";
             this.btnWkndDateCl.Size = new System.Drawing.Size(75, 23);
             this.btnWkndDateCl.TabIndex = 55;
@@ -677,13 +692,31 @@
             this.btnWkndDateCl.UseVisualStyleBackColor = true;
             this.btnWkndDateCl.Click += new System.EventHandler(this.btnWkndDateCl_Click);
             // 
+            // btnWkndDayCl
+            // 
+            this.btnWkndDayCl.Location = new System.Drawing.Point(211, 292);
+            this.btnWkndDayCl.Name = "btnWkndDayCl";
+            this.btnWkndDayCl.Size = new System.Drawing.Size(75, 23);
+            this.btnWkndDayCl.TabIndex = 55;
+            this.btnWkndDayCl.Text = "Change";
+            this.btnWkndDayCl.UseVisualStyleBackColor = true;
+            this.btnWkndDayCl.Click += new System.EventHandler(this.btnWkndDayCl_Click);
+            // 
             // pnlWkndDateCl
             // 
             this.pnlWkndDateCl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlWkndDateCl.Location = new System.Drawing.Point(123, 292);
+            this.pnlWkndDateCl.Location = new System.Drawing.Point(123, 323);
             this.pnlWkndDateCl.Name = "pnlWkndDateCl";
             this.pnlWkndDateCl.Size = new System.Drawing.Size(82, 25);
             this.pnlWkndDateCl.TabIndex = 54;
+            // 
+            // pnlWkndDayCl
+            // 
+            this.pnlWkndDayCl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlWkndDayCl.Location = new System.Drawing.Point(123, 292);
+            this.pnlWkndDayCl.Name = "pnlWkndDayCl";
+            this.pnlWkndDayCl.Size = new System.Drawing.Size(82, 25);
+            this.pnlWkndDayCl.TabIndex = 54;
             // 
             // StylerForm
             // 
@@ -792,5 +825,8 @@
         private System.Windows.Forms.Button btnWkndDayCl;
         private System.Windows.Forms.Panel pnlWkndDateCl;
         private System.Windows.Forms.Panel pnlWkndDayCl;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnTlShiftWknd;
+        private System.Windows.Forms.Panel pnlTlStWkndCl;
     }
 }

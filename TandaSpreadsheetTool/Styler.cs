@@ -52,7 +52,7 @@ namespace TandaSpreadsheetTool
             pnlShiftHeadCl.BackColor = GetColorFromByte(currentStyle.tlShiftHeadCl);
             pnlWkndDayCl.BackColor = GetColorFromByte(currentStyle.wkndDayCl);
             pnlWkndDateCl.BackColor = GetColorFromByte(currentStyle.wkndDateCl);
-
+            pnlTlStWkndCl.BackColor = GetColorFromByte(currentStyle.wkndTotalCl);
             pnlTotalShiftFdCl.BackColor = GetColorFromByte(currentStyle.tlShiftFieldCl);
             ckBxShiftAnalysis.Checked = currentStyle.shiftAnalysis;
 
@@ -91,7 +91,7 @@ namespace TandaSpreadsheetTool
             Refresh();
         }
 
-        void SetStyleToForm()
+       public void SetStyleToForm()
         {
             currentStyle.nameHeadingCl = GetByteFromColor(pnlNameHeadCL.BackColor);
             currentStyle.nameFieldCl = GetByteFromColor(pnlNameField.BackColor);
@@ -103,6 +103,8 @@ namespace TandaSpreadsheetTool
             currentStyle.tlShiftHeadCl = GetByteFromColor(pnlShiftHeadCl.BackColor);
             currentStyle.wkndDateCl = GetByteFromColor(pnlWkndDateCl.BackColor);
             currentStyle.wkndDayCl = GetByteFromColor(pnlWkndDayCl.BackColor);
+            currentStyle.wkndTotalCl = GetByteFromColor(pnlTlStWkndCl.BackColor);
+            
 
             currentStyle.boldHeadings = ckBxBoldHead.Checked;
             
@@ -322,6 +324,14 @@ namespace TandaSpreadsheetTool
             if(clrD.ShowDialog() == DialogResult.OK)
             {
                 pnlWkndDateCl.BackColor = clrD.Color;
+            }
+        }
+
+        private void btnTlShiftWknd_Click(object sender, EventArgs e)
+        {
+            if (clrD.ShowDialog() == DialogResult.OK)
+            {
+                pnlTlStWkndCl.BackColor = clrD.Color;
             }
         }
     }

@@ -58,6 +58,7 @@ namespace TandaSpreadsheetTool
         public TeamValue()
         {
         }
+
         public TeamValue( XSSFCellStyle style,XSSFCellStyle styleBold, bool isUsed=false, int dayCount =0, int legendPosition = 0)
         {
             this.isUsed = isUsed;
@@ -83,6 +84,7 @@ namespace TandaSpreadsheetTool
         public byte[] tlShiftFieldCl;
         public byte[] wkndDayCl;
         public byte[] wkndDateCl;
+        public byte[] wkndTotalCl;
 
         public char teamNameSep;
         public FillPattern fieldWkndPat; 
@@ -118,6 +120,7 @@ namespace TandaSpreadsheetTool
                 tlShiftFieldCl = new byte[] { 56, 118, 29 },
                 wkndDayCl = new byte[] { 255, 255, 0 },
                 wkndDateCl = new byte[] {255,255,153},
+                wkndTotalCl = new byte[] {255,255,0},
                 minBrightness = 0.7f,
                 teamNameSep = ':',
                 rotaFieldCl = new byte[] { 255, 255, 255 },
@@ -179,6 +182,7 @@ namespace TandaSpreadsheetTool
         public object department_id;
         
     }
+
     [Serializable]
     public class FormattedRoster
     {
@@ -201,6 +205,7 @@ namespace TandaSpreadsheetTool
        public string name;
         
     }
+
     [Serializable]
     public class FormattedStaff
     {

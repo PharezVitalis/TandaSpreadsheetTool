@@ -52,6 +52,11 @@ namespace TandaSpreadsheetTool
             return day == DayOfWeek.Saturday || day == DayOfWeek.Sunday;
         }
 
+        bool IsWeekend(string day)
+        {           
+            return day == "Saturday" | day == "Sunday";
+        }
+
         public bool CreateWorkbook(FormattedRoster roster, SpreadSheetStyle style, string path = null)
         {
             var workBook = (IWorkbook)new XSSFWorkbook();
@@ -331,12 +336,6 @@ namespace TandaSpreadsheetTool
                 {
                     var currentSchedule = currentStaff.schedules[j];
 
-                    //if (currentSchedule.startDate < roster.start)
-                    //{
-                    //    continue;
-                    //}
-
-
 
                     currentCell = currentRow.CreateCell(2 + (currentSchedule.startDate - roster.start).Days);
                     currentCell.SetCellValue(currentSchedule.team + ": " + currentSchedule.startTime + " - " + currentSchedule.endTime);
@@ -376,11 +375,10 @@ namespace TandaSpreadsheetTool
             styleDict.TryGetValue(nameof(style.tlShiftHeadCl), out var cellStyle);
             currentCell.SetCellValue("Total Shifts");
             currentCell.CellStyle = cellStyle;
-
-            cellStyle = styleDict[nameof(style.tlShiftFieldCl)];
-            styleDict.TryGetValue(nameof(style.tlShiftFieldCl),)
-           
             
+            styleDict.TryGetValue(nameof(style.tlShiftFieldCl), out cellStyle);
+            styleDict.TryGetValue(nameof(style.wkndTotalCl), out var wkndStlye);
+            var dayRow = sheet.GetRow(1);
 
             for (int i = 2; i <= maxColCount; i++)
             {//cellstye = total shift weekday field style
@@ -388,7 +386,8 @@ namespace TandaSpreadsheetTool
                 var currentColName = GetColumnName(i);
                 var formula = String.Format("COUNTA({0}4:{0}{1})", currentColName, maxRowCount);
                 currentCell.SetCellFormula(formula);
-                currentCell.CellStyle = cellStyle;
+
+                currentCell.CellStyle =(IsWeekend(dayRow.GetCell(i).StringCellValue))?wkndStlye: cellStyle;
             }
 
         }
@@ -446,10 +445,9 @@ namespace TandaSpreadsheetTool
 
             //row where the day names across the top appear
             var dayRow = sheet.CreateRow(1);
-            //title style
-            var currentStyle = (XSSFCellStyle)null;
 
-            styleDict.TryGetValue("title", out currentStyle);
+            //title style
+            styleDict.TryGetValue("title", out  var currentStyle);
 
             var dateString = from.ToShortDateString() + " to " + to.ToShortDateString();
 
@@ -481,13 +479,13 @@ namespace TandaSpreadsheetTool
             styleDict.TryGetValue(nameof(style.dateCl), out var currentStyle2);
 
             styleDict.TryGetValue(nameof(style.wkndDateCl), out var wknDateSt);
-            styleDict.TryGetValue(nameof(style.wkndDateCl), out var wknDaySt);
+            styleDict.TryGetValue(nameof(style.wkndDayCl), out var wknDaySt);
 
             var colWidth = (int)Math.Round(style.colWidth * 256);
             sheet.SetColumnWidth(0, colWidth);
             sheet.SetColumnWidth(1, colWidth);
 
-            bool useVertHead = style.useVertDates == UseVerticalDates.TRUE || style.useVertDates == UseVerticalDates.AUTO & style.colWidth < 11.15f;
+            bool useVertHead = style.useVertDates == UseVerticalDates.TRUE || (style.useVertDates == UseVerticalDates.AUTO & style.colWidth < 11.15f);
 
             nOfDays = (int)(to - from).TotalDays;
             maxColCount = 2 + nOfDays;
@@ -599,9 +597,13 @@ namespace TandaSpreadsheetTool
             nextStyle = AutoStyle(wBk, headingFont, style.headAlign, new XSSFColor(style.teamLegHeadCl));
             styleDict.Add(nameof(style.teamLegHeadCl), nextStyle);
 
-            //style for total shifts (weekday only, may need to create weekend version)
+            //style for total shifts (weekday) 
             nextStyle = AutoStyle(wBk, headingFont, style.rotaAlign, new XSSFColor(style.tlShiftFieldCl));
             styleDict.Add(nameof(style.tlShiftFieldCl), nextStyle);
+
+            //style for total shifts (weekend) 
+            nextStyle = AutoStyle(wBk, headingFont, style.rotaAlign, new XSSFColor(style.wkndTotalCl));
+            styleDict.Add(nameof(style.wkndTotalCl), nextStyle);
 
             //style for total shifts header
             nextStyle = AutoStyle(wBk, headingFont, style.nameAlign, new XSSFColor(style.tlShiftHeadCl));
