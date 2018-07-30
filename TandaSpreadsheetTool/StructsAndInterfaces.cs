@@ -128,7 +128,7 @@ namespace TandaSpreadsheetTool
                 dayNameCl = new byte[] { 56, 118, 29 },
                 dateCl = new byte[] { 147, 196, 125 },
                 teamLegHeadCl = new byte[] { 108, 101, 245},
-                colWidth = 22,
+                colWidth = 12,
                 font = "Arial",
                 fontSize = 11,
                 divBy = SpreadSheetDiv.NONE,

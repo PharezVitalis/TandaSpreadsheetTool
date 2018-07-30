@@ -652,6 +652,7 @@ namespace TandaSpreadsheetTool
                     if (brigthnessValid)
                     {
                         colour = SetMinBrightness(colour, style.minBrightness);
+                    
                     }
 
                     nextStyle = AutoStyle(wBk, fieldFont, style.rotaAlign, colour);
@@ -751,9 +752,18 @@ namespace TandaSpreadsheetTool
                   
                     foreach (var team in teamDict)
                     {
-                        
+                        if (!team.Value.isUsed)
+                        {
+                            continue;
+                        }
+                       
                         var sameRgb =
                             IsSameRGB(currentCell.CellStyle.FillForegroundColorColor.RGB, team.Value.style.FillForegroundColorColor.RGB);
+                        if (team.Value.style.FillForegroundColorColor.RGB[0] == 127  || currentCell.CellStyle.FillForegroundColorColor.RGB[0] == 127)
+                        {
+                            ;
+                        }
+
                         if (sameRgb)
                         {
                             team.Value.dayCount++;
