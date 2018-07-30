@@ -10,31 +10,56 @@ using System.Windows.Forms;
 
 namespace TandaSpreadsheetTool
 {
+    /// <summary>
+    /// Manages and Generates roster objects
+    /// </summary>
     class RosterManager
     {
-
+        /// <summary>
+        /// Networker instance
+        /// </summary>
         Networker networker;
 
 
-
+        /// <summary>
+        /// the max number of connection retries
+        /// </summary>
         int maxTries;
+
+        /// <summary>
+        /// The delay between each connection attempt
+        /// </summary>
         int retryDelay;
 
 
-
+        /// <summary>
+        /// A List of all the rosters that have been created
+        /// </summary>
         List<FormattedRoster> builtRosters;
 
+      
         List<User> staffObjs;
+
 
         List<Team> teamObjs;
 
-
+        //flags
         bool hasStaff = false;
         bool hasTeams = false;
+
+        /// <summary>
+        /// The main form's Notification Interface
+        /// </summary>
         INotifiable form;
 
+        /// <summary>
+        /// The last time the staff list has been updated
+        /// </summary>
         DateTime staffLstLastUpdated;
 
+        /// <summary >
+        /// The path where the roster data files are stored
+        /// </summary>
         public static string Path
         {
             get
@@ -43,6 +68,13 @@ namespace TandaSpreadsheetTool
             }
         }
 
+        /// <summary>
+        /// Creates a new instance of the RosterManager class
+        /// </summary>
+        /// <param name="networker">A Networking object</param>
+        /// <param name="form">A notifiable form</param>
+        /// <param name="maxTries">Maximum connection attempts</param>
+        /// <param name="retryDelay">The delay between connection attempts</param>
         public RosterManager(Networker networker, INotifiable form, int maxTries = 5, int retryDelay = 500)
         {
             this.maxTries = maxTries;
@@ -62,6 +94,9 @@ namespace TandaSpreadsheetTool
 
         }
 
+        /// <summary>
+        /// The team list
+        /// </summary>
         public Team[] Teams
         {
             get
@@ -70,6 +105,9 @@ namespace TandaSpreadsheetTool
             }
         }
 
+        /// <summary>
+        /// The last time the staff was updated
+        /// </summary>
         public string LastStaffUpdate
         {
             get
@@ -85,6 +123,11 @@ namespace TandaSpreadsheetTool
             }
         }
 
+        /// <summary>
+        /// Get's the staff JSON data and converts it to objects
+        /// </summary>
+        /// <param name="forceUpdate">If true, The local copy of the staff will be overridden</param>
+        /// <returns>True if sucuessful</returns>
         public async Task<bool> GetStaff(bool forceUpdate = false)
         {
             var staffJArr = new JArray();
@@ -189,14 +232,23 @@ namespace TandaSpreadsheetTool
 
         }
 
+        /// <summary>
+        /// Formatted DateTime string for when the last staff update was
+        /// </summary>
+        /// <remarks>This was intended to be used to automatically update the staff list if it is old</remarks>
         public string LastUpdated
         {
             get
             {
-                return staffLstLastUpdated.ToShortDateString();
+                return staffLstLastUpdated.ToString("dd/MM/yy hh:mm");
             }
         }
 
+        /// <summary>
+        /// Strips sensitive data from the staff JSON files, so they are safe to save
+        /// </summary>
+        /// <param name="token">The JToken to have data removed</param>
+        /// <param name="fields">The fields to be removed</param>
         private void RemoveFields(JToken token, string[] fields)
         {
             JContainer container = token as JContainer;
@@ -219,6 +271,11 @@ namespace TandaSpreadsheetTool
             }
         }
 
+        /// <summary>
+        /// Gets the team JSON data and converts it to objects
+        /// </summary>
+        /// <param name="forceUpdate">If true, The local copy of the staff will be overridden</param>
+        /// <returns>True if sucuessful</returns>
         public async Task<bool> GetTeams(bool forceUpdate = false)
         {
             var teamsArr = new JArray();
@@ -299,6 +356,13 @@ namespace TandaSpreadsheetTool
             return true;
         }
 
+        /// <summary>
+        /// Sets a date to a given time
+        /// </summary>
+        /// <param name="day">The date to be set</param>
+        /// <param name="hours">24 hour based time</param>
+        /// <param name="minutes">minutes passed the hour</param>
+        /// <returns>The adjusted DateTime object</returns>
         public static DateTime SetToTime(DateTime day, int hours, int minutes)
         {
 
@@ -310,6 +374,10 @@ namespace TandaSpreadsheetTool
 
         }
 
+        /// <summary>
+        /// Loads in local roster files
+        /// </summary>
+        /// <param name="getStaffFileData">Whether staff and team data should be read from file as well</param>
         public void LoadRosters( bool getStaffFileData = true)
         {
             var rosterPath = Path + "Rosters";
@@ -365,6 +433,13 @@ namespace TandaSpreadsheetTool
             form.DisableNotifiers();
         }
 
+        /// <summary>
+        /// Builds roster objects (all 1 week long) within the given time frame
+        /// </summary>
+        /// <param name="dateFrom">The date from which the roster starts</param>
+        /// <param name="dateTo">The date where the roster stops</param>
+        /// <param name="save">Saves data to a hardcoded path (within exe files) if true </param>
+        /// <returns>The formatted roster</returns>
         public async Task<FormattedRoster> BuildRoster(DateTime dateFrom, DateTime dateTo, bool save = true)
         {
             var currentTries = 0;
@@ -537,11 +612,20 @@ namespace TandaSpreadsheetTool
             return outRoster;
         }
 
+        /// <summary>
+        /// Autogenerates a full path to save a roster
+        /// </summary>
+        /// <param name="roster">The roster to be saved</param>
+        /// <returns>The full roster path</returns>
         public static string GenRosterPath(FormattedRoster roster)
         {
             return Path + "Rosters\\" + "Roster " + roster.start.ToString("dd-MM-yyyy") + " to " + roster.finish.ToString("dd-MM-yyyy") + ".bin";
         }
 
+        /// <summary>
+        /// Removes a roster and deletes it's file
+        /// </summary>
+        /// <param name="index">the index to be removed</param>
         public void Remove(int index)
         {
             if(index>-1 && index < builtRosters.Count)
@@ -557,6 +641,11 @@ namespace TandaSpreadsheetTool
             }
         }
 
+        /// <summary>
+        /// converts a DD/MM/YY or .../YYYY date format to a DateTime
+        /// </summary>
+        /// <param name="date">string date value</param>
+        /// <returns>DateTime object of given date</returns>
         public static DateTime BuildDate(string date)
         {
             int days = 0;
@@ -587,6 +676,11 @@ namespace TandaSpreadsheetTool
             return new DateTime(years, months, days);
         }
 
+        /// <summary>
+        /// Converts a unix time value to a DateTime
+        /// </summary>
+        /// <param name="unixValue">Value to be converted to date</param>
+        /// <returns>DateTime object of given date</returns>
         public static DateTime UnixToDate(int unixValue)
         {
             var date = new DateTime(1970, 1, 1);
@@ -598,6 +692,11 @@ namespace TandaSpreadsheetTool
             return date;
         }
 
+        /// <summary>
+        /// Converts a unix time value to a DateTime
+        /// </summary>
+        /// <param name="unixValue">Value to be converted to date</param>
+        /// <returns>DateTime object of given date</returns>
         public static DateTime UnixToDate(long unixValue)
         {
             var date = new DateTime(1970, 1, 1, 0, 0, 0);
@@ -608,11 +707,19 @@ namespace TandaSpreadsheetTool
             return date;
         }
 
+        /// <summary>
+        /// formats date to YYYY/MM/DD, as required by the Tanda API
+        /// </summary>
+        /// <param name="date">date to be converted</param>
+        /// <returns>Converted date value in YYYY/MM/DD format</returns>
+        /// <remarks>Compatible only with DD/MM/YYYY format</remarks>
         public static string FormatDate(string date)
         {
             return date.Substring(6, 4) + "/" + date.Substring(3, 2) + "/" + date.Substring(0, 2);
         }
-
+        /// <summary>
+        /// Returns how frequently an connection attempt will be made (in ms)
+        /// </summary>
         public int RetryDelay
         {
             get
@@ -636,6 +743,13 @@ namespace TandaSpreadsheetTool
             }
         }
 
+        /// <summary>
+        /// Helper function to create a single formatted roster from an array of rosters
+        /// </summary>
+        /// <param name="rosters">Rosters to be formatted</param>
+        /// <param name="dateFrom">The date from which a roster will be added</param>
+        /// <param name="dateTo">The latest date from which a roster will be added</param>
+        /// <returns>A formatted roster</returns>
         private FormattedRoster CreateRoster(Roster[] rosters,DateTime dateFrom, DateTime dateTo)
         {
 
@@ -740,6 +854,10 @@ namespace TandaSpreadsheetTool
             return roster;
         }
 
+        /// <summary>
+        /// Gets all the rosters held within the current instance
+        /// </summary>
+        /// <returns>An array of all formatted rosters</returns>
         public FormattedRoster[] GetAllRosters()
         {
 
