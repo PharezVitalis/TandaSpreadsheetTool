@@ -295,6 +295,11 @@ namespace TandaSpreadsheetTool
 
 
                 }//end inner for
+
+                currentCell = currentRow.CreateCell(maxColCount);
+                currentCell.SetCellFormula(String.Format("CountA(C{0}:{1}{0}", currentRow.RowNum+1, GetColumnName(maxColCount - 1)));
+                currentCell.CellStyle = cellStyle;
+
             }//end outer for
             //should be done inside of create workbook
             CreateTotalShiftCount(style, sheet);
@@ -322,8 +327,10 @@ namespace TandaSpreadsheetTool
 
 
             maxRowCount = staffCount + 1;
+
+            
             for (int i = 0; i < staffCount; i++)
-            {
+            {//cellstyle = name field style
                 currentRow = sheet.CreateRow(i + 3);
                 var currentStaff = roster.staff[i];
                 var scheduleCount = currentStaff.schedules.Count;
@@ -355,8 +362,15 @@ namespace TandaSpreadsheetTool
 
 
                 }//end inner for
-            }//end outer for
+                currentCell = currentRow.CreateCell(maxColCount);
+                
+                var formula = String.Format("CountA(C{0}:{1}{0})", currentRow.RowNum+1, GetColumnName(maxColCount - 1));
+                currentCell.SetCellFormula(formula);
+                currentCell.CellStyle = cellStyle;
 
+
+            }//end outer for
+            
 
 
 
@@ -380,14 +394,15 @@ namespace TandaSpreadsheetTool
             styleDict.TryGetValue(nameof(style.wkndTotalCl), out var wkndStlye);
             var dayRow = sheet.GetRow(1);
 
-            for (int i = 2; i <= maxColCount; i++)
+            for (int i = 2; i < maxColCount; i++)
             {//cellstye = total shift weekday field style
                 currentCell = currentRow.CreateCell(i);
                 var currentColName = GetColumnName(i);
                 var formula = String.Format("COUNTA({0}4:{0}{1})", currentColName, maxRowCount);
                 currentCell.SetCellFormula(formula);
 
-                currentCell.CellStyle =(IsWeekend(dayRow.GetCell(i).StringCellValue))?wkndStlye: cellStyle;
+                 currentCell.CellStyle =(IsWeekend(dayRow.GetCell(i).StringCellValue))?wkndStlye: cellStyle;
+                
             }
 
         }
@@ -514,7 +529,11 @@ namespace TandaSpreadsheetTool
 
                 sheet.SetColumnWidth(i + 2, colWidth);
             }
-
+            maxColCount++;
+            currentCell = currentRow.CreateCell(maxColCount);
+            currentCell.SetCellValue("Total");
+            styleDict.TryGetValue(nameof(SpreadSheetStyle.nameHeadingCl), out currentStyle);
+            currentCell.CellStyle = currentStyle;
         }
 
         private IRow GetRow(int rowIndex, ISheet sheet)
@@ -719,7 +738,7 @@ namespace TandaSpreadsheetTool
 
             var fieldSize = roster.staff.Count+1;
 
-            for (int i = 2; i <= maxColCount; i++)
+            for (int i = 2; i < maxColCount; i++)
             {
                 for (int j= 3; j <= fieldSize; j++)
                 {
