@@ -559,14 +559,43 @@ namespace TandaSpreadsheetTool
 
 
 
-            var rosterObjs = new Roster[rosters.Length];
+            var rosterObjs = new List<Roster>();
 
             try
             {
-                for (int i = 0; i < rosterObjs.Length; i++)
+
+                var modifyStart = false;
+
+                for (int i = 0; i < rosters.Length; i++)
                 {
-                   var currentRoster = rosterObjs[i] = JsonConvert.DeserializeObject<Roster>(rosters[i].ToString());
+                   var currentRoster  = JsonConvert.DeserializeObject<Roster>(rosters[i].ToString());
+
+                    if (currentRoster.schedules.Count<1)
+                    {
+                        if (i == 0)
+                        {
+                            modifyStart = true;
+                        }
+                        continue;
+                    }
+
+                    rosterObjs.Add(currentRoster);
                 }
+
+                if (modifyStart)
+                {
+                    dateFrom = rosterObjs[0].start;
+                    SetToTime(dateFrom, 0, 0);
+                }
+
+                if (rosterObjs.Count < 1)
+                {
+                    form.UpdateProgress("No rosters found");
+                    form.RaiseMessage("No Schedules Available", "No schedules were found within the specified date range", MessageBoxIcon.Exclamation);
+                    form.DisableNotifiers();
+                    return null;
+                }
+             
             }
 
             catch (Exception e)
@@ -576,7 +605,7 @@ namespace TandaSpreadsheetTool
                 form.DisableNotifiers();
                 return null;
             }
-            var outRoster = CreateRoster(rosterObjs, dateFrom,dateTo);
+            var outRoster = CreateRoster(rosterObjs.ToArray(), ref dateFrom,ref dateTo, rosterObjs.Count != rosters.Length);
 
             outRoster.finish = dateTo;
             outRoster.start = dateFrom;
@@ -608,7 +637,6 @@ namespace TandaSpreadsheetTool
             builtRosters.Add(outRoster);
             form.UpdateProgress("Finished Building Roster");
             form.DisableNotifiers();
-
             return outRoster;
         }
 
@@ -744,26 +772,33 @@ namespace TandaSpreadsheetTool
         }
 
         /// <summary>
-        /// Helper function to create a single formatted roster from an array of rosters
+        /// Helper function to create a single formatted roster from an array of unformatted roster Objects
         /// </summary>
         /// <param name="rosters">Rosters to be formatted</param>
         /// <param name="dateFrom">The date from which a roster will be added</param>
         /// <param name="dateTo">The latest date from which a roster will be added</param>
-        /// <returns>A formatted roster</returns>
-        private FormattedRoster CreateRoster(Roster[] rosters,DateTime dateFrom, DateTime dateTo)
+        /// <returns>A formatted roster </returns>
+        private FormattedRoster CreateRoster(Roster[] rosters, ref DateTime dateFrom, ref DateTime dateTo, bool modifyDate = false)
         {
 
             var roster = new FormattedRoster();
+            if (modifyDate)
+            {
+                dateTo = new DateTime(1970, 01, 01);
+                form.UpdateProgress("Some schedule values were empty");
+            }
+            
 
             for (int i = 0; i < rosters.Length; i++)
             {
+              
                 var currentRoster = rosters[i];
 
                 var dayCount = currentRoster.schedules.Count;
                 for (int j = 0; j < dayCount; j++)
                 {
                     var currentDay = currentRoster.schedules[j];
-                    var scheduleCount = currentDay.schedules.Count;
+                    var scheduleCount = currentDay.schedules.Count;                  
 
                     for (int k = 0; k < scheduleCount; k++)
                     {
@@ -804,7 +839,7 @@ namespace TandaSpreadsheetTool
                         if (start != null)
                         {
                             formattedSch.startDate = UnixToDate(Convert.ToInt32(start));
-                            if (formattedSch.startDate.Date> dateTo.Date)
+                            if (!modifyDate&formattedSch.startDate.Date> dateTo.Date)
                             {
                                 break;
                             }
@@ -812,6 +847,15 @@ namespace TandaSpreadsheetTool
                             {
                                 continue;
                             }
+                            else if (modifyDate && formattedSch.startDate > dateTo)
+                            {
+                                dateTo = formattedSch.startDate;
+                            }
+                        }
+                        else
+                        {
+                            
+                            continue;
                         }
                         formattedSch.startTime = formattedSch.startDate.ToString("HH:mm");
 
@@ -840,16 +884,20 @@ namespace TandaSpreadsheetTool
 
 
 
-                    }
+                    }// end schedule for
 
 
-                }
+                }//end day for
 
 
 
 
+            }// end rosters for
+
+            if (modifyDate)
+            {
+                form.RaiseMessage("Empty Schedules", "Some Schedule values were empty, the date has been recalculated");
             }
-
 
             return roster;
         }

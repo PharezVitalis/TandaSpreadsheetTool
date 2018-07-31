@@ -176,6 +176,11 @@ namespace TandaSpreadsheetTool
             try
             {
                  newRoster = await builder.BuildRoster(dateFrom, dateTo, ckBxSaveJson.Checked);
+                if (newRoster == null)
+                {
+                    Invoke(new MethodInvoker(EnableJsonBtn));
+                    return;
+                }
             }
             catch (ArgumentOutOfRangeException aoe)
             {
