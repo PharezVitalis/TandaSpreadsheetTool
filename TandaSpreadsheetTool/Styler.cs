@@ -11,8 +11,15 @@ using System.Windows.Forms;
 
 namespace TandaSpreadsheetTool
 {
+    /// <summary>
+    /// Form that handles Spreadsheet formattting
+    /// </summary>
     public partial class StylerForm : Form
     {
+        /// <summary>
+        /// CurrentStyle Spreadsheet style
+        /// </summary>
+        /// <remarks>Does not change until Accept button is pressed</remarks>
         SpreadSheetStyle currentStyle;
 
         public StylerForm(SpreadSheetStyle style)
@@ -31,7 +38,7 @@ namespace TandaSpreadsheetTool
             SetFormToStyle();
         }
 
-
+        #region HelperMethods
         public void UpdateStyle(SpreadSheetStyle newStyle)
         {            
             if (!Visible)
@@ -167,7 +174,34 @@ namespace TandaSpreadsheetTool
 
             }
         }
+        private FontStyle GetFontStyle()
+        {
+            var style = 0;
 
+            if (currentStyle.italicFs)
+            {
+                style += 2;
+            }
+
+            if (currentStyle.boldFs)
+            {
+                style += 1;
+            }
+
+            if (currentStyle.strikeThroughFs)
+            {
+                style += 8;
+            }
+
+            if (currentStyle.underLineFs)
+            {
+                style += 4;
+            }
+
+            return (FontStyle)style;
+        }
+#endregion
+        #region Event Handlers
         private void btnNameHeadCl_Click(object sender, EventArgs e)
         {
            if (clrD.ShowDialog() == DialogResult.OK)
@@ -199,33 +233,6 @@ namespace TandaSpreadsheetTool
                 pnlRotaEmptyCl.BackColor = clrD.Color;
             }
         }       
-
-        private FontStyle GetFontStyle()
-        {
-            var style = 0;
-
-            if (currentStyle.italicFs)
-            {
-                style += 2;
-            }
-
-            if (currentStyle.boldFs)
-            {
-                style += 1;
-            }
-
-            if (currentStyle.strikeThroughFs)
-            {
-                style += 8;
-            }
-
-            if (currentStyle.underLineFs)
-            {
-                style += 4;
-            }
-
-            return (FontStyle)style;
-        }
 
         private void btnDayNameCl_Click(object sender, EventArgs e)
         {
@@ -334,5 +341,6 @@ namespace TandaSpreadsheetTool
                 pnlTlStWkndCl.BackColor = clrD.Color;
             }
         }
+#endregion
     }
 }

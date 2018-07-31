@@ -10,31 +10,59 @@ using System.Threading.Tasks;
 
 namespace TandaSpreadsheetTool
 {
+    /// <summary>
+    /// Class to handle network requests
+    /// </summary>
+    /// <remarks>1:only 1 should ever exists (so could be static class), 2:Could automate requests so that there is only 1 request method </remarks>
     class Networker
     {
-
-        
-
+        /// <summary>
+        /// the message from the last exception that occured
+        /// </summary>
         string mostRecentError = "";
 
         protected string userNameKey = "iv7jlwbcx#hcq&*";
 
+        /// <summary>
+        /// the username
+        /// </summary>
         string username = "";
         
-
+        /// <summary>
+        /// Acess token
+        /// </summary>
         JObject token;
 
-        JObject roster;
+        /// <summary>
+        /// Array of Teams from Tanda as JObjects
+        /// </summary>
         JArray teams;
+
+        /// <summary>
+        /// Array of stamm members from Tanda as JObjects
+        /// </summary>
         JArray staff;
 
+        /// <summary>
+        /// A Notifiable form
+        /// </summary>
         INotifiable form;
 
        
-
+        /// <summary>
+        /// Sends network requests
+        /// </summary>
         HttpClient client;
+
+        /// <summary>
+        /// Request response
+        /// </summary>
         HttpResponseMessage httpresponse;
 
+        /// <summary>
+        /// Creates a new instance of the Networker Class
+        /// </summary>
+        /// <param name="form">Notifiable form</param>
         public Networker(INotifiable form)
         {
            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
@@ -50,9 +78,15 @@ namespace TandaSpreadsheetTool
             client.BaseAddress = new Uri("https://my.tanda.co/api/");
         }
 
+        #region FileIO
+        /// <summary>
+        /// Loads the token 
+        /// </summary>
+        /// <param name="password">Password to decrypt the token</param>
+        /// <returns>True if the token was sucessfully loaded and decrypted</returns>
         public bool LoadToken(string password)
         {
-            form.EnableNotifiers();
+            form.NewNotifier();
 
             if (File.Exists(RosterManager.Path + "data.wpn") & password != "")
             {
@@ -77,7 +111,7 @@ namespace TandaSpreadsheetTool
                             if (str == "Failed")
                             {
                                 form.UpdateProgress("Failed to login, access denied");
-                                form.DisableNotifiers();
+                                form.RemoveNotifier();
                                 return false;
                             }
 
@@ -88,9 +122,9 @@ namespace TandaSpreadsheetTool
                     }
                     catch (Exception e)
                     {
-                        form.UpdateProgress("Failed to get token");// problem where use can't remove local data
+                        form.UpdateProgress("Failed to get token");
                         mostRecentError = e.Message;
-                        form.DisableNotifiers();
+                        form.RemoveNotifier();
                         return false;
                     }
                 }
@@ -99,16 +133,24 @@ namespace TandaSpreadsheetTool
             }
             else
             {
-                form.DisableNotifiers();
+                form.UpdateProgress("No data found");
+                form.RemoveNotifier();
                 return false;
             }
-            form.DisableNotifiers();
+            form.UpdateProgress("Data loaded sucessfully");
+            form.RemoveNotifier();
 
             return true;
         }
 
+        /// <summary>
+        /// Removes all Networker files
+        /// </summary>
         public void ClearFileData()
         {
+            form.NewNotifier();
+            form.UpdateProgress("Clearing user file Data");
+
             if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + "data.wpn"))
             {
                 try
@@ -135,10 +177,17 @@ namespace TandaSpreadsheetTool
                 
             }
 
+            form.UpdateProgress("Data cleared");
+            form.RemoveNotifier();
+
             token = null;
             username = "";
         }
 
+        /// <summary>
+        /// Saves the username
+        /// </summary>
+        /// <param name="username">username value</param>
         public void SaveUserName(string username)
         {            
            byte[] storedBytes=Encoding.UTF8.GetBytes(Encrypt(username, userNameKey));
@@ -154,6 +203,10 @@ namespace TandaSpreadsheetTool
             }
         }
 
+        /// <summary>
+        /// Loads the username
+        /// </summary>
+        /// <returns>The loaded username if sucessful, otherwise an empty string </returns>
         public string LoadUsername()
         {
             if (!File.Exists(RosterManager.Path  + "ud.wpn"))
@@ -178,18 +231,20 @@ namespace TandaSpreadsheetTool
 
              
 
-            if (username == "Failed" || username == "")
-            {
-                // add warning system here
-            }
-            else
+            if (!(username == "Failed" || username == ""))
             {
                 this.username = username;
             }
+           
 
             return username;
         }
 
+        /// <summary>
+        /// Encrypts and Saves the token
+        /// </summary>
+        /// <param name="token">the token to be saved</param>
+        /// <param name="password">the encryption string</param>
         private void SaveToken(JObject token, string password)
         {
             string cypher = Encrypt(token.ToString(), password);
@@ -209,7 +264,16 @@ namespace TandaSpreadsheetTool
                 Console.WriteLine("Failed to save network information " + e.Message);
             }
         }
+#endregion
 
+        #region Encryption
+
+        /// <summary>
+        /// Encrypts the data string using the key
+        /// </summary>
+        /// <param name="data">data to be encrypted</param>
+        /// <param name="key">key value used to encrypt string</param>
+        /// <returns>The encrypted string</returns>
         public  string Encrypt(string data, string key)
         {
             var DES = new TripleDESCryptoServiceProvider();
@@ -244,6 +308,11 @@ namespace TandaSpreadsheetTool
             
         }
 
+        /// <summary>
+        /// Modifes the key to suit encryption
+        /// </summary>
+        /// <param name="password">password value</param>
+        /// <returns>modified bytes generated from the password</returns>
         private  byte[] GetKey(string password)
         {
             string key = null;
@@ -259,6 +328,12 @@ namespace TandaSpreadsheetTool
             return Encoding.UTF8.GetBytes(key);
         }
 
+        /// <summary>
+        /// Decrypts data using key
+        /// </summary>
+        /// <param name="data">Data to be decrypted</param>
+        /// <param name="key">key to decrypt data with</param>
+        /// <returns>Decrypted value</returns>
         public  string Decrypt(string data, string key)
         {
             var DES = new TripleDESCryptoServiceProvider();
@@ -292,10 +367,16 @@ namespace TandaSpreadsheetTool
            
         }
 
-       
+#endregion
 
-#region NetworkRequests
 
+        #region NetworkRequests
+        /// <summary>
+        /// Get's the token from file then decrypts it
+        /// </summary>
+        /// <param name="username">token username</param>
+        /// <param name="password">password that encrypted the token</param>
+        /// <returns>True if sucessfully loaded and decrypted</returns>
         public async Task<bool> GetToken(string username, string password)
         {           
 
@@ -303,7 +384,7 @@ namespace TandaSpreadsheetTool
             {
                 return false;
             }
-            form.EnableNotifiers();
+            form.NewNotifier();
             form.UpdateProgress("Getting Token");
 
 
@@ -345,17 +426,23 @@ namespace TandaSpreadsheetTool
             }
             catch (Exception ex)
             {
-                form.DisableNotifiers();
+                form.RemoveNotifier();
                 
                 return false;
             }
 
 
-            form.DisableNotifiers();
+            form.RemoveNotifier();
             return true;
 
         }
 
+        /// <summary>
+        /// Get's the roster value containing the given date 
+        /// </summary>
+        /// <remarks>Data is more consistent with the API if the day is always Monday</remarks>
+        /// <param name="containingDate">Date which roster will contain</param>
+        /// <returns>The JObject roster recieved from the Tanda API</returns>
         public async Task<JObject> GetRooster(DateTime containingDate)
         {
             
@@ -365,14 +452,14 @@ namespace TandaSpreadsheetTool
 
             client.DefaultRequestHeaders.Add("Authorization", "bearer " + token.GetValue("access_token"));
             var payload = "";
-
+            JObject roster = null;
             try
             {
                 httpresponse = await client.GetAsync("v2/rosters/on/" + containingDate.ToString("yyyy-MM-dd"));
                 
                  payload = await httpresponse.Content.ReadAsStringAsync();
 
-                roster = JObject.Parse(payload);
+                 roster = JObject.Parse(payload);
                if (!httpresponse.IsSuccessStatusCode)
                 {
                     Console.WriteLine("Failed to get roster from : " + containingDate.ToShortDateString());
@@ -390,6 +477,10 @@ namespace TandaSpreadsheetTool
             return roster;
         }
 
+        /// <summary>
+        /// Gets all teams associated with the current account
+        /// </summary>
+        /// <returns>A JSON Array containing the teams</returns>
         public async Task<JArray> GetDepartments()
         {
            
@@ -416,6 +507,10 @@ namespace TandaSpreadsheetTool
             return teams;
         }
     
+        /// <summary>
+        /// Gets all the staff associated with the current account
+        /// </summary>
+        /// <returns></returns>
         public async Task<JArray> GetStaff()
         {
            
@@ -452,14 +547,9 @@ namespace TandaSpreadsheetTool
 
 
 
-        public JObject Roster
-        {
-            get
-            {
-                return roster;
-            }
-        }
-      
+        /// <summary>
+        /// Returns the last recieved Teams JSON Array
+        /// </summary>
         public JArray Teams
         {
             get
@@ -468,6 +558,9 @@ namespace TandaSpreadsheetTool
             }
         }
 
+        /// <summary>
+        /// Returns the last recieved Staff JSON Array
+        /// </summary>
         public JArray Staff
         {
             get
@@ -476,10 +569,9 @@ namespace TandaSpreadsheetTool
             }
         }
 
-   
-
-       
-
+        /// <summary>
+        /// The last exception thrown by the networker
+        /// </summary>
         public string LastNetErrMsg
         {
             get
@@ -488,6 +580,9 @@ namespace TandaSpreadsheetTool
             }
         }
 
+        /// <summary>
+        /// Whether the token is not null
+        /// </summary>
         public bool Authenticated
         {
             get
@@ -496,6 +591,9 @@ namespace TandaSpreadsheetTool
             }
         }
 
+        /// <summary>
+        /// The last user to log in
+        /// </summary>
         public string LastUser
         {
             get
@@ -504,7 +602,10 @@ namespace TandaSpreadsheetTool
             }
         }
 
-        bool IsFirstUse
+        /// <summary>
+        /// Whether data files to do with networking exists
+        /// </summary>
+        bool IsCleanLogIn
         {
             get
             {
@@ -512,12 +613,13 @@ namespace TandaSpreadsheetTool
             }
         }
         #endregion
+
         ~Networker()
         {
             client.CancelPendingRequests();
             client.Dispose();
             httpresponse.Dispose();
-
+            
         }
 
         

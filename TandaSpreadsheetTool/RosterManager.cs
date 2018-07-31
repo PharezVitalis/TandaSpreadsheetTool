@@ -118,7 +118,7 @@ namespace TandaSpreadsheetTool
                 }
                 else
                 {
-                    return null;
+                    return String.Empty;
                 }
             }
         }
@@ -133,7 +133,7 @@ namespace TandaSpreadsheetTool
             var staffJArr = new JArray();
             var readFromFile = false;
 
-            form.EnableNotifiers();
+            form.NewNotifier();
 
             if (!forceUpdate & File.Exists(Path + "staff.json"))
             {
@@ -192,7 +192,7 @@ namespace TandaSpreadsheetTool
                 form.UpdateProgress("Failed: Failed to get staff from Tanda API: "+e.Message);
                 
                 form.RaiseMessage("Error Building Roster", "Failed to Build Roster, the file from Tanda is Invalid. ");
-                form.DisableNotifiers();
+                form.RemoveNotifier();
                 hasStaff = false;
                 return false;
             }
@@ -225,23 +225,11 @@ namespace TandaSpreadsheetTool
             }
 
             form.UpdateProgress("Finished Getting Staff");
-            form.DisableNotifiers();
+            form.RemoveNotifier();
 
             hasStaff = true;
             return true;
 
-        }
-
-        /// <summary>
-        /// Formatted DateTime string for when the last staff update was
-        /// </summary>
-        /// <remarks>This was intended to be used to automatically update the staff list if it is old</remarks>
-        public string LastUpdated
-        {
-            get
-            {
-                return staffLstLastUpdated.ToString("dd/MM/yy hh:mm");
-            }
         }
 
         /// <summary>
@@ -281,7 +269,7 @@ namespace TandaSpreadsheetTool
             var teamsArr = new JArray();
             bool readFromFile = false;
 
-            form.EnableNotifiers();
+            form.NewNotifier();
            
 
             if (!forceUpdate & File.Exists(Path + "teams.json"))
@@ -331,7 +319,7 @@ namespace TandaSpreadsheetTool
             catch(Exception e)
             {
                 form.UpdateProgress("Failed, data formats changed or incorrect: "+e.Message);
-                form.DisableNotifiers();
+                form.RemoveNotifier();
                 hasTeams = false;
                 return false;
             }
@@ -351,7 +339,7 @@ namespace TandaSpreadsheetTool
                 
             }
             form.UpdateProgress("Finished formatting team data");
-            form.DisableNotifiers();
+            form.RemoveNotifier();
             hasTeams = true;
             return true;
         }
@@ -382,7 +370,7 @@ namespace TandaSpreadsheetTool
         {
             var rosterPath = Path + "Rosters";
 
-            form.EnableNotifiers();
+            form.NewNotifier();
             form.UpdateProgress("Getting roster data files.");
 
             var fileNames = Directory.GetFiles(rosterPath);
@@ -430,7 +418,7 @@ namespace TandaSpreadsheetTool
 
 
             }
-            form.DisableNotifiers();
+            form.RemoveNotifier();
         }
 
         /// <summary>
@@ -443,7 +431,7 @@ namespace TandaSpreadsheetTool
         public async Task<FormattedRoster> BuildRoster(DateTime dateFrom, DateTime dateTo, bool save = true)
         {
             var currentTries = 0;
-            form.EnableNotifiers();
+            form.NewNotifier();
             form.UpdateProgress("Getting roster data.");
 
             dateFrom = SetToTime(dateFrom, 0, 0);
@@ -508,7 +496,7 @@ namespace TandaSpreadsheetTool
                         {
                             form.UpdateProgress("Failed to get team data");
                             form.RaiseMessage("Failed to get teams", "Failed to get team data", MessageBoxIcon.Error);
-                            form.DisableNotifiers();
+                            form.RemoveNotifier();
                             return null;
                         }
                     }
@@ -542,7 +530,7 @@ namespace TandaSpreadsheetTool
                         {
                             form.UpdateProgress("Failed to get staff data");
                             form.RaiseMessage("Failed to get staff", "Failed to get staff data", MessageBoxIcon.Warning);
-                            form.DisableNotifiers();
+                            form.RemoveNotifier();
                             return null;
                         }
                     }
@@ -592,7 +580,7 @@ namespace TandaSpreadsheetTool
                 {
                     form.UpdateProgress("No rosters found");
                     form.RaiseMessage("No Schedules Available", "No schedules were found within the specified date range", MessageBoxIcon.Exclamation);
-                    form.DisableNotifiers();
+                    form.RemoveNotifier();
                     return null;
                 }
              
@@ -602,7 +590,7 @@ namespace TandaSpreadsheetTool
             {
                 form.UpdateProgress("Failed: failed to format roster data: " + e.Message);
                 form.RaiseMessage("Failed to format Roster", "Failed to format roster data: " + e.Message, MessageBoxIcon.Warning);
-                form.DisableNotifiers();
+                form.RemoveNotifier();
                 return null;
             }
             var outRoster = CreateRoster(rosterObjs.ToArray(), ref dateFrom,ref dateTo, rosterObjs.Count != rosters.Length);
@@ -636,7 +624,7 @@ namespace TandaSpreadsheetTool
            
             builtRosters.Add(outRoster);
             form.UpdateProgress("Finished Building Roster");
-            form.DisableNotifiers();
+            form.RemoveNotifier();
             return outRoster;
         }
 
@@ -667,6 +655,47 @@ namespace TandaSpreadsheetTool
 
                 builtRosters.RemoveAt(index);
             }
+        }
+
+        /// <summary>
+        /// Deletes all roster data files, clears the roster list
+        /// </summary>
+        public void Remove()
+        {
+             var rosterPath = Path + "Rosters";
+
+            form.NewNotifier();
+            form.UpdateProgress("Removing roster data files.");
+
+            var fileNames = Directory.GetFiles(rosterPath);
+
+            for (int i = 0; i < fileNames.Length; i++)
+            {
+                var file = fileNames[i];
+
+                if (file.Contains("Roster") & file.Contains(".bin"))
+                {
+                    try
+                    {
+
+                        File.Delete(file);
+                        
+
+                    }
+                    catch 
+                    {
+                        form.UpdateProgress("Failed to Delete file: " + file);
+
+                        continue;
+                    }
+
+                }
+
+
+            }
+            builtRosters.Clear();
+            form.UpdateProgress("Finished Removing files");
+            form.RemoveNotifier();
         }
 
         /// <summary>
@@ -745,6 +774,7 @@ namespace TandaSpreadsheetTool
         {
             return date.Substring(6, 4) + "/" + date.Substring(3, 2) + "/" + date.Substring(0, 2);
         }
+
         /// <summary>
         /// Returns how frequently an connection attempt will be made (in ms)
         /// </summary>

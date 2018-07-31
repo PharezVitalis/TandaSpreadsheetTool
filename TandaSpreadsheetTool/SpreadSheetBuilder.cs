@@ -117,7 +117,7 @@ namespace TandaSpreadsheetTool
             weekendFont.IsItalic = true;
             weekendFont.Underline = FontUnderlineType.Double;
 
-            form.EnableNotifiers();
+            form.NewNotifier();
             form.UpdateProgress("Building Spreadsheet...");
 
             form.UpdateProgress("Building styles");
@@ -265,14 +265,14 @@ namespace TandaSpreadsheetTool
             {
                 form.UpdateProgress("Failed to save file: " + e.Message);
                 form.RaiseMessage("Failed To save Excel File", "Excel File failed to save: " + e.Message);
-                form.DisableNotifiers();
+                form.RemoveNotifier();
                 return false;
             }
             workBook.Close();
             teamDict.Clear();
             styleDict.Clear();
             form.UpdateProgress("Finished creating excel sheet at: " + path);
-            form.DisableNotifiers();
+            form.RemoveNotifier();
             GC.Collect();
             return true;            
         }
@@ -622,6 +622,14 @@ namespace TandaSpreadsheetTool
 
             nOfDays = (int)(to - from).TotalDays;
             maxColCount = 2 + nOfDays;
+            if (useVertHead)
+            {
+                currentStyle.Rotation = 90;
+                currentStyle2.Rotation = 90;
+                wknDateSt.Rotation = 90;
+                wknDaySt.Rotation = 90;
+            }
+
             for (int i = 0; i <= nOfDays; i++)
             {// currentStyle = date field style, currentStyle2 = day field style
 
@@ -635,11 +643,7 @@ namespace TandaSpreadsheetTool
                 dateCell.SetCellValue(currentDate.ToShortDateString());
 
 
-                if (useVertHead)
-                {
-                    currentStyle.Rotation = 90;
-                    currentStyle2.Rotation = 90;
-                }
+           
                 var isWeekend = IsWeekend(currentDay);
 
                 currentCell.CellStyle =(isWeekend)?wknDaySt: currentStyle;

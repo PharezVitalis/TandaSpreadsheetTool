@@ -68,7 +68,7 @@
             this.pnlLogIn.Controls.Add(this.lblPwd);
             this.pnlLogIn.Controls.Add(this.lblUName);
             this.pnlLogIn.Controls.Add(this.lblToContinue);
-            this.pnlLogIn.Location = new System.Drawing.Point(15, 258);
+            this.pnlLogIn.Location = new System.Drawing.Point(12, 9);
             this.pnlLogIn.Name = "pnlLogIn";
             this.pnlLogIn.Size = new System.Drawing.Size(733, 142);
             this.pnlLogIn.TabIndex = 0;
@@ -298,16 +298,16 @@
             // pgBarMain
             // 
             this.pgBarMain.Enabled = false;
-            this.pgBarMain.Location = new System.Drawing.Point(346, 183);
+            this.pgBarMain.Location = new System.Drawing.Point(373, 200);
             this.pgBarMain.Name = "pgBarMain";
-            this.pgBarMain.Size = new System.Drawing.Size(232, 22);
+            this.pgBarMain.Size = new System.Drawing.Size(219, 35);
             this.pgBarMain.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.pgBarMain.TabIndex = 3;
             this.pgBarMain.Visible = false;
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(595, 182);
+            this.btnExit.Location = new System.Drawing.Point(595, 212);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(150, 23);
             this.btnExit.TabIndex = 17;
@@ -321,10 +321,10 @@
             this.lstBxNotifier.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.lstBxNotifier.Enabled = false;
             this.lstBxNotifier.FormattingEnabled = true;
-            this.lstBxNotifier.Location = new System.Drawing.Point(12, 160);
+            this.lstBxNotifier.Location = new System.Drawing.Point(3, 157);
             this.lstBxNotifier.Name = "lstBxNotifier";
             this.lstBxNotifier.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.lstBxNotifier.Size = new System.Drawing.Size(320, 65);
+            this.lstBxNotifier.Size = new System.Drawing.Size(364, 78);
             this.lstBxNotifier.TabIndex = 18;
             this.lstBxNotifier.TabStop = false;
             // 
@@ -332,7 +332,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(757, 551);
+            this.ClientSize = new System.Drawing.Size(757, 248);
             this.Controls.Add(this.lstBxNotifier);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.pgBarMain);
@@ -341,6 +341,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "MainForm";
+            this.ShowIcon = false;
             this.Text = "Tanda Roster Spreadsheet Tool";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.pnlLogIn.ResumeLayout(false);

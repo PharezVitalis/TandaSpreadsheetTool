@@ -751,6 +751,7 @@
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.ckBxBoldHead);
             this.Name = "StylerForm";
+            this.ShowIcon = false;
             this.Text = "Styler";
             ((System.ComponentModel.ISupportInitialize)(this.tkBarBrightness)).EndInit();
             this.gBxUseVertDates.ResumeLayout(false);

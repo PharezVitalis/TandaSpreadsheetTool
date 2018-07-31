@@ -7,26 +7,33 @@ using NPOI.XSSF.UserModel;
 
 namespace TandaSpreadsheetTool
 {
-   
+   //File to hold Data Classes, interfaces, simple structures and enumerators
   
     
-
+        /// <summary>
+        /// Division setting for Spreadsheet
+        /// </summary>
     public enum SpreadSheetDiv
     {
         NONE,WEEKLY,BIWEEKLY,MONTHLY
     }
     
+    /// <summary>
+    /// A Interface used to notify forms of any background progress
+    /// </summary>
     public interface INotifiable
     {
-        void EnableNotifiers();
-        void DisableNotifiers();
+        void NewNotifier();
+        void RemoveNotifier();
         void UpdateProgress(string progressUpdate, int progress = -1);
-        int ProcessCount { get; }
+        int NotifiersCount { get; }
         void RaiseMessage(string title, string message,System.Windows.Forms.MessageBoxIcon icon = System.Windows.Forms.MessageBoxIcon.Information);
 
     }
 
-
+    /// <summary>
+    /// Roster class that JSON Roster deserialises to
+    /// </summary>
     public class Roster
     {
         public int id;
@@ -42,11 +49,17 @@ namespace TandaSpreadsheetTool
 
     }
 
+    /// <summary>
+    /// Whether vertical date and day heading should be used
+    /// </summary>
     public enum UseVerticalDates
     {
         TRUE, AUTO, FALSE
     }
 
+    /// <summary>
+    /// Data class for Storing meta data and style for each team when building spreadsheet
+    /// </summary>
    public class TeamValue
     {
         public XSSFCellStyle style;
@@ -69,6 +82,9 @@ namespace TandaSpreadsheetTool
         }
     }
 
+    /// <summary>
+    /// Spreadsheet style settings
+    /// </summary>
     public struct SpreadSheetStyle
     {
         //cl = colour
@@ -150,6 +166,9 @@ namespace TandaSpreadsheetTool
        
     }
 
+    /// <summary>
+    /// Container class for scedules
+    /// </summary>
     public class Day
     {
         public string date { get; set; }
@@ -161,17 +180,9 @@ namespace TandaSpreadsheetTool
         }
     }
 
-    public class StaffHolder
-    {
-        public List<User> staff { get; set; }
-        
-        public StaffHolder()
-        {
-            staff = new List<User>();
-        }
-
-    }
-
+ /// <summary>
+ /// JSON deseriliases to this schedule
+ /// </summary>
     public struct Schedule
     {
       
@@ -183,6 +194,9 @@ namespace TandaSpreadsheetTool
         
     }
 
+    /// <summary>
+    /// A Formatter roster structure used to create spreadsheets
+    /// </summary>
     [Serializable]
     public class FormattedRoster
     {
@@ -197,7 +211,9 @@ namespace TandaSpreadsheetTool
             
     }
 
-    
+    /// <summary>
+    /// Staff JSON objects are deserialised to this structure
+    /// </summary>
 
     public struct User
     {
@@ -205,8 +221,10 @@ namespace TandaSpreadsheetTool
        public string name;
         
     }
-
-    [Serializable]
+    /// <summary>
+    /// Formatted staff member (has 1-m relationship with schedules) used in FormattedRoster
+    /// </summary>
+    [Serializable]    
     public class FormattedStaff
     {
         public List<FormattedSchedule> schedules { get; set; }
@@ -223,6 +241,9 @@ namespace TandaSpreadsheetTool
       
     }
 
+    /// <summary>
+    /// Team Data Class which JSON object deserialises to
+    /// </summary>
     public class Team
     {
         public int id { get; set; }
@@ -243,6 +264,9 @@ namespace TandaSpreadsheetTool
 
     }
 
+    /// <summary>
+    /// A formatted schedule used by FormattedRoster
+    /// </summary>
     [Serializable]
     public struct FormattedSchedule
     {
