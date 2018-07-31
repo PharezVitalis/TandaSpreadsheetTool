@@ -68,7 +68,7 @@
             this.pnlLogIn.Controls.Add(this.lblPwd);
             this.pnlLogIn.Controls.Add(this.lblUName);
             this.pnlLogIn.Controls.Add(this.lblToContinue);
-            this.pnlLogIn.Location = new System.Drawing.Point(18, 6);
+            this.pnlLogIn.Location = new System.Drawing.Point(15, 258);
             this.pnlLogIn.Name = "pnlLogIn";
             this.pnlLogIn.Size = new System.Drawing.Size(733, 142);
             this.pnlLogIn.TabIndex = 0;
@@ -253,6 +253,7 @@
             this.dtPFrom.Name = "dtPFrom";
             this.dtPFrom.Size = new System.Drawing.Size(118, 20);
             this.dtPFrom.TabIndex = 1;
+            this.dtPFrom.ValueChanged += new System.EventHandler(this.dtPFrom_ValueChanged);
             // 
             // dtPTo
             // 
@@ -260,6 +261,7 @@
             this.dtPTo.Name = "dtPTo";
             this.dtPTo.Size = new System.Drawing.Size(118, 20);
             this.dtPTo.TabIndex = 2;
+            this.dtPTo.ValueChanged += new System.EventHandler(this.dtPTo_ValueChanged);
             // 
             // lblDateTo
             // 
@@ -330,7 +332,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(757, 240);
+            this.ClientSize = new System.Drawing.Size(757, 551);
             this.Controls.Add(this.lstBxNotifier);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.pgBarMain);

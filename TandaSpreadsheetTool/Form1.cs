@@ -46,7 +46,7 @@ namespace TandaSpreadsheetTool
             }
 
          
-
+            
             dtPFrom.Value = DateTime.Now.AddDays(-7);
             dtPTo.Value = DateTime.Now;
 
@@ -464,6 +464,16 @@ namespace TandaSpreadsheetTool
         private void btnExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void dtPFrom_ValueChanged(object sender, EventArgs e)
+        {
+            dtPTo.MinDate = dtPFrom.Value;
+        }
+
+        private void dtPTo_ValueChanged(object sender, EventArgs e)
+        {
+            dtPFrom.MaxDate = dtPTo.Value;
         }
     }
 }
