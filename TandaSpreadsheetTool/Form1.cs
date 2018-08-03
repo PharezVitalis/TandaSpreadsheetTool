@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TandaSpreadsheetTool
@@ -76,7 +77,7 @@ namespace TandaSpreadsheetTool
                 txtBxUName.Text = networker.LastUser;
             }
 
-            lblLastUpdated.Text = "Last Updated: " + builder.LastStaffUpdate;
+          
             
             dtPFrom.Value = DateTime.Now.AddDays(-7);
             dtPTo.Value = DateTime.Now;
@@ -260,7 +261,7 @@ namespace TandaSpreadsheetTool
         void EnableJsonBtn()
         {
             btnGetJSON.Enabled = true;
-            btnUpdateStaff.Enabled = true;
+            btnRefresh.Enabled = true;
             if (rosters != null)
             {
                 if (rosters.Length > 0)
@@ -276,6 +277,11 @@ namespace TandaSpreadsheetTool
         /// </summary>
         void UpdateRosterList()
         {
+            if (SynchronizationContext.Current == null)
+            {
+                Invoke(new MethodInvoker(UpdateRosterList));
+                return;
+            }
             
             rosters = builder.GetAllRosters();
             lstBxRosters.Items.Clear();
@@ -335,10 +341,7 @@ namespace TandaSpreadsheetTool
                     System.Diagnostics.Process.Start(@spreadSheetPath);
                 }
             }
-            else
-            {
-                // failed
-            }
+            
         }
 
         /// <summary>
@@ -346,8 +349,9 @@ namespace TandaSpreadsheetTool
         /// </summary>
         async private void RefreshStaffList()
         {
-            await builder.GetStaff(true);
-            await builder.GetTeams(true);
+            await Task.Run(new Action(() => builder.Refresh()));
+            UpdateRosterList();
+            
             Invoke(new MethodInvoker(EnableJsonBtn));
         }
 
@@ -457,7 +461,7 @@ namespace TandaSpreadsheetTool
         {
             
             btnGetJSON.Enabled = false;
-            btnUpdateStaff.Enabled = false;
+            btnRefresh.Enabled = false;
 
             if (!bgThread.IsAlive)
             {
@@ -512,7 +516,7 @@ namespace TandaSpreadsheetTool
 
 
             btnGetJSON.Enabled = false;
-            btnUpdateStaff.Enabled = false;
+            btnRefresh.Enabled = false;
             if (!bgThread.IsAlive)
             {
                 bgThread = new Thread(new ThreadStart(MakeRoster));
@@ -546,7 +550,7 @@ namespace TandaSpreadsheetTool
                 bgThread.Start();
             }
             else
-            {
+            {//pattern should be added to all methods that use the bgThread
                 MessageBox.Show("Task Aborted: Background processes are still running");
             }
 
@@ -566,6 +570,21 @@ namespace TandaSpreadsheetTool
         {
             dtPFrom.MaxDate = dtPTo.Value;
         }
-#endregion
+        
+
+        private void btnClearData_Click(object sender, EventArgs e)
+        {
+            var dResult = MessageBox.Show("Clear All Data Associated with this user? (Spreadsheets will not be affected)", "Clear User Data", MessageBoxButtons.YesNoCancel);
+
+            if (dResult == DialogResult.Yes)
+            {
+                networker.ClearFileData();
+                builder.Remove();
+                UpdateRosterList();
+                
+            }
+            
+        }
+        #endregion
     }
 }

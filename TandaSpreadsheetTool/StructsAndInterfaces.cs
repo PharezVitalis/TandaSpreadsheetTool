@@ -19,7 +19,7 @@ namespace TandaSpreadsheetTool
     }
     
     /// <summary>
-    /// A Interface used to notify forms of any background progress
+    /// An Interface used to notify forms of any background progress
     /// </summary>
     public interface INotifiable
     {
@@ -58,7 +58,7 @@ namespace TandaSpreadsheetTool
     }
 
     /// <summary>
-    /// Data class for Storing meta data and style for each team when building spreadsheet
+    /// Data class for Storing meta data and cell formatting for each team when building spreadsheet
     /// </summary>
    public class TeamValue
     {
@@ -88,7 +88,7 @@ namespace TandaSpreadsheetTool
     public struct SpreadSheetStyle
     {
         //cl = colour
-
+        
         public byte[] nameHeadingCl;
         public byte[] nameFieldCl;
         public byte[] rotaFieldCl;
@@ -117,7 +117,7 @@ namespace TandaSpreadsheetTool
         public HorizontalAlignment nameAlign;
         public HorizontalAlignment headAlign;
         public HorizontalAlignment rotaAlign;
-
+        public bool autoNameColWidth;
         public bool useTeamLegends;
         public bool useShiftLegends;
         public bool shiftAnalysis;
@@ -130,6 +130,7 @@ namespace TandaSpreadsheetTool
             return new SpreadSheetStyle()
             {
                 boldHeadings = true,
+                autoNameColWidth = true,
                 nameHeadingCl = new byte[] { 61, 133, 198 },
                 nameFieldCl = new byte[] { 207, 226, 243 },
                 tlShiftHeadCl = new byte[] { 142, 169, 219 },

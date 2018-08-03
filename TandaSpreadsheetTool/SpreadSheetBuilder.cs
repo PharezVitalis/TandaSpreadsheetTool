@@ -90,6 +90,7 @@ namespace TandaSpreadsheetTool
         /// <summary>
         /// returns true if the day is a weekend
         /// </summary>
+        /// <remarks>It is based on using the value giving from DayOfWeek inside of  a DateTime</remarks>
         /// <param name="day">day to be tested, must start with capital</param>
         /// <returns>Returns true if the day is a weekend</returns>
         bool IsWeekend(string day)
@@ -98,7 +99,7 @@ namespace TandaSpreadsheetTool
         }
 
         /// <summary>
-        /// Creates a workbook at the given path
+        /// Creates a workbook at the given path and puts all the roster data into it
         /// </summary>
         /// <param name="roster">The roster data used to generate the workbook</param>
         /// <param name="style">Styling options for the workbook</param>
@@ -388,10 +389,16 @@ namespace TandaSpreadsheetTool
                 currentCell.CellStyle = cellStyle;
 
             }//end outer for
-            
-            
+
+
+            if (style.autoNameColWidth)
+            {
+                sheet.AutoSizeColumn(1);
+            }
+
 
         }
+
 
         /// <summary>
         /// creates a roster table on the sheet
@@ -424,7 +431,7 @@ namespace TandaSpreadsheetTool
 
 
             maxRowCount = staffCount + 1;
-
+           
             
             for (int i = 0; i < staffCount; i++)
             {//cellstyle = name field style
@@ -485,6 +492,11 @@ namespace TandaSpreadsheetTool
 
             }//end outer for
 
+            if (style.autoNameColWidth)
+            {
+                sheet.AutoSizeColumn(1);
+            }
+            
         }
 
         /// <summary>

@@ -42,9 +42,8 @@
             this.btnRemove = new System.Windows.Forms.Button();
             this.lstBxRosters = new System.Windows.Forms.ListBox();
             this.ckBxSaveJson = new System.Windows.Forms.CheckBox();
-            this.btnUpdateStaff = new System.Windows.Forms.Button();
+            this.btnRefresh = new System.Windows.Forms.Button();
             this.lblStatus = new System.Windows.Forms.Label();
-            this.lblLastUpdated = new System.Windows.Forms.Label();
             this.btnMakeExcel = new System.Windows.Forms.Button();
             this.dtPFrom = new System.Windows.Forms.DateTimePicker();
             this.dtPTo = new System.Windows.Forms.DateTimePicker();
@@ -55,12 +54,14 @@
             this.pgBarMain = new System.Windows.Forms.ProgressBar();
             this.btnExit = new System.Windows.Forms.Button();
             this.lstBxNotifier = new System.Windows.Forms.ListBox();
+            this.btnClearData = new System.Windows.Forms.Button();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlLogIn
             // 
+            this.pnlLogIn.Controls.Add(this.btnClearData);
             this.pnlLogIn.Controls.Add(this.lblLoad);
             this.pnlLogIn.Controls.Add(this.btnLogIn);
             this.pnlLogIn.Controls.Add(this.txtBxPwd);
@@ -68,7 +69,7 @@
             this.pnlLogIn.Controls.Add(this.lblPwd);
             this.pnlLogIn.Controls.Add(this.lblUName);
             this.pnlLogIn.Controls.Add(this.lblToContinue);
-            this.pnlLogIn.Location = new System.Drawing.Point(12, 9);
+            this.pnlLogIn.Location = new System.Drawing.Point(12, 298);
             this.pnlLogIn.Name = "pnlLogIn";
             this.pnlLogIn.Size = new System.Drawing.Size(733, 142);
             this.pnlLogIn.TabIndex = 0;
@@ -83,7 +84,7 @@
             // 
             // btnLogIn
             // 
-            this.btnLogIn.Location = new System.Drawing.Point(213, 119);
+            this.btnLogIn.Location = new System.Drawing.Point(315, 111);
             this.btnLogIn.Name = "btnLogIn";
             this.btnLogIn.Size = new System.Drawing.Size(75, 23);
             this.btnLogIn.TabIndex = 5;
@@ -93,7 +94,7 @@
             // 
             // txtBxPwd
             // 
-            this.txtBxPwd.Location = new System.Drawing.Point(110, 93);
+            this.txtBxPwd.Location = new System.Drawing.Point(123, 87);
             this.txtBxPwd.Name = "txtBxPwd";
             this.txtBxPwd.Size = new System.Drawing.Size(178, 20);
             this.txtBxPwd.TabIndex = 4;
@@ -101,7 +102,7 @@
             // 
             // txtBxUName
             // 
-            this.txtBxUName.Location = new System.Drawing.Point(110, 59);
+            this.txtBxUName.Location = new System.Drawing.Point(123, 53);
             this.txtBxUName.Name = "txtBxUName";
             this.txtBxUName.Size = new System.Drawing.Size(178, 20);
             this.txtBxUName.TabIndex = 3;
@@ -109,7 +110,7 @@
             // lblPwd
             // 
             this.lblPwd.AutoSize = true;
-            this.lblPwd.Location = new System.Drawing.Point(51, 96);
+            this.lblPwd.Location = new System.Drawing.Point(64, 90);
             this.lblPwd.Name = "lblPwd";
             this.lblPwd.Size = new System.Drawing.Size(53, 13);
             this.lblPwd.TabIndex = 2;
@@ -118,7 +119,7 @@
             // lblUName
             // 
             this.lblUName.AutoSize = true;
-            this.lblUName.Location = new System.Drawing.Point(69, 62);
+            this.lblUName.Location = new System.Drawing.Point(82, 56);
             this.lblUName.Name = "lblUName";
             this.lblUName.Size = new System.Drawing.Size(35, 13);
             this.lblUName.TabIndex = 1;
@@ -141,9 +142,8 @@
             this.pnlMain.Controls.Add(this.btnRemove);
             this.pnlMain.Controls.Add(this.lstBxRosters);
             this.pnlMain.Controls.Add(this.ckBxSaveJson);
-            this.pnlMain.Controls.Add(this.btnUpdateStaff);
+            this.pnlMain.Controls.Add(this.btnRefresh);
             this.pnlMain.Controls.Add(this.lblStatus);
-            this.pnlMain.Controls.Add(this.lblLastUpdated);
             this.pnlMain.Controls.Add(this.btnMakeExcel);
             this.pnlMain.Controls.Add(this.dtPFrom);
             this.pnlMain.Controls.Add(this.dtPTo);
@@ -209,15 +209,15 @@
             this.ckBxSaveJson.Text = "Save Roster Data File";
             this.ckBxSaveJson.UseVisualStyleBackColor = true;
             // 
-            // btnUpdateStaff
+            // btnRefresh
             // 
-            this.btnUpdateStaff.Location = new System.Drawing.Point(205, 111);
-            this.btnUpdateStaff.Name = "btnUpdateStaff";
-            this.btnUpdateStaff.Size = new System.Drawing.Size(150, 23);
-            this.btnUpdateStaff.TabIndex = 12;
-            this.btnUpdateStaff.Text = "Update Staff List";
-            this.btnUpdateStaff.UseVisualStyleBackColor = true;
-            this.btnUpdateStaff.Click += new System.EventHandler(this.btnUpdateStaff_Click);
+            this.btnRefresh.Location = new System.Drawing.Point(205, 111);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(150, 23);
+            this.btnRefresh.TabIndex = 12;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnUpdateStaff_Click);
             // 
             // lblStatus
             // 
@@ -226,15 +226,6 @@
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(0, 13);
             this.lblStatus.TabIndex = 11;
-            // 
-            // lblLastUpdated
-            // 
-            this.lblLastUpdated.AutoSize = true;
-            this.lblLastUpdated.Location = new System.Drawing.Point(202, 87);
-            this.lblLastUpdated.Name = "lblLastUpdated";
-            this.lblLastUpdated.Size = new System.Drawing.Size(118, 13);
-            this.lblLastUpdated.TabIndex = 9;
-            this.lblLastUpdated.Text = "Staff List Last Updated:";
             // 
             // btnMakeExcel
             // 
@@ -328,11 +319,21 @@
             this.lstBxNotifier.TabIndex = 18;
             this.lstBxNotifier.TabStop = false;
             // 
+            // btnClearData
+            // 
+            this.btnClearData.Location = new System.Drawing.Point(431, 111);
+            this.btnClearData.Name = "btnClearData";
+            this.btnClearData.Size = new System.Drawing.Size(75, 23);
+            this.btnClearData.TabIndex = 7;
+            this.btnClearData.Text = "Clear Data";
+            this.btnClearData.UseVisualStyleBackColor = true;
+            this.btnClearData.Click += new System.EventHandler(this.btnClearData_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(757, 248);
+            this.ClientSize = new System.Drawing.Size(757, 452);
             this.Controls.Add(this.lstBxNotifier);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.pgBarMain);
@@ -370,17 +371,17 @@
         private System.Windows.Forms.DateTimePicker dtPTo;
         private System.Windows.Forms.Button btnMakeExcel;
         private System.Windows.Forms.Label lblStatus;
-        private System.Windows.Forms.Button btnUpdateStaff;
+        private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.CheckBox ckBxSaveJson;
         private System.Windows.Forms.ListBox lstBxRosters;
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnFormat;
-        private System.Windows.Forms.Label lblLastUpdated;
         private System.Windows.Forms.SaveFileDialog excelSaveDialog;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.ListBox lstBxNotifier;
         private System.Windows.Forms.ProgressBar pgBarMain;
         private System.Windows.Forms.CheckBox ckBxOpenSpreadsheet;
+        private System.Windows.Forms.Button btnClearData;
     }
 }
 

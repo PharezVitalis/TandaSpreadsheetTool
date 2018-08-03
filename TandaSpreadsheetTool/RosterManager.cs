@@ -656,6 +656,45 @@ namespace TandaSpreadsheetTool
                 builtRosters.RemoveAt(index);
             }
         }
+        /// <summary>
+        /// Refreshes the staff list, team list and the roster list
+        /// </summary>
+        public async void Refresh()
+        {
+            form.NewNotifier();
+            form.UpdateProgress("Updating staff data");
+           if ( await GetStaff(true)&await GetTeams(true))
+            {
+                form.UpdateProgress("Staff data updated");
+            }
+            else
+            {
+                form.UpdateProgress("Failed to update staff");
+                form.RaiseMessage("Failed to update staff", networker.LastNetErrMsg, MessageBoxIcon.Warning);
+                form.RemoveNotifier();
+                return;
+            }
+            form.UpdateProgress("Rebuilding Rosters");
+
+            var rosters = builtRosters.ToArray();
+            builtRosters.Clear();
+            for (int i = 0; i < rosters.Length; i++)
+            {
+                var currentRoster = rosters[i];
+                currentRoster = await BuildRoster(currentRoster.start, currentRoster.finish);
+                if (currentRoster == null)
+                {
+                    var message = "Failed to build roster: " + currentRoster.start.ToShortDateString() + " to " + currentRoster.finish.ToShortDateString();
+                    form.UpdateProgress(message);
+                    form.RaiseMessage("Failed to build roster", message, MessageBoxIcon.Warning);
+                    continue;
+                }
+                builtRosters.Add(currentRoster);
+            }
+            form.UpdateProgress("Finish refreshing data");
+            form.RemoveNotifier();
+
+        }
 
         /// <summary>
         /// Deletes all roster data files, clears the roster list

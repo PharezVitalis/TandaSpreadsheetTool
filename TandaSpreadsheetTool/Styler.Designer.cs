@@ -91,6 +91,7 @@
             this.btnWkndDayCl = new System.Windows.Forms.Button();
             this.pnlWkndDateCl = new System.Windows.Forms.Panel();
             this.pnlWkndDayCl = new System.Windows.Forms.Panel();
+            this.ckBxAutoName = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarBrightness)).BeginInit();
             this.gBxUseVertDates.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tkBarColumnWidth)).BeginInit();
@@ -102,7 +103,7 @@
             this.ckBxBoldHead.AutoSize = true;
             this.ckBxBoldHead.Checked = true;
             this.ckBxBoldHead.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckBxBoldHead.Location = new System.Drawing.Point(444, 413);
+            this.ckBxBoldHead.Location = new System.Drawing.Point(333, 289);
             this.ckBxBoldHead.Name = "ckBxBoldHead";
             this.ckBxBoldHead.Size = new System.Drawing.Size(95, 17);
             this.ckBxBoldHead.TabIndex = 0;
@@ -124,7 +125,7 @@
             this.ckBxTeamColours.AutoSize = true;
             this.ckBxTeamColours.Checked = true;
             this.ckBxTeamColours.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckBxTeamColours.Location = new System.Drawing.Point(444, 442);
+            this.ckBxTeamColours.Location = new System.Drawing.Point(333, 318);
             this.ckBxTeamColours.Name = "ckBxTeamColours";
             this.ckBxTeamColours.Size = new System.Drawing.Size(113, 17);
             this.ckBxTeamColours.TabIndex = 2;
@@ -324,7 +325,7 @@
             // 
             // btnAccept
             // 
-            this.btnAccept.Location = new System.Drawing.Point(540, 603);
+            this.btnAccept.Location = new System.Drawing.Point(550, 523);
             this.btnAccept.Name = "btnAccept";
             this.btnAccept.Size = new System.Drawing.Size(75, 23);
             this.btnAccept.TabIndex = 24;
@@ -335,7 +336,7 @@
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(11, 603);
+            this.btnCancel.Location = new System.Drawing.Point(21, 523);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 25;
@@ -346,7 +347,7 @@
             // lblColWidth
             // 
             this.lblColWidth.AutoSize = true;
-            this.lblColWidth.Location = new System.Drawing.Point(383, 318);
+            this.lblColWidth.Location = new System.Drawing.Point(375, 205);
             this.lblColWidth.Name = "lblColWidth";
             this.lblColWidth.Size = new System.Drawing.Size(73, 13);
             this.lblColWidth.TabIndex = 26;
@@ -368,7 +369,7 @@
             // 
             // btnDefault
             // 
-            this.btnDefault.Location = new System.Drawing.Point(459, 603);
+            this.btnDefault.Location = new System.Drawing.Point(469, 523);
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size(75, 23);
             this.btnDefault.TabIndex = 29;
@@ -387,7 +388,7 @@
             // 
             // btnFonts
             // 
-            this.btnFonts.Location = new System.Drawing.Point(378, 603);
+            this.btnFonts.Location = new System.Drawing.Point(388, 523);
             this.btnFonts.Name = "btnFonts";
             this.btnFonts.Size = new System.Drawing.Size(75, 23);
             this.btnFonts.TabIndex = 31;
@@ -495,7 +496,7 @@
             this.gBxUseVertDates.Controls.Add(this.rbtnVertDateAuto);
             this.gBxUseVertDates.Controls.Add(this.rbtnVertDateNo);
             this.gBxUseVertDates.Controls.Add(this.rbtnVertDateYes);
-            this.gBxUseVertDates.Location = new System.Drawing.Point(421, 505);
+            this.gBxUseVertDates.Location = new System.Drawing.Point(333, 398);
             this.gBxUseVertDates.Name = "gBxUseVertDates";
             this.gBxUseVertDates.Size = new System.Drawing.Size(154, 49);
             this.gBxUseVertDates.TabIndex = 43;
@@ -505,7 +506,7 @@
             // tkBarColumnWidth
             // 
             this.tkBarColumnWidth.LargeChange = 1000;
-            this.tkBarColumnWidth.Location = new System.Drawing.Point(333, 332);
+            this.tkBarColumnWidth.Location = new System.Drawing.Point(325, 219);
             this.tkBarColumnWidth.Maximum = 10000;
             this.tkBarColumnWidth.Name = "tkBarColumnWidth";
             this.tkBarColumnWidth.Size = new System.Drawing.Size(285, 45);
@@ -525,7 +526,7 @@
             // lblColWidthVal
             // 
             this.lblColWidthVal.AutoSize = true;
-            this.lblColWidthVal.Location = new System.Drawing.Point(441, 368);
+            this.lblColWidthVal.Location = new System.Drawing.Point(442, 251);
             this.lblColWidthVal.Name = "lblColWidthVal";
             this.lblColWidthVal.Size = new System.Drawing.Size(28, 13);
             this.lblColWidthVal.TabIndex = 46;
@@ -534,7 +535,7 @@
             // ckBxShiftAnalysis
             // 
             this.ckBxShiftAnalysis.AutoSize = true;
-            this.ckBxShiftAnalysis.Location = new System.Drawing.Point(444, 471);
+            this.ckBxShiftAnalysis.Location = new System.Drawing.Point(470, 289);
             this.ckBxShiftAnalysis.Name = "ckBxShiftAnalysis";
             this.ckBxShiftAnalysis.Size = new System.Drawing.Size(118, 17);
             this.ckBxShiftAnalysis.TabIndex = 47;
@@ -718,13 +719,24 @@
             this.pnlWkndDayCl.Size = new System.Drawing.Size(82, 25);
             this.pnlWkndDayCl.TabIndex = 54;
             // 
+            // ckBxAutoName
+            // 
+            this.ckBxAutoName.AutoSize = true;
+            this.ckBxAutoName.Location = new System.Drawing.Point(470, 318);
+            this.ckBxAutoName.Name = "ckBxAutoName";
+            this.ckBxAutoName.Size = new System.Drawing.Size(140, 17);
+            this.ckBxAutoName.TabIndex = 55;
+            this.ckBxAutoName.Text = "Auto Size Name Column";
+            this.ckBxAutoName.UseVisualStyleBackColor = true;
+            // 
             // StylerForm
             // 
             this.AcceptButton = this.btnAccept;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(627, 638);
+            this.ClientSize = new System.Drawing.Size(640, 551);
+            this.Controls.Add(this.ckBxAutoName);
             this.Controls.Add(this.gBxColours);
             this.Controls.Add(this.ckBxShiftAnalysis);
             this.Controls.Add(this.lblColWidthVal);
@@ -829,5 +841,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnTlShiftWknd;
         private System.Windows.Forms.Panel pnlTlStWkndCl;
+        private System.Windows.Forms.CheckBox ckBxAutoName;
     }
 }

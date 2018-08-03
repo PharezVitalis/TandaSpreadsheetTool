@@ -62,7 +62,7 @@ namespace TandaSpreadsheetTool
             pnlTlStWkndCl.BackColor = GetColorFromByte(currentStyle.wkndTotalCl);
             pnlTotalShiftFdCl.BackColor = GetColorFromByte(currentStyle.tlShiftFieldCl);
             ckBxShiftAnalysis.Checked = currentStyle.shiftAnalysis;
-
+            ckBxAutoName.Checked = currentStyle.autoNameColWidth;
             fontD.Font = new Font(currentStyle.font, currentStyle.fontSize, GetFontStyle());
             // need to set: col width 
 
@@ -114,7 +114,7 @@ namespace TandaSpreadsheetTool
             
 
             currentStyle.boldHeadings = ckBxBoldHead.Checked;
-            
+            currentStyle.autoNameColWidth = ckBxAutoName.Checked;
 
             currentStyle.minBrightness = (float)tkBarBrightness.Value / 100;
             currentStyle.colWidth = (float)tkBarColumnWidth.Value / 100;
@@ -201,6 +201,7 @@ namespace TandaSpreadsheetTool
             return (FontStyle)style;
         }
 #endregion
+
         #region Event Handlers
         private void btnNameHeadCl_Click(object sender, EventArgs e)
         {
