@@ -64,7 +64,7 @@ namespace TandaSpreadsheetTool
         {
             get
             {
-                return Environment.CurrentDirectory + "\\" + "Data" + "\\";
+                return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)+"\\Tanda to Excel\\Data\\";
             }
         }
 
