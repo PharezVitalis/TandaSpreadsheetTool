@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.pnlLogIn = new System.Windows.Forms.Panel();
+            this.btnClearData = new System.Windows.Forms.Button();
             this.lblLoad = new System.Windows.Forms.Label();
             this.btnLogIn = new System.Windows.Forms.Button();
             this.txtBxPwd = new System.Windows.Forms.TextBox();
@@ -54,7 +55,8 @@
             this.pgBarMain = new System.Windows.Forms.ProgressBar();
             this.btnExit = new System.Windows.Forms.Button();
             this.lstBxNotifier = new System.Windows.Forms.ListBox();
-            this.btnClearData = new System.Windows.Forms.Button();
+            this.btnSsreference = new System.Windows.Forms.Button();
+            this.ckBxRebuildSheets = new System.Windows.Forms.CheckBox();
             this.pnlLogIn.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -69,10 +71,20 @@
             this.pnlLogIn.Controls.Add(this.lblPwd);
             this.pnlLogIn.Controls.Add(this.lblUName);
             this.pnlLogIn.Controls.Add(this.lblToContinue);
-            this.pnlLogIn.Location = new System.Drawing.Point(12, 298);
+            this.pnlLogIn.Location = new System.Drawing.Point(15, 6);
             this.pnlLogIn.Name = "pnlLogIn";
             this.pnlLogIn.Size = new System.Drawing.Size(733, 142);
             this.pnlLogIn.TabIndex = 0;
+            // 
+            // btnClearData
+            // 
+            this.btnClearData.Location = new System.Drawing.Point(431, 111);
+            this.btnClearData.Name = "btnClearData";
+            this.btnClearData.Size = new System.Drawing.Size(75, 23);
+            this.btnClearData.TabIndex = 7;
+            this.btnClearData.Text = "Clear Data";
+            this.btnClearData.UseVisualStyleBackColor = true;
+            this.btnClearData.Click += new System.EventHandler(this.btnClearData_Click);
             // 
             // lblLoad
             // 
@@ -137,6 +149,8 @@
             // 
             // pnlMain
             // 
+            this.pnlMain.Controls.Add(this.ckBxRebuildSheets);
+            this.pnlMain.Controls.Add(this.btnSsreference);
             this.pnlMain.Controls.Add(this.ckBxOpenSpreadsheet);
             this.pnlMain.Controls.Add(this.btnFormat);
             this.pnlMain.Controls.Add(this.btnRemove);
@@ -161,7 +175,7 @@
             this.ckBxOpenSpreadsheet.AutoSize = true;
             this.ckBxOpenSpreadsheet.Checked = true;
             this.ckBxOpenSpreadsheet.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckBxOpenSpreadsheet.Location = new System.Drawing.Point(546, 55);
+            this.ckBxOpenSpreadsheet.Location = new System.Drawing.Point(546, 6);
             this.ckBxOpenSpreadsheet.Name = "ckBxOpenSpreadsheet";
             this.ckBxOpenSpreadsheet.Size = new System.Drawing.Size(131, 17);
             this.ckBxOpenSpreadsheet.TabIndex = 17;
@@ -192,9 +206,9 @@
             // lstBxRosters
             // 
             this.lstBxRosters.FormattingEnabled = true;
-            this.lstBxRosters.Location = new System.Drawing.Point(376, 26);
+            this.lstBxRosters.Location = new System.Drawing.Point(376, 13);
             this.lstBxRosters.Name = "lstBxRosters";
-            this.lstBxRosters.Size = new System.Drawing.Size(164, 108);
+            this.lstBxRosters.Size = new System.Drawing.Size(164, 121);
             this.lstBxRosters.TabIndex = 14;
             // 
             // ckBxSaveJson
@@ -289,16 +303,16 @@
             // pgBarMain
             // 
             this.pgBarMain.Enabled = false;
-            this.pgBarMain.Location = new System.Drawing.Point(373, 200);
+            this.pgBarMain.Location = new System.Drawing.Point(526, 157);
             this.pgBarMain.Name = "pgBarMain";
-            this.pgBarMain.Size = new System.Drawing.Size(219, 35);
+            this.pgBarMain.Size = new System.Drawing.Size(219, 23);
             this.pgBarMain.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.pgBarMain.TabIndex = 3;
             this.pgBarMain.Visible = false;
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(595, 212);
+            this.btnExit.Location = new System.Drawing.Point(595, 202);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(150, 23);
             this.btnExit.TabIndex = 17;
@@ -315,25 +329,38 @@
             this.lstBxNotifier.Location = new System.Drawing.Point(3, 157);
             this.lstBxNotifier.Name = "lstBxNotifier";
             this.lstBxNotifier.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.lstBxNotifier.Size = new System.Drawing.Size(364, 78);
+            this.lstBxNotifier.Size = new System.Drawing.Size(517, 78);
             this.lstBxNotifier.TabIndex = 18;
             this.lstBxNotifier.TabStop = false;
             // 
-            // btnClearData
+            // btnSsreference
             // 
-            this.btnClearData.Location = new System.Drawing.Point(431, 111);
-            this.btnClearData.Name = "btnClearData";
-            this.btnClearData.Size = new System.Drawing.Size(75, 23);
-            this.btnClearData.TabIndex = 7;
-            this.btnClearData.Text = "Clear Data";
-            this.btnClearData.UseVisualStyleBackColor = true;
-            this.btnClearData.Click += new System.EventHandler(this.btnClearData_Click);
+            this.btnSsreference.Enabled = false;
+            this.btnSsreference.Location = new System.Drawing.Point(546, 51);
+            this.btnSsreference.Name = "btnSsreference";
+            this.btnSsreference.Size = new System.Drawing.Size(150, 23);
+            this.btnSsreference.TabIndex = 18;
+            this.btnSsreference.Text = "Update Excel reference";
+            this.btnSsreference.UseVisualStyleBackColor = true;
+            this.btnSsreference.Click += new System.EventHandler(this.btnSsreference_Click);
+            // 
+            // ckBxRebuildSheets
+            // 
+            this.ckBxRebuildSheets.AutoSize = true;
+            this.ckBxRebuildSheets.Checked = true;
+            this.ckBxRebuildSheets.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ckBxRebuildSheets.Location = new System.Drawing.Point(205, 88);
+            this.ckBxRebuildSheets.Name = "ckBxRebuildSheets";
+            this.ckBxRebuildSheets.Size = new System.Drawing.Size(150, 17);
+            this.ckBxRebuildSheets.TabIndex = 19;
+            this.ckBxRebuildSheets.Text = "Regenerate Spreadsheets";
+            this.ckBxRebuildSheets.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(757, 452);
+            this.ClientSize = new System.Drawing.Size(757, 248);
             this.Controls.Add(this.lstBxNotifier);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.pgBarMain);
@@ -382,6 +409,8 @@
         private System.Windows.Forms.ProgressBar pgBarMain;
         private System.Windows.Forms.CheckBox ckBxOpenSpreadsheet;
         private System.Windows.Forms.Button btnClearData;
+        private System.Windows.Forms.Button btnSsreference;
+        private System.Windows.Forms.CheckBox ckBxRebuildSheets;
     }
 }
 

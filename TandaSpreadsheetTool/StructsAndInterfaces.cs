@@ -202,6 +202,7 @@ namespace TandaSpreadsheetTool
     public class FormattedRoster
     {
         public List<FormattedStaff> staff {get; set; }
+        public string excelFilePath { get; set; }
         public DateTime start { get; set; }
         public DateTime finish { get; set; }
         
@@ -209,7 +210,13 @@ namespace TandaSpreadsheetTool
         {
             staff = new List<FormattedStaff>();
         }
-            
+            public string Name
+        {
+            get
+            {
+                return start.ToShortDateString() + " to " + finish.ToShortDateString();
+            }
+        }
     }
 
     /// <summary>

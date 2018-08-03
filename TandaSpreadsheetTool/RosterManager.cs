@@ -432,7 +432,7 @@ namespace TandaSpreadsheetTool
         {
             var currentTries = 0;
             form.NewNotifier();
-            form.UpdateProgress("Getting roster data.");
+            form.UpdateProgress("Getting roster data for :" + dateFrom.ToShortDateString() +" to "+dateTo.ToShortDateString());
 
             dateFrom = SetToTime(dateFrom, 0, 0);
             dateTo = SetToTime(dateTo, 23, 59);
@@ -638,6 +638,30 @@ namespace TandaSpreadsheetTool
             return Path + "Rosters\\" + "Roster " + roster.start.ToString("dd-MM-yyyy") + " to " + roster.finish.ToString("dd-MM-yyyy") + ".bin";
         }
 
+        public void AddPath(int index, string path)
+        {
+            if (!File.Exists(path))
+            {
+                form.RaiseMessage("Files does not exist","The specified file specified (" + path + ") does not exist");
+                return;
+            }
+
+            var searchedRoster = builtRosters.Find((x => x.excelFilePath == path));
+
+            if (searchedRoster!= null && searchedRoster != builtRosters[index])
+            {
+                form.RaiseMessage("Duplicate paths", "Roster references the same spreadsheet file. reference removed for " + searchedRoster.start.ToShortDateString() + " to " + searchedRoster.finish.ToShortDateString()+". Use the \"Update Excel reference\" button to add an excel reference to a roster");
+
+                searchedRoster.excelFilePath = String.Empty;
+            }
+            if (index>-1 & index< builtRosters.Count)
+            {
+                builtRosters[index].excelFilePath = path;
+            }
+            
+          
+        }
+
         /// <summary>
         /// Removes a roster and deletes it's file
         /// </summary>
@@ -689,12 +713,14 @@ namespace TandaSpreadsheetTool
                     form.RaiseMessage("Failed to build roster", message, MessageBoxIcon.Warning);
                     continue;
                 }
-                builtRosters.Add(currentRoster);
+                
             }
             form.UpdateProgress("Finish refreshing data");
             form.RemoveNotifier();
 
         }
+
+       
 
         /// <summary>
         /// Deletes all roster data files, clears the roster list

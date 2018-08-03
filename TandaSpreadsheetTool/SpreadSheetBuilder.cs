@@ -278,6 +278,7 @@ namespace TandaSpreadsheetTool
             return true;            
         }
 
+
         /// <summary>
         /// creates a roster table on the sheet within the range of specified dates
         /// </summary>
@@ -351,35 +352,42 @@ namespace TandaSpreadsheetTool
                     currentCell = currentRow.CreateCell(2 - colOffset + (currentSchedule.startDate - roster.start).Days);
                     currentCell.SetCellValue(currentSchedule.startTime + "-" + currentSchedule.endTime);
 
-
-                    if (teamDict.TryGetValue(currentSchedule.team, out teamStyle))
+                    if (currentSchedule.team != null)
                     {
-                        if (IsWeekend(currentSchedule.startDate.DayOfWeek))
+
+
+                        if (teamDict.TryGetValue(currentSchedule.team, out teamStyle))
                         {
-                            if (!styleDict.TryGetValue(currentSchedule.team + "-wknd", out var weekendStyle))
+                            if (IsWeekend(currentSchedule.startDate.DayOfWeek))
                             {
-                                weekendStyle = (XSSFCellStyle)teamStyle.style.Clone();
-                                weekendStyle.SetFont(weekendFont);
+                                if (!styleDict.TryGetValue(currentSchedule.team + "-wknd", out var weekendStyle))
+                                {
+                                    weekendStyle = (XSSFCellStyle)teamStyle.style.Clone();
+                                    weekendStyle.SetFont(weekendFont);
 
-                                styleDict.Add(currentSchedule.team + "-wknd", weekendStyle);
+                                    styleDict.Add(currentSchedule.team + "-wknd", weekendStyle);
 
+                                }
+                                currentCell.CellStyle = weekendStyle;
                             }
-                            currentCell.CellStyle = weekendStyle;
+                            else
+                            {
+                                currentCell.CellStyle = teamStyle.style;
+                            }
+
+
+                            currentCell.CellStyle = teamStyle.style;
+                            teamStyle.isUsed = true;
                         }
                         else
                         {
-                            currentCell.CellStyle = teamStyle.style;
+                            currentCell.CellStyle = IsWeekend(currentSchedule.startDate.DayOfWeek) ? wkndFieldStyle : fieldStyle;
                         }
-
-
-                        currentCell.CellStyle = teamStyle.style;
-                        teamStyle.isUsed = true;
                     }
                     else
                     {
                         currentCell.CellStyle = IsWeekend(currentSchedule.startDate.DayOfWeek) ? wkndFieldStyle : fieldStyle;
                     }
-
 
 
                 }//end inner for
@@ -451,34 +459,40 @@ namespace TandaSpreadsheetTool
                     currentCell = currentRow.CreateCell(2 + (currentSchedule.startDate - roster.start).Days);
                     currentCell.SetCellValue(currentSchedule.startTime + "-" + currentSchedule.endTime);
 
-
-                    if (teamDict.TryGetValue(currentSchedule.team, out teamStyle))
+                    if (currentSchedule.team != null)
                     {
-                        teamStyle.isUsed = true;
-
-                        if (IsWeekend(currentSchedule.startDate.DayOfWeek))
+                        if (teamDict.TryGetValue(currentSchedule.team, out teamStyle))
                         {
-                            if (!styleDict.TryGetValue(currentSchedule.team+"-wknd",out var weekendStyle))
+                            teamStyle.isUsed = true;
+
+                            if (IsWeekend(currentSchedule.startDate.DayOfWeek))
                             {
-                                weekendStyle =(XSSFCellStyle)teamStyle.style.Clone();
-                                weekendStyle.SetFont(weekendFont);
-                                
-                                styleDict.Add(currentSchedule.team + "-wknd", weekendStyle);
-                                
+                                if (!styleDict.TryGetValue(currentSchedule.team + "-wknd", out var weekendStyle))
+                                {
+                                    weekendStyle = (XSSFCellStyle)teamStyle.style.Clone();
+                                    weekendStyle.SetFont(weekendFont);
+
+                                    styleDict.Add(currentSchedule.team + "-wknd", weekendStyle);
+
+                                }
+                                currentCell.CellStyle = weekendStyle;
                             }
-                            currentCell.CellStyle = weekendStyle;
+                            else
+                            {
+                                currentCell.CellStyle = teamStyle.style;
+                            }
+
                         }
                         else
                         {
-                            currentCell.CellStyle = teamStyle.style;
+                            currentCell.CellStyle = IsWeekend(currentSchedule.startDate.DayOfWeek) ? wkndFieldStyle : fieldStyle;
                         }
-                        
+
                     }
                     else
                     {
-                        currentCell.CellStyle = IsWeekend(currentSchedule.startDate.DayOfWeek)? wkndFieldStyle: fieldStyle;
+                        currentCell.CellStyle = IsWeekend(currentSchedule.startDate.DayOfWeek) ? wkndFieldStyle : fieldStyle;
                     }
-                   
 
 
 

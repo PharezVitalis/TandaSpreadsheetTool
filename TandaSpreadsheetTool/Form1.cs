@@ -52,6 +52,8 @@ namespace TandaSpreadsheetTool
         /// </summary>
         string spreadSheetPath = null;
 
+     
+
         public MainForm()
         {
             InitializeComponent();
@@ -267,6 +269,8 @@ namespace TandaSpreadsheetTool
                 if (rosters.Length > 0)
                 {
                     btnMakeExcel.Enabled = true;
+                    btnSsreference.Enabled = true;
+                    btnRemove.Enabled = true;
                 }
             }
             
@@ -301,11 +305,14 @@ namespace TandaSpreadsheetTool
             if (rosters.Length > 0)
             {
                 btnMakeExcel.Enabled = true;
+                btnRemove.Enabled = true;                
+                btnSsreference.Enabled = true;
                 btnRemove.Enabled = true;
-               
+
             }
             else
             {
+
                 btnMakeExcel.Enabled = false;
                 btnRemove.Enabled = false;
                 return;
@@ -320,7 +327,7 @@ namespace TandaSpreadsheetTool
         /// </summary>
         /// <param name="selectedIndex">Index value of Roster to be built from array</param>
         /// <param name="open">Whether the excel sheet will be open on complete</param>
-        void BuildExcelSheet(int selectedIndex, bool open = false)
+        void BuildExcelSheet(int selectedIndex, bool open = false, bool refreshList = true)
         {
             if (!sheetBuilder.TeamsSet)
             {
@@ -334,7 +341,11 @@ namespace TandaSpreadsheetTool
 
             if (sheetBuilder.CreateWorkbook(rosters[selectedIndex], style, spreadSheetPath))
             {
-                // sucessful
+                builder.AddPath(selectedIndex, spreadSheetPath);
+                if (refreshList)
+                {
+                    UpdateRosterList();
+                }
 
             if (open)
                 {
@@ -347,11 +358,17 @@ namespace TandaSpreadsheetTool
         /// <summary>
         /// Refreshes the Staff List
         /// </summary>
-        async private void RefreshStaffList()
+        async private void RefreshData(bool updateSpreadsheets = true)
         {
             await Task.Run(new Action(() => builder.Refresh()));
-            UpdateRosterList();
-            
+            if (updateSpreadsheets)
+            {
+                RebuildAllSpreadsheets();
+            }
+            else
+            {
+                UpdateRosterList();
+            }
             Invoke(new MethodInvoker(EnableJsonBtn));
         }
 
@@ -427,6 +444,26 @@ namespace TandaSpreadsheetTool
             lstBxNotifier.Items.Add(progressUpdate);
         }
 
+        private  void RebuildAllSpreadsheets()
+        {
+            for (int i = 0; i < rosters.Length; i++)
+            {
+                var currentRoster = rosters[i];
+                spreadSheetPath = currentRoster.excelFilePath;
+                if (spreadSheetPath == null | spreadSheetPath.Length < 1)
+                {
+                    RaiseMessage("Roster has no valid excel path","Roster:  "+ currentRoster.Name+ " has no valid spreadsheet path");
+                    continue;
+                }
+                if (!File.Exists(spreadSheetPath))
+                {
+                    RaiseMessage("Spreadsheet File Doesn't Exist", "The file: " + spreadSheetPath + " doesn't exist, roster : " + currentRoster.Name + "was rebuilt at the given path");
+                }
+                BuildExcelSheet(i,false,false);
+            }
+            UpdateRosterList();
+        }
+
         /// <summary>
         /// Opens a new Message Dialogue 
         /// </summary>
@@ -465,7 +502,8 @@ namespace TandaSpreadsheetTool
 
             if (!bgThread.IsAlive)
             {
-                bgThread = new Thread(new ThreadStart(RefreshStaffList));
+                var rebuildSheets = ckBxRebuildSheets.Checked;
+                bgThread = new Thread(new ThreadStart(()=>RefreshData(rebuildSheets)));
                 bgThread.Start();
             }
             else
@@ -501,6 +539,7 @@ namespace TandaSpreadsheetTool
         {
             stylerForm.Close();
             stylerForm.Dispose();
+            excelSaveDialog.Dispose();
         }
 
         private void btnLogIn_Click(object sender, EventArgs e)
@@ -556,6 +595,7 @@ namespace TandaSpreadsheetTool
 
         }
 
+
         private void btnExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -585,6 +625,47 @@ namespace TandaSpreadsheetTool
             }
             
         }
+
+
+       
+
+        private void btnSsreference_Click(object sender, EventArgs e)
+        {
+            var currentRoster = rosters[lstBxRosters.SelectedIndex];
+
+            var overWrite = excelSaveDialog.OverwritePrompt;
+            var checkFileExist = excelSaveDialog.CheckFileExists;
+
+            excelSaveDialog.CheckFileExists = false;
+            excelSaveDialog.OverwritePrompt = false;
+            excelSaveDialog.FileName = currentRoster.excelFilePath;
+
+            var dResult = excelSaveDialog.ShowDialog();
+
+           if (dResult!= DialogResult.Yes & dResult != DialogResult.OK)
+            {
+                return;
+            }
+
+            if (!File.Exists(excelSaveDialog.FileName))
+            {
+                MessageBox.Show("Specified file does not exist", "Excel Filed doesn't exist");
+            }
+            else
+            {
+                
+                dResult = MessageBox.Show("Overwrite excel file reference? for " + currentRoster.start.ToShortDateString() + " to " + currentRoster.finish.ToShortDateString(), "Overwrite Excel reference", MessageBoxButtons.YesNo);
+                if (dResult == DialogResult.Yes)
+                {
+                    builder.AddPath(lstBxRosters.SelectedIndex, excelSaveDialog.FileName);
+                }
+            }
+
+
+            excelSaveDialog.CheckFileExists = checkFileExist;
+            excelSaveDialog.OverwritePrompt = overWrite; ;
+        }
         #endregion
     }
+    
 }
