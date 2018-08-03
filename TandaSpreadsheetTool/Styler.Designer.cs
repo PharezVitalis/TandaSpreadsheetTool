@@ -401,8 +401,8 @@
             this.cBxNameAlign.FormattingEnabled = true;
             this.cBxNameAlign.Items.AddRange(new object[] {
             "Left",
-            "Right",
-            "Centre"});
+            "Centre",
+            "Right"});
             this.cBxNameAlign.Location = new System.Drawing.Point(102, 100);
             this.cBxNameAlign.Name = "cBxNameAlign";
             this.cBxNameAlign.Size = new System.Drawing.Size(142, 21);
@@ -422,8 +422,8 @@
             this.cBxHeadAlign.FormattingEnabled = true;
             this.cBxHeadAlign.Items.AddRange(new object[] {
             "Left",
-            "Right",
-            "Centre"});
+            "Centre",
+            "Right"});
             this.cBxHeadAlign.Location = new System.Drawing.Point(370, 54);
             this.cBxHeadAlign.Name = "cBxHeadAlign";
             this.cBxHeadAlign.Size = new System.Drawing.Size(142, 21);
@@ -452,8 +452,8 @@
             this.cBxRotaAlign.FormattingEnabled = true;
             this.cBxRotaAlign.Items.AddRange(new object[] {
             "Left",
-            "Right",
-            "Centre"});
+            "Centre",
+            "Right"});
             this.cBxRotaAlign.Location = new System.Drawing.Point(370, 100);
             this.cBxRotaAlign.Name = "cBxRotaAlign";
             this.cBxRotaAlign.Size = new System.Drawing.Size(142, 21);

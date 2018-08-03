@@ -39,6 +39,7 @@ namespace TandaSpreadsheetTool
         }
 
         #region HelperMethods
+
         public void UpdateStyle(SpreadSheetStyle newStyle)
         {            
             if (!Visible)
@@ -143,8 +144,11 @@ namespace TandaSpreadsheetTool
             }
 
             currentStyle.headAlign = (NPOI.SS.UserModel.HorizontalAlignment)cBxHeadAlign.SelectedIndex + 1;
+            Console.WriteLine("Head Alglign = " + currentStyle.headAlign.ToString());
             currentStyle.nameAlign = (NPOI.SS.UserModel.HorizontalAlignment)cBxNameAlign.SelectedIndex + 1;
+            Console.WriteLine("Head Alglign = " + currentStyle.nameAlign.ToString());
             currentStyle.rotaAlign = (NPOI.SS.UserModel.HorizontalAlignment)cBxRotaAlign.SelectedIndex + 1;
+            Console.WriteLine("Head Alglign = " + currentStyle.rotaAlign.ToString());
 
             currentStyle.divBy = (SpreadSheetDiv)cBxDiv.SelectedIndex;
         }
